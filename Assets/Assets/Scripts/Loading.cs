@@ -8,40 +8,35 @@ using TMPro;
 
 public class Loading : MonoBehaviour
 {
-    AsyncOperation loadAsync;
-    Slider loadingBar;
-    TextMeshProUGUI loadingText;
+    AsyncOperation _loadAsync;
+    Slider _loadingBar;
+    TextMeshProUGUI _loadingText;
 
-    string[] loadingTexts = new string[] { "Now Loading.", "Now Loading..", "Now Loading...", "Now Loading....", "Now Loading....." };
-    float spendTime = 0f;
+    string[] _loadingTexts = new string[] { "Now Loading.", "Now Loading..", "Now Loading...", "Now Loading....", "Now Loading....." };
+    float _spendTime = 0f;
 
-    public float loadingBar_IncreaseSpeed = 1f;
-
-    void Awake()
-    {
-        
-    }
+    public float _loadingBar_IncreaseSpeed = 1f;
 
     private void Start()
     {
         StartCoroutine(LoadScene());
-        loadingBar = FindObjectOfType<Slider>();
-        loadingText = FindObjectOfType<TextMeshProUGUI>();
+        _loadingBar = FindObjectOfType<Slider>();
+        _loadingText = FindObjectOfType<TextMeshProUGUI>();
         StartCoroutine(loadingBarIncrease());
     }
 
     private void Update()
     {
-        spendTime += Time.deltaTime * 2;
-        spendTime %= 5;
-        loadingText.text = loadingTexts[(int)spendTime];
+        _spendTime += Time.deltaTime * 2;
+        _spendTime %= 5;
+        _loadingText.text = _loadingTexts[(int)_spendTime];
     }
 
     IEnumerator LoadScene()
     {
-        loadAsync = SceneManager.LoadSceneAsync(2);
-        loadAsync.allowSceneActivation = false;
-        while (loadAsync.progress < 0.9f)
+        _loadAsync = SceneManager.LoadSceneAsync(2);
+        _loadAsync.allowSceneActivation = false;
+        while (_loadAsync.progress < 0.9f)
         {
             yield return null;
         }
@@ -49,14 +44,14 @@ public class Loading : MonoBehaviour
 
     IEnumerator loadingBarIncrease()
     {
-        while (loadingBar.value < 1f)
+        while (_loadingBar.value < 1f)
         {
-            if (loadingBar.value <= loadAsync.progress + 0.1f)
+            if (_loadingBar.value <= _loadAsync.progress + 0.1f)
             {
-                loadingBar.value += Time.deltaTime * loadingBar_IncreaseSpeed;
+                _loadingBar.value += Time.deltaTime * _loadingBar_IncreaseSpeed;
             }
             yield return null;
         }
-        loadAsync.allowSceneActivation = true;
+        _loadAsync.allowSceneActivation = true;
     }
 }

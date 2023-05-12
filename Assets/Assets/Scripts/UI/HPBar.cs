@@ -10,8 +10,10 @@ public class HPBar : MonoBehaviour
     Slider _slider;
     TextMeshProUGUI _HpText;
 
+    float _startValue = 1;
     float _goalValue = 1;
-    float _barChangeSpeed = 1;
+    public float _barChangeSpeed = 2;
+    float _currentBarAchievement = 1;
 
     private void Awake()
     {
@@ -29,28 +31,32 @@ public class HPBar : MonoBehaviour
 
     private void Update()
     {
-        if (_slider.value > _goalValue)
-        {
-            _slider.value -= _barChangeSpeed * Time.deltaTime;
-            if (_slider.value < _goalValue) 
-            {
-                _slider.value = _goalValue;
-            }
-        }
-        else if (_slider.value < _goalValue)
-        {
-            _slider.value += _barChangeSpeed * Time.deltaTime;
-            if (_slider.value > _goalValue)
-            {
-                _slider.value = _goalValue;
-            }
-        }
+        //if (_slider.value > _goalValue)
+        //{
+        //    _slider.value -= _barChangeSpeed * Time.deltaTime;
+        //    if (_slider.value < _goalValue) 
+        //    {
+        //        _slider.value = _goalValue;
+        //    }
+        //}
+        //else if (_slider.value < _goalValue)
+        //{
+        //    _slider.value += _barChangeSpeed * Time.deltaTime;
+        //    if (_slider.value > _goalValue)
+        //    {
+        //        _slider.value = _goalValue;
+        //    }
+        //}
+        _currentBarAchievement += Time.deltaTime * _barChangeSpeed;
+        _slider.value = Mathf.Lerp(_startValue, _goalValue, _currentBarAchievement);
     }
 
     // Update is called once per frame
     private void Refresh(float maxHp, float hp)
     {
+        _currentBarAchievement = 0;
         _goalValue = hp / maxHp;
+        _startValue = _slider.value;
         _HpText.text = $"{(int)hp} / {(int)maxHp}";
     }
 }

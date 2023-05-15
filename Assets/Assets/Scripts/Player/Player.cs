@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Rendering.LookDev;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -13,7 +14,7 @@ public class Player : MonoBehaviour
     public float HP
     {
         get => _hp;
-        private set 
+        private set
         {
             _hp = value;
             _hp = Mathf.Clamp(_hp, 0, MaxHP);
@@ -22,6 +23,10 @@ public class Player : MonoBehaviour
     }
     public Action<float, float> _onChangeHP;
 
+    public static float trueValue = 0f;
+    public static float falseValue = 1f;
+
+    float _isAttack = falseValue;
     float _attackPower = 10;
 
     public float _moveSpeed = 1f;
@@ -31,7 +36,8 @@ public class Player : MonoBehaviour
 
     Animator _anim;
     readonly int _isMoveHash = Animator.StringToHash("IsMove");
-    
+    readonly int _isAttackHash = Animator.StringToHash("IsAttack");
+
     PlayerInputActions _inputActions;
 
     private void Awake()
@@ -47,18 +53,46 @@ public class Player : MonoBehaviour
         _inputActions.Player.Enable();
         _inputActions.Player.Move.performed += OnMoveInput;
         _inputActions.Player.Move.canceled += OnMoveInput;
+        _inputActions.Player.Attack.performed += OnAttackInput;
     }
 
     private void OnDisable()
     {
+        _inputActions.Player.Attack.performed -= OnAttackInput;
         _inputActions.Player.Move.canceled -= OnMoveInput;
         _inputActions.Player.Move.performed -= OnMoveInput;
-        _inputActions.Player.Disable();   
+        _inputActions.Player.Disable();
     }
 
     private void OnMoveInput(InputAction.CallbackContext context)
     {
         _moveDir = context.ReadValue<Vector2>();
+        if (_isAttack == falseValue)
+        {
+            if (_moveDir.x > 0)
+            {
+                transform.localScale = new Vector3(-1, 1, 1);
+            }
+            else if (_moveDir.x < 0)
+            {
+                transform.localScale = Vector3.one;
+            }
+        }
+        _anim.SetBool(_isMoveHash, !context.canceled);
+    }
+
+    private void OnAttackInput(InputAction.CallbackContext _)
+    {
+        if (_isAttack == falseValue)
+        {
+            _isAttack = trueValue;
+            _anim.SetTrigger(_isAttackHash);
+        }
+    }
+
+    public void AttackEnd()
+    {
+        _isAttack = falseValue;
         if (_moveDir.x > 0)
         {
             transform.localScale = new Vector3(-1, 1, 1);
@@ -67,12 +101,11 @@ public class Player : MonoBehaviour
         {
             transform.localScale = Vector3.one;
         }
-        _anim.SetBool(_isMoveHash, !context.canceled);
     }
 
     private void FixedUpdate()
     {
-        _rigid.transform.position = _rigid.transform.position + Time.fixedDeltaTime * _moveSpeed * (Vector3)_moveDir;
+        _rigid.transform.position = _rigid.transform.position + Time.fixedDeltaTime * _moveSpeed * _isAttack * (Vector3)_moveDir ;
     }
 
     public void Test_HPChange(float value)

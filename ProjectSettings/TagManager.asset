@@ -3,18 +3,20 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - Enemy
+  - Wall
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Player
   - Water
   - UI
-  - 
-  - 
-  - 
-  - 
+  - HaveBodyObject
+  - HaveBodyObjectSensor
+  - PlayerSensor
+  - Wall
   - 
   - 
   - 
@@ -38,6 +40,21 @@ TagManager:
   - 
   - 
   m_SortingLayers:
+  - name: Ground
+    uniqueID: 3010111655
+    locked: 0
+  - name: AttackRange
+    uniqueID: 1017135829
+    locked: 0
+  - name: Position
+    uniqueID: 1787489735
+    locked: 0
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Effect
+    uniqueID: 3307031351
+    locked: 0
+  - name: MonsterHpBar
+    uniqueID: 3967425595
     locked: 0

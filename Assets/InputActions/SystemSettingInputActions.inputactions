@@ -1,0 +1,51 @@
+{
+    "name": "SystemSettingInputActions",
+    "maps": [
+        {
+            "name": "System",
+            "id": "56acf4a5-efe0-4538-87e4-de62e75c4973",
+            "actions": [
+                {
+                    "name": "MonsterHpBarVisible",
+                    "type": "Button",
+                    "id": "71507f6a-e287-455d-bc9f-184fa0024b54",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "bfb13dab-10e0-4f9d-97f6-6aa33bc82523",
+                    "path": "<Keyboard>/1",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "KeyBoardAndMouse",
+                    "action": "MonsterHpBarVisible",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": [
+        {
+            "name": "KeyBoardAndMouse",
+            "bindingGroup": "KeyBoardAndMouse",
+            "devices": [
+                {
+                    "devicePath": "<Keyboard>",
+                    "isOptional": false,
+                    "isOR": false
+                },
+                {
+                    "devicePath": "<Mouse>",
+                    "isOptional": false,
+                    "isOR": false
+                }
+            ]
+        }
+    ]
+}

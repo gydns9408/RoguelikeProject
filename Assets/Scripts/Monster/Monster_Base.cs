@@ -87,6 +87,7 @@ public class Monster_Base : MonoBehaviour
     protected float _afterHit_chasingTime_value = 0f;
 
     protected Transform _position;
+    public Transform Position => _position;
     protected Monster_HpBar _hpBar;
     public Monster_HpBar HPBar => _hpBar;
 
@@ -253,22 +254,7 @@ public class Monster_Base : MonoBehaviour
             _randomGoalArea_Y = UnityEngine.Random.Range(_randomGoalArea_minY, _randomGoalArea_maxY);
         }
         _randomGoalArea_moveDir = (new Vector3(_randomGoalArea_X, _randomGoalArea_Y, 0) - _position.position).normalized;
-        if (_randomGoalArea_moveDir.x > 0)
-        {
-            transform.localScale = new Vector3(-1, 1, 1);
-            if (_hpBar.transform.localScale.x > 0)
-            {
-                _hpBar.transform.localScale = _hpBar_localScale_reverse;
-            }
-        }
-        else if (_randomGoalArea_moveDir.x < 0)
-        {
-            transform.localScale = Vector3.one;
-            if (_hpBar.transform.localScale.x < 0)
-            {
-                _hpBar.transform.localScale = _hpBar_localScale;
-            }
-        }
+        HeadTurn(_randomGoalArea_moveDir);
     }
 
     protected void FixedUpdate_Spawn()
@@ -335,45 +321,35 @@ public class Monster_Base : MonoBehaviour
         if ((GameManager.Instance.Player.Position.position - _position.position).sqrMagnitude > 0.2f)
         {
             Vector3 moveDir = (GameManager.Instance.Player.Position.position - _position.position).normalized;
-            if (moveDir.x > 0)
-            {
-                transform.localScale = new Vector3(-1, 1, 1);
-                if (_hpBar.transform.localScale.x > 0)
-                {
-                    _hpBar.transform.localScale = _hpBar_localScale_reverse;
-                }
-            }
-            else if (moveDir.x < 0)
-            {
-                transform.localScale = Vector3.one;
-                if (_hpBar.transform.localScale.x < 0)
-                {
-                    _hpBar.transform.localScale = _hpBar_localScale;
-                }
-            }
+            HeadTurn(moveDir);
             _rigid.MovePosition(transform.position + moveDir * _moveSpeed * Time.fixedDeltaTime);
         }
     }
 
     protected void Ready_Chase()
     {
-            Vector3 goalDir = GameManager.Instance.Player.Position.position - _position.position;
-            if (goalDir.x > 0)
+        Vector3 goalDir = GameManager.Instance.Player.Position.position - _position.position;
+        HeadTurn(goalDir);
+    }
+
+    protected void HeadTurn(Vector3 moveDir)
+    {
+        if (moveDir.x > 0)
+        {
+            transform.localScale = new Vector3(-1, 1, 1);
+            if (_hpBar.transform.localScale.x > 0)
             {
-                transform.localScale = new Vector3(-1, 1, 1);
-                if (_hpBar.transform.localScale.x > 0)
-                {
-                  _hpBar.transform.localScale = _hpBar_localScale_reverse;
-                }
+                _hpBar.transform.localScale = _hpBar_localScale_reverse;
             }
-            else if (goalDir.x < 0)
+        }
+        else if (moveDir.x < 0)
+        {
+            transform.localScale = Vector3.one;
+            if (_hpBar.transform.localScale.x < 0)
             {
-                transform.localScale = Vector3.one;
-                if (_hpBar.transform.localScale.x < 0)
-                {
-                  _hpBar.transform.localScale = _hpBar_localScale;
-                }
+                _hpBar.transform.localScale = _hpBar_localScale;
             }
+        }
     }
 
     protected void FixedUpdate_Attack()

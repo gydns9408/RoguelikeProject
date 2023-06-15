@@ -6,16 +6,16 @@ using UnityEditor.Rendering.LookDev;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class Player : MonoBehaviour
+public class Player : Unit_Base
 {
-    [SerializeField]
-    float _maxHp = 100;
+    //[SerializeField]
+    //float _maxHp = 100;
     public float MaxHP => _maxHp;
-    float _hp = 100;
-    public float HP
+    //float _hp = 100;
+    public override float HP
     {
         get => _hp;
-        private set
+        protected set
         {
             if (_isAlive)
             {
@@ -37,54 +37,52 @@ public class Player : MonoBehaviour
         }
     }
     public Action<float, float> _onChangeHP;
-    bool _isAlive = true;
+    //bool _isAlive = true;
 
-    public float _hit_invincibleTime = 1.5f; 
-    float _hit_invincibleTime_value = 0f;
+    //public float _hit_invincibleTime = 1.5f; 
+    //float _hit_invincibleTime_value = 0f;
     public float _hit_blinking_interval = 0.1f;
     WaitForSeconds _wait_hitCorotine;
 
-    public static float trueValue = 0f;
-    public static float falseValue = 1f;
+    //public static float trueValue = 0f;
+    //public static float falseValue = 1f;
 
-    float _isAttack = falseValue;
-    float _attackPower = 10;
-    float _defencePower = 3;
+    //float _isAttack = falseValue;
+    //float _attackPower = 10;
+    //float _defencePower = 3;
 
-    public float _moveSpeed = 1f;
-    Vector2 _moveDir;
+    //public float _moveSpeed = 1f;
+    //Vector2 _moveDir;
 
-    Rigidbody2D _rigid;
+    //Rigidbody2D _rigid;
     
 
-    Animator _anim;
+    //Animator _anim;
     readonly int _isMoveHash = Animator.StringToHash("IsMove");
     readonly int _isAttackHash = Animator.StringToHash("IsAttack");
     readonly int _activeHash = Animator.StringToHash("Active");
 
     PlayerInputActions _inputActions;
 
-    SpriteRenderer _sprite;
+    //SpriteRenderer _sprite;
     SlashEffect _slashEffect;
     PlayerAttackRange1 _attackRange1;
     Collider2D _attackRange1_trigger;
     Animator _attackRange1_anim;
-    Transform _position;
-    public Transform Position => _position;
+    //Transform _position;
+    //public Transform Position => _position;
 
-    private void Awake()
+    protected override void Awake()
     {
-        _rigid = GetComponent<Rigidbody2D>();
-        _anim = GetComponent<Animator>();
+        base.Awake();
         _inputActions = new PlayerInputActions();
-        _sprite = GetComponent<SpriteRenderer>();
         _slashEffect = GetComponentInChildren<SlashEffect>(true);
         _attackRange1 = GetComponentInChildren<PlayerAttackRange1>(true);
         _attackRange1_trigger = _attackRange1.gameObject.GetComponentInChildren<Collider2D>(true);
         _attackRange1_anim = _attackRange1.gameObject.GetComponent<Animator>();
 
-        _position = transform.GetChild(0);
         HP = MaxHP;
+        _isAlive = true;
 
         _wait_hitCorotine = new WaitForSeconds(_hit_blinking_interval);
     }
@@ -167,16 +165,16 @@ public class Player : MonoBehaviour
         mob.SufferDamage(_attackPower + UnityEngine.Random.Range(0f, _attackPower * 0.1f));
     }
 
-    public void SufferDamage(float damage)
-    {
-        if (_hit_invincibleTime_value < 0)
-        {
-            _hit_invincibleTime_value = _hit_invincibleTime;
-            float fianl_Damage = damage * (1 - (_defencePower / (100f + _defencePower)));
-            HP -= fianl_Damage;
+    //public void SufferDamage(float damage)
+    //{
+    //    if (_hit_invincibleTime_value < 0)
+    //    {
+    //        _hit_invincibleTime_value = _hit_invincibleTime;
+    //        float fianl_Damage = damage * (1 - (_defencePower / (100f + _defencePower)));
+    //        HP -= fianl_Damage;
 
-        }
-    }
+    //    }
+    //}
 
     IEnumerator HitCoroutine()
     {
@@ -209,11 +207,11 @@ public class Player : MonoBehaviour
         _sprite.sortingOrder = (int)(_position.position.y * -100);
     }
 
-    private void FixedUpdate()
-    {
-        _rigid.transform.position = _rigid.transform.position + Time.fixedDeltaTime * _moveSpeed * _isAttack * (Vector3)_moveDir;
-        _rigid.velocity = Vector2.zero;
-    }
+    //private void FixedUpdate()
+    //{
+    //    _rigid.transform.position = _rigid.transform.position + Time.fixedDeltaTime * _moveSpeed * _isAttack * (Vector3)_moveDir;
+    //    _rigid.velocity = Vector2.zero;
+    //}
 
     public void Test_HPChange(float value)
     {

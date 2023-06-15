@@ -7,53 +7,36 @@ public class Unit_Base : MonoBehaviour
 {
     public float _maxHp = 25f;
     protected float _hp;
-    protected float HP
+    public virtual float HP
     {
         get => _hp;
-        set
+        protected set
         {
             if (_isAlive)
             {
                 float refine_value = Mathf.Clamp(value, 0, _maxHp);
-                if (refine_value < _hp)
+                if (refine_value < _hp && refine_value <= 0)
                 {
-                    if (refine_value > 0)
-                    {
-                        //_coroutine.Hit();
-                        if (Mathf.Abs(_hp - refine_value) > _maxHp * 0.1f)
-                        {
-                            //_NowState = EnemyState.Hit;
-                        }
-                        else
-                        {
-                            //_afterHit_chasingTime_value = _afterHit_chasingTime;
-                            //if (_NowState != EnemyState.Attack)
-                            //{
-                            //    Ready_Chase();
-                            //    _NowState = EnemyState.Chase;
-                            //}
-                        }
-                    }
-                    else
-                    {
-                        _isAlive = false;
-                        //_coroutine.Die();
-                        //_NowState = EnemyState.Die;
-                    }
+                    _isAlive = false;
                 }
                 _hp = refine_value;
-                _onChangeHP?.Invoke(_hp);
             }
         }
     }
+
+    public float _moveSpeed = 1f;
+    protected Vector2 _moveDir;
+
+    protected static float trueValue = 0f;
+    protected static float falseValue = 1f;
+
+    protected float _isAttack = falseValue;
 
     protected bool _isAlive = false;
     protected float _attackPower = 3;
     protected float _defencePower = 0;
     public float _hit_invincibleTime = 0.6f;
     protected float _hit_invincibleTime_value = 0f;
-
-    public Action<float> _onChangeHP;
 
     protected Transform _position;
     public Transform Position => _position;
@@ -75,13 +58,13 @@ public class Unit_Base : MonoBehaviour
         _position = transform.GetChild(0);
         _position_sprite = _position.GetComponent<SpriteRenderer>();
 
-        Color color = _sprite.material.color;
-        color.a = 0f;
-        _sprite.material.color = color;
-        color = _position_sprite.color;
-        color.a = 0f;
-        _position_sprite.color = color;
-        _collider.enabled = false;
+        //Color color = _sprite.material.color;
+        //color.a = 0f;
+        //_sprite.material.color = color;
+        //color = _position_sprite.color;
+        //color.a = 0f;
+        //_position_sprite.color = color;
+        //_collider.enabled = false;
     }
 
     public void SufferDamage(float damage)
@@ -94,4 +77,11 @@ public class Unit_Base : MonoBehaviour
 
         }
     }
+
+    protected void FixedUpdate()
+    {
+        _rigid.transform.position = _rigid.transform.position + Time.fixedDeltaTime * _moveSpeed * _isAttack * (Vector3)_moveDir;
+        _rigid.velocity = Vector2.zero;
+    }
+
 }

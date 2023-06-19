@@ -81,8 +81,9 @@ public class Player : Unit_Base
         _attackRange1_trigger = _attackRange1.gameObject.GetComponentInChildren<Collider2D>(true);
         _attackRange1_anim = _attackRange1.gameObject.GetComponent<Animator>();
 
-        HP = MaxHP;
         _isAlive = true;
+        HP = MaxHP;
+
 
         _wait_hitCorotine = new WaitForSeconds(_hit_blinking_interval);
     }

@@ -35,6 +35,15 @@ public partial class @SystemSettingInputActions : IInputActionCollection2, IDisp
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""PlayerInfoUIVisible"",
+                    ""type"": ""Button"",
+                    ""id"": ""51ff2444-e667-4e55-a252-fabe4d0971c7"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -46,6 +55,17 @@ public partial class @SystemSettingInputActions : IInputActionCollection2, IDisp
                     ""processors"": """",
                     ""groups"": ""KeyBoardAndMouse"",
                     ""action"": ""MonsterHpBarVisible"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c4aef658-a8c5-426e-a0a5-29d3ef2e4a18"",
+                    ""path"": ""<Keyboard>/2"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""KeyBoardAndMouse"",
+                    ""action"": ""PlayerInfoUIVisible"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -74,6 +94,7 @@ public partial class @SystemSettingInputActions : IInputActionCollection2, IDisp
         // System
         m_System = asset.FindActionMap("System", throwIfNotFound: true);
         m_System_MonsterHpBarVisible = m_System.FindAction("MonsterHpBarVisible", throwIfNotFound: true);
+        m_System_PlayerInfoUIVisible = m_System.FindAction("PlayerInfoUIVisible", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -134,11 +155,13 @@ public partial class @SystemSettingInputActions : IInputActionCollection2, IDisp
     private readonly InputActionMap m_System;
     private ISystemActions m_SystemActionsCallbackInterface;
     private readonly InputAction m_System_MonsterHpBarVisible;
+    private readonly InputAction m_System_PlayerInfoUIVisible;
     public struct SystemActions
     {
         private @SystemSettingInputActions m_Wrapper;
         public SystemActions(@SystemSettingInputActions wrapper) { m_Wrapper = wrapper; }
         public InputAction @MonsterHpBarVisible => m_Wrapper.m_System_MonsterHpBarVisible;
+        public InputAction @PlayerInfoUIVisible => m_Wrapper.m_System_PlayerInfoUIVisible;
         public InputActionMap Get() { return m_Wrapper.m_System; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -151,6 +174,9 @@ public partial class @SystemSettingInputActions : IInputActionCollection2, IDisp
                 @MonsterHpBarVisible.started -= m_Wrapper.m_SystemActionsCallbackInterface.OnMonsterHpBarVisible;
                 @MonsterHpBarVisible.performed -= m_Wrapper.m_SystemActionsCallbackInterface.OnMonsterHpBarVisible;
                 @MonsterHpBarVisible.canceled -= m_Wrapper.m_SystemActionsCallbackInterface.OnMonsterHpBarVisible;
+                @PlayerInfoUIVisible.started -= m_Wrapper.m_SystemActionsCallbackInterface.OnPlayerInfoUIVisible;
+                @PlayerInfoUIVisible.performed -= m_Wrapper.m_SystemActionsCallbackInterface.OnPlayerInfoUIVisible;
+                @PlayerInfoUIVisible.canceled -= m_Wrapper.m_SystemActionsCallbackInterface.OnPlayerInfoUIVisible;
             }
             m_Wrapper.m_SystemActionsCallbackInterface = instance;
             if (instance != null)
@@ -158,6 +184,9 @@ public partial class @SystemSettingInputActions : IInputActionCollection2, IDisp
                 @MonsterHpBarVisible.started += instance.OnMonsterHpBarVisible;
                 @MonsterHpBarVisible.performed += instance.OnMonsterHpBarVisible;
                 @MonsterHpBarVisible.canceled += instance.OnMonsterHpBarVisible;
+                @PlayerInfoUIVisible.started += instance.OnPlayerInfoUIVisible;
+                @PlayerInfoUIVisible.performed += instance.OnPlayerInfoUIVisible;
+                @PlayerInfoUIVisible.canceled += instance.OnPlayerInfoUIVisible;
             }
         }
     }
@@ -174,5 +203,6 @@ public partial class @SystemSettingInputActions : IInputActionCollection2, IDisp
     public interface ISystemActions
     {
         void OnMonsterHpBarVisible(InputAction.CallbackContext context);
+        void OnPlayerInfoUIVisible(InputAction.CallbackContext context);
     }
 }

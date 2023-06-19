@@ -30,6 +30,7 @@ public class GameManager : Singleton<GameManager>
             _inputActions = new SystemSettingInputActions();
             _inputActions.System.Enable();
             _inputActions.System.MonsterHpBarVisible.performed += OnMonster_HpBarVisible_Option_Input;
+            _inputActions.System.PlayerInfoUIVisible.performed += OnUI_PlayerInfoUIVisible_Option_Input;
         }
     }
     protected override void Initialize()
@@ -43,8 +44,14 @@ public class GameManager : Singleton<GameManager>
         _onChange_isVisible_enemyHpBar?.Invoke(_isVisible_enemyHpBar);
     }
 
+    private void OnUI_PlayerInfoUIVisible_Option_Input(InputAction.CallbackContext _)
+    {
+
+    }
+
     private void OnDisable()
     {
+        _inputActions.System.PlayerInfoUIVisible.performed -= OnUI_PlayerInfoUIVisible_Option_Input;
         _inputActions.System.MonsterHpBarVisible.performed -= OnMonster_HpBarVisible_Option_Input;
         _inputActions.System.Disable();
     }

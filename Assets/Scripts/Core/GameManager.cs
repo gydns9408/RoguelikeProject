@@ -9,6 +9,7 @@ using UnityEngine.SceneManagement;
 public class GameManager : Singleton<GameManager>
 {
     Player _player;
+    PlayerInfoUI _playerInfoUI;
     public Player Player => _player;
 
     bool _isVisible_enemyHpBar = true;
@@ -36,6 +37,7 @@ public class GameManager : Singleton<GameManager>
     protected override void Initialize()
     {
         _player = FindObjectOfType<Player>();
+        _playerInfoUI = FindObjectOfType<PlayerInfoUI>();
         StartCoroutine(Monster_Spawn(10f));
     }
     private void OnMonster_HpBarVisible_Option_Input(InputAction.CallbackContext _)
@@ -46,7 +48,14 @@ public class GameManager : Singleton<GameManager>
 
     private void OnUI_PlayerInfoUIVisible_Option_Input(InputAction.CallbackContext _)
     {
-
+        if (_playerInfoUI.gameObject.activeSelf == false)
+        {
+            _playerInfoUI.gameObject.SetActive(true);
+        }
+        else
+        {
+            _playerInfoUI.gameObject.SetActive(false);
+        }
     }
 
     private void OnDisable()

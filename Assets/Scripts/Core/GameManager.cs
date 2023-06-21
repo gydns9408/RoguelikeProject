@@ -38,6 +38,9 @@ public class GameManager : Singleton<GameManager>
     {
         _player = FindObjectOfType<Player>();
         _playerInfoUI = FindObjectOfType<PlayerInfoUI>();
+        ItemInventory itemInventory = new ItemInventory(20, _player);
+        ItemInventoryUI itemUI = FindObjectOfType<ItemInventoryUI>();
+        itemUI.Initialize(itemInventory);
         StartCoroutine(Monster_Spawn(10f));
     }
     private void OnMonster_HpBarVisible_Option_Input(InputAction.CallbackContext _)

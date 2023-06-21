@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class Unit_Base : MonoBehaviour
 {
+    [Header("유닛 기본 데이터")]
     public float _maxHp = 25f;
     protected float _hp;
     public virtual float HP

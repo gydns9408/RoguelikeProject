@@ -61,6 +61,7 @@ public class Monster_Base : Unit_Base
     //public float _moveSpeed = 1.0f;
     protected float _freeMove_notMoveDirChangeTime = 1.0f;
     protected float _freeMove_notMoveDirChangeTime_value = 0f;
+    [Header("몬스터 기본 데이터")]
     public float _idleTime = 3.0f;
     public float _dieTime = 1.0f;
     protected float _dieTime_reciprocal;
@@ -81,7 +82,6 @@ public class Monster_Base : Unit_Base
 
     //public float _hit_invincibleTime = 0.6f;
     //protected float _hit_invincibleTime_value = 0f;
-    public float _hit_blinking_interval = 0.1f;
     protected WaitForSeconds _hit_wait;
     protected float _afterHit_chasingTime = 0.5f;
     protected float _afterHit_chasingTime_value = 0f;

@@ -1,21 +1,20 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class StartButton : MonoBehaviour
+public class Button_Base : MonoBehaviour
 {
     // Start is called before the first frame update
-    void Awake()
+    protected virtual void Awake()
     {
         Button button= GetComponent<Button>();
-        button.onClick.AddListener(GoLoadingScene);
+        button.onClick.AddListener(ButtonClickEvent);
     }
 
     // Update is called once per frame
-    void GoLoadingScene()
+    protected virtual void ButtonClickEvent()
     {
-        SceneManager.LoadScene(1);
+
     }
 }

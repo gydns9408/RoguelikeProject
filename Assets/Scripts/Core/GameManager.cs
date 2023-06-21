@@ -23,6 +23,8 @@ public class GameManager : Singleton<GameManager>
     public float _randomSpawnArea_minY = -4.89f;
     public float _randomSpawnArea_maxY = 4.89f;
 
+    public uint _inventorySlotAmount = 20;
+
     protected override void RunOnlyOnce_Initialize()
     {
         if (_initialized == false)
@@ -38,7 +40,7 @@ public class GameManager : Singleton<GameManager>
     {
         _player = FindObjectOfType<Player>();
         _playerInfoUI = FindObjectOfType<PlayerInfoUI>();
-        ItemInventory itemInventory = new ItemInventory(20, _player);
+        ItemInventory itemInventory = new ItemInventory(_inventorySlotAmount, _player);
         ItemInventoryUI itemUI = FindObjectOfType<ItemInventoryUI>();
         itemUI.Initialize(itemInventory);
         StartCoroutine(Monster_Spawn(10f));
@@ -53,11 +55,11 @@ public class GameManager : Singleton<GameManager>
     {
         if (_playerInfoUI.gameObject.activeSelf == false)
         {
-            _playerInfoUI.gameObject.SetActive(true);
+            _playerInfoUI.Open();
         }
         else
         {
-            _playerInfoUI.gameObject.SetActive(false);
+            _playerInfoUI.Close();
         }
     }
 

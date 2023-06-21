@@ -8,8 +8,10 @@ using UnityEngine.InputSystem;
 
 public class Player : Unit_Base
 {
+
     //[SerializeField]
     //float _maxHp = 100;
+    
     public float MaxHP => _maxHp;
     //float _hp = 100;
     public override float HP
@@ -41,8 +43,9 @@ public class Player : Unit_Base
 
     //public float _hit_invincibleTime = 1.5f; 
     //float _hit_invincibleTime_value = 0f;
-    public float _hit_blinking_interval = 0.1f;
+    
     WaitForSeconds _wait_hitCorotine;
+    public float _pickUpRange = 3.0f;
 
     //public static float trueValue = 0f;
     //public static float falseValue = 1f;
@@ -94,6 +97,7 @@ public class Player : Unit_Base
         _inputActions.Player.Move.performed += OnMoveInput;
         _inputActions.Player.Move.canceled += OnMoveInput;
         _inputActions.Player.Attack.performed += OnAttackInput;
+        _inputActions.Player.PickUp.performed += OnPickUpInput;
 
         _attackRange1.onMonsterAttack += CauseDamage;
     }
@@ -102,6 +106,7 @@ public class Player : Unit_Base
     {
         _attackRange1.onMonsterAttack -= CauseDamage;
 
+        _inputActions.Player.PickUp.performed -= OnPickUpInput;
         _inputActions.Player.Attack.performed -= OnAttackInput;
         _inputActions.Player.Move.canceled -= OnMoveInput;
         _inputActions.Player.Move.performed -= OnMoveInput;
@@ -133,6 +138,11 @@ public class Player : Unit_Base
             _anim.SetTrigger(_isAttackHash);
             _attackRange1_anim.SetTrigger(_activeHash);
         }
+    }
+
+    private void OnPickUpInput(InputAction.CallbackContext _)
+    {
+        Collider2D[] items = Physics2D.OverlapCircleAll(Position.position, _pickUpRange, LayerMask.GetMask("Item"));
     }
 
     private void CreateSlashEffect()

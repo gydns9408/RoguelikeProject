@@ -1,11 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class ItemInventoryUI : MonoBehaviour
+public class ItemInventoryUI : UI_Window_Base
 {
     ItemSlotUI[] _slots;
+    public ItemSlotUI[] ItemSlotUI => _slots;
+
+    ItemInventory _inven;
+    public ItemInventory Inven => _inven;
 
     public GameObject slotPrefab;
     
@@ -17,6 +22,7 @@ public class ItemInventoryUI : MonoBehaviour
 
     public void Initialize(ItemInventory inven)
     {
+        _inven = inven;
         if (_slots.Length != inven.InventorySize)
         {
             Transform slots = transform.GetChild(0);
@@ -33,7 +39,7 @@ public class ItemInventoryUI : MonoBehaviour
             {
                 invenSizeSqrt = Mathf.Ceil(invenSizeSqrt);
             }
-            float oneSlotSideLength = Mathf.Floor((slotsRect.rect.width - gridLayout.padding.left * 2f) / invenSizeSqrt);
+            float oneSlotSideLength = Mathf.Floor((slotsRect.rect.width - gridLayout.padding.left * 2.5f) / invenSizeSqrt);
             gridLayout.cellSize = new Vector2(oneSlotSideLength, oneSlotSideLength);
 
             _slots = new ItemSlotUI[inven.InventorySize];
@@ -43,6 +49,11 @@ public class ItemInventoryUI : MonoBehaviour
                 obj.name = $"{slotPrefab.name}{i + 1}";
                 _slots[i] = obj.GetComponent<ItemSlotUI>();
             }
+        }
+
+        for (uint i = 0; i < _slots.Length; i++)
+        {
+            _slots[i].Initialize(inven[i]);
         }
     }
 }

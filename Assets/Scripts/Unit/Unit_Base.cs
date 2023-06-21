@@ -34,10 +34,11 @@ public class Unit_Base : MonoBehaviour
     protected float _isAttack = falseValue;
 
     protected bool _isAlive = false;
-    protected float _attackPower = 3;
-    protected float _defencePower = 0;
+    public float _attackPower = 3;
+    public float _defencePower = 0;
     public float _hit_invincibleTime = 0.6f;
     protected float _hit_invincibleTime_value = 0f;
+    public float _hit_blinking_interval = 0.1f;
 
     protected Transform _position;
     public Transform Position => _position;

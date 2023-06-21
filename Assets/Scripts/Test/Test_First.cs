@@ -7,6 +7,9 @@ public class Test_First : Test_Base
 {
     public Player player;
     public Monster_Monster1 monster_Monster1;
+    public ItemInventoryUI invenUI;
+    public ItemDataManager itemDataManager;
+
     // Start is called before the first frame update
     protected override void Test_Action1(InputAction.CallbackContext _)
     {
@@ -20,7 +23,8 @@ public class Test_First : Test_Base
 
     protected override void Test_Action3(InputAction.CallbackContext _)
     {
-        monster_Monster1.Test1();
+        invenUI.Inven[0].SlotSetting(itemDataManager[ItemType.BeastMeat], 10);
+        invenUI.ItemSlotUI[0].Refresh();
     }
 
 }

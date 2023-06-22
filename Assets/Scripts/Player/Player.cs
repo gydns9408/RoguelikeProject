@@ -145,7 +145,11 @@ public class Player : Unit_Base
         Collider2D[] items = Physics2D.OverlapCircleAll(Position.position, _pickUpRange, LayerMask.GetMask("Item"));
         foreach (Collider2D collider in items)
         {
-            collider.gameObject.SetActive(false);
+            DropItem dropItem = collider.GetComponent<DropItem>();
+            if (dropItem != null)
+            {
+                dropItem.PickUp();
+            }
         }
     }
 
@@ -215,11 +219,6 @@ public class Player : Unit_Base
     {
         _hit_invincibleTime_value -= Time.deltaTime;
         _hit_invincibleTime_value %= _hit_invincibleTime;
-    }
-
-    private void LateUpdate()
-    {
-        _sprite.sortingOrder = (int)(_position.position.y * -100);
     }
 
     //private void FixedUpdate()

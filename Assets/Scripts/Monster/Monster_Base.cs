@@ -469,10 +469,7 @@ public class Monster_Base : Unit_Base
         _freeMove_notMoveDirChangeTime_value %= _freeMove_notMoveDirChangeTime;
     }
 
-    private void LateUpdate()
-    {
-        _sprite.sortingOrder = (int)(_position.position.y * -100);
-    }
+
 
     protected virtual void OnDisable()
     {

@@ -86,4 +86,9 @@ public class Unit_Base : MonoBehaviour
         _rigid.velocity = Vector2.zero;
     }
 
+    protected void LateUpdate()
+    {
+        _sprite.sortingOrder = (int)(_position.position.y * -100);
+    }
+
 }

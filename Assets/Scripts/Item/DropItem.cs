@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DropItem : MonoBehaviour
+public class DropItem : PoolObjectShape
 {
     ItemData _itemData;
     public ItemData ItemData
@@ -33,9 +33,19 @@ public class DropItem : MonoBehaviour
     Transform _child;
     public float _rotSpeed = 360f;
 
+    public float _remainTime = 10.0f;
     private void Awake()
     {
         _child = transform.GetChild(0);
+    }
+
+    private void OnEnable()
+    {
+        StopAllCoroutines();
+        if (gameObject.activeSelf == true)
+        {
+            StartCoroutine(LifeOver(_remainTime));
+        }
     }
 
     private void Update()

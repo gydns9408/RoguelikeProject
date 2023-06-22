@@ -143,6 +143,10 @@ public class Player : Unit_Base
     private void OnPickUpInput(InputAction.CallbackContext _)
     {
         Collider2D[] items = Physics2D.OverlapCircleAll(Position.position, _pickUpRange, LayerMask.GetMask("Item"));
+        foreach (Collider2D collider in items)
+        {
+            collider.gameObject.SetActive(false);
+        }
     }
 
     private void CreateSlashEffect()

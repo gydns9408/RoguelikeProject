@@ -70,6 +70,7 @@ public class DropItem : PoolObjectShape
     private void FixedUpdate()
     {
         _rigid.transform.position = _rigid.transform.position + Time.fixedDeltaTime * _moveSpeed * (Vector3)_moveDir;
+        _rigid.velocity = Vector2.zero;
     }
 
     public void PickUp()
@@ -88,9 +89,9 @@ public class DropItem : PoolObjectShape
         {
             color.a -= Time.deltaTime;
             _sprite.color = color;
-            if ((GameManager.Instance.Player.Position.position - transform.position).sqrMagnitude > 0.2f)
+            if ((GameManager.Instance.Player.Position.position - _position.position).sqrMagnitude > 0.2f)
             {
-                Vector3 moveDir = (GameManager.Instance.Player.Position.position - transform.position).normalized;
+                Vector3 moveDir = (GameManager.Instance.Player.Position.position - _position.position).normalized;
                 _moveDir = moveDir;
             }
             yield return null;

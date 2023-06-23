@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.EventSystems;
 
-public class ItemSlotUI : MonoBehaviour
+public class ItemSlotUI : MonoBehaviour, IDropHandler
 {
     ItemSlot _slot;
     Image _itemIcon;
@@ -24,6 +25,19 @@ public class ItemSlotUI : MonoBehaviour
     {
         _slot = slot;
         Refresh();
+    }
+
+    public void OnDrop(PointerEventData eventData)
+    {
+        ItemIcon dropItem = eventData.pointerDrag.GetComponent<ItemIcon>();
+        if (dropItem != null)
+        {
+
+        }
+        else
+        {
+            return;
+        }
     }
 
     public void Refresh()

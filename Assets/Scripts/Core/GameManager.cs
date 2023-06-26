@@ -12,6 +12,9 @@ public class GameManager : Singleton<GameManager>
     PlayerInfoUI _playerInfoUI;
     public Player Player => _player;
 
+    ItemDataManager _itemDataManager;
+    public ItemDataManager ItemData => _itemDataManager;
+
     bool _isVisible_enemyHpBar = true;
     public bool IsVisible_enemyHpBar => _isVisible_enemyHpBar;
     public Action<bool> _onChange_isVisible_enemyHpBar;
@@ -30,6 +33,7 @@ public class GameManager : Singleton<GameManager>
         if (_initialized == false)
         {
             _initialized = true;
+            _itemDataManager = GetComponent<ItemDataManager>();
             _inputActions = new SystemSettingInputActions();
             _inputActions.System.Enable();
             _inputActions.System.MonsterHpBarVisible.performed += OnMonster_HpBarVisible_Option_Input;

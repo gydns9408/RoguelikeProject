@@ -18,7 +18,7 @@ public class ItemIcon : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
     public uint ItemAmount => _itemAmount;
 
     Vector3 _orgPos;
-    public Transform OrgParent
+    public ItemSlotUI OrgParent
     {
         get; private set;
     }
@@ -34,10 +34,15 @@ public class ItemIcon : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
     public void OnBeginDrag(PointerEventData eventData)
     {
         _orgPos = transform.position;
-        OrgParent = transform.parent;
         _dragOffset = (Vector2)transform.position - eventData.position;
         transform.SetParent(_parentParent);
         _itemIcon.raycastTarget = false;
+        Color color1 = _itemIcon.color;
+        color1.a = 0.5f;
+        _itemIcon.color = color1;
+        Color color2 = _itemAmountText.color;
+        color2.a = 0.5f;
+        _itemAmountText.color = color2;
     }
 
     public void OnDrag(PointerEventData eventData)
@@ -51,18 +56,25 @@ public class ItemIcon : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
         _itemIcon.raycastTarget = true;
         if (transform.parent == _parentParent)
         {
-            transform.SetParent(OrgParent);
+            transform.SetParent(OrgParent.transform);
         }
+        Color color1 = _itemIcon.color;
+        color1.a = 1f;
+        _itemIcon.color = color1;
+        Color color2 = _itemAmountText.color;
+        color2.a = 1f;
+        _itemAmountText.color = color2;
     }
 
-    public void SetParent(Transform parent, bool rePos = false)
+    public void SetParent(ItemSlotUI parent, bool rePos = false)
     {
-        transform.SetParent(parent);
-        _orgPos = parent.position + _position_modify_value;
+        transform.SetParent(parent.transform);
+        _orgPos = parent.transform.position + _position_modify_value;
         if(rePos)
         {
-            transform.position = parent.position + _position_modify_value;
+            transform.position = parent.transform.position + _position_modify_value;
         }
+        OrgParent = parent;
     }
 
     public void OnPointerClick(PointerEventData eventData)
@@ -70,28 +82,24 @@ public class ItemIcon : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
 
     }
 
-    public void SlotSetting(ItemData itemData, uint itemAmount)
+    public void IconSetting(ItemData itemData, uint itemAmount)
     {
-        if (ItemData != itemData)
-        {
-            _itemData = itemData;
-        }
+        OrgParent.Slot.SlotSetting(itemData, itemAmount);
         if (itemAmount != 0)
         {
-            if (ItemAmount != itemAmount)
-            {
-                _itemAmount = itemAmount;
-            }
+            _itemData = itemData;
+            _itemAmount = itemAmount;
+            _itemIcon.sprite = _itemData.itemIcon;
+            _itemAmountText.text = itemAmount.ToString();
+            
         }
         else
         {
-            _itemData = null;
-            _itemAmount = 0;
-        }
-        if (_itemData != null)
-        {
-            _itemIcon.sprite = _itemData.itemIcon;
-            _itemAmountText.text = itemAmount.ToString();
+            if(OrgParent != null)
+            {
+                OrgParent.SetChild(null);
+            }
+            gameObject.SetActive(false);
         }
     }
 }

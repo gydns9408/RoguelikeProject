@@ -8,10 +8,10 @@ public class DropItem : PoolObjectShape
     public ItemData ItemData
     {
         get => _itemData;
-        set
+        private set
         {
-            if (_itemData == null)
-            {
+            if (_itemData == null) 
+            { 
                 _itemData = value;
             }
         }
@@ -21,7 +21,7 @@ public class DropItem : PoolObjectShape
     public uint ItemAmount
     {
         get => _itemAmount;
-        set
+        private set
         {
             if (_itemAmount == 0)
             {
@@ -36,8 +36,6 @@ public class DropItem : PoolObjectShape
     SpriteRenderer _sprite;
 
     bool _isAlive = false;
-
-    public float _rotSpeed = 360f;
     public float _moveSpeed = 1.0f;
     Vector2 _moveDir;
 
@@ -62,11 +60,10 @@ public class DropItem : PoolObjectShape
         _isAlive = true;
     }
 
-    private void Update()
+    public void DropItemSetting()
     {
-        _child.Rotate(0f, _rotSpeed * Time.deltaTime, 0f);
+        
     }
-
     private void FixedUpdate()
     {
         _rigid.transform.position = _rigid.transform.position + Time.fixedDeltaTime * _moveSpeed * (Vector3)_moveDir;

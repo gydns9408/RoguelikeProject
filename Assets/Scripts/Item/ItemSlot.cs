@@ -18,16 +18,10 @@ public class ItemSlot
 
     public void SlotSetting(ItemData itemData, uint itemAmount)
     {
-        if (ItemData != itemData)
-        { 
-            _itemData = itemData;
-        }
         if (itemAmount != 0)
         {
-            if (ItemAmount != itemAmount)
-            {
-                _itemAmount = itemAmount;
-            }
+            _itemData = itemData;
+            _itemAmount = itemAmount;
         }
         else
         {

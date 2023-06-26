@@ -5,15 +5,15 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using TMPro;
 
-public class ItemIcon : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerClickHandler
+public class ItemIcon : PoolObjectShape, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerClickHandler
 {
     Image _itemIcon;
     TextMeshProUGUI _itemAmountText;
     Transform _parentParent;
     Vector3 _position_modify_value = new Vector3(0, 12.9f, 0);
 
-    ItemData _itemData;
-    public ItemData ItemData => _itemData;
+    ItemCode _itemCode;
+    public ItemCode ItemCode => _itemCode;
     uint _itemAmount;
     public uint ItemAmount => _itemAmount;
 
@@ -75,6 +75,7 @@ public class ItemIcon : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
             transform.position = parent.transform.position + _position_modify_value;
         }
         OrgParent = parent;
+        OrgParent.Slot.SlotSetting(_itemCode, _itemAmount);
     }
 
     public void OnPointerClick(PointerEventData eventData)
@@ -82,14 +83,14 @@ public class ItemIcon : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
 
     }
 
-    public void IconSetting(ItemData itemData, uint itemAmount)
+    public void IconSetting(ItemCode itemCode, uint itemAmount)
     {
-        OrgParent.Slot.SlotSetting(itemData, itemAmount);
+        OrgParent.Slot.SlotSetting(itemCode, itemAmount);
         if (itemAmount != 0)
         {
-            _itemData = itemData;
+            _itemCode = itemCode;
             _itemAmount = itemAmount;
-            _itemIcon.sprite = _itemData.itemIcon;
+            _itemIcon.sprite = GameManager.Instance.ItemData[_itemCode].itemIcon;
             _itemAmountText.text = itemAmount.ToString();
             
         }

@@ -5,5 +5,5 @@ using UnityEngine;
 public class ItemDataManager : MonoBehaviour
 {
     public ItemData[] ItemDatas;
-    public ItemData this[ItemType type] => ItemDatas[(int)type];
+    public ItemData this[ItemCode type] => ItemDatas[(int)type];
 }

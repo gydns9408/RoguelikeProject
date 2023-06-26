@@ -4,15 +4,15 @@ using UnityEngine;
 
 public class DropItem : PoolObjectShape
 {
-    ItemData _itemData;
-    public ItemData ItemData
+    ItemCode _itemCode;
+    public ItemCode ItemCode
     {
-        get => _itemData;
+        get => _itemCode;
         private set
         {
-            if (_itemData == null) 
+            if (_itemCode == ItemCode.None) 
             { 
-                _itemData = value;
+                _itemCode = value;
             }
         }
     }

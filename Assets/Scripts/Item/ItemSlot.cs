@@ -6,8 +6,8 @@ public class ItemSlot
 {
     uint _slotNum;
     public uint SlotNum => _slotNum;
-    ItemData _itemData;
-    public ItemData ItemData => _itemData;
+    ItemCode _itemCode;
+    public ItemCode ItemCode => _itemCode;
     uint _itemAmount;
     public uint ItemAmount => _itemAmount;
 
@@ -16,16 +16,16 @@ public class ItemSlot
         _slotNum = slotNum;
     }
 
-    public void SlotSetting(ItemData itemData, uint itemAmount)
+    public void SlotSetting(ItemCode itemCode, uint itemAmount)
     {
         if (itemAmount != 0)
         {
-            _itemData = itemData;
+            _itemCode = itemCode;
             _itemAmount = itemAmount;
         }
         else
         {
-            _itemData = null;
+            _itemCode = ItemCode.None;
             _itemAmount = 0;
         }
     }

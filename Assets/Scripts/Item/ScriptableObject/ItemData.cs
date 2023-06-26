@@ -2,8 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum ItemType
+public enum ItemCode
 {
+    None,
     BeastMeat
 }
 
@@ -11,7 +12,7 @@ public enum ItemType
 public class ItemData : ScriptableObject
 {
     [Header("아이템 기본 데이터")]
-    public ItemType itmeType;
+    public ItemCode itmeCode;
     public string itemName = "아이템이름";
     public GameObject dropItmePrefab;
     public Sprite itemIcon;

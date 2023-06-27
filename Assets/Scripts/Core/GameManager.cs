@@ -9,8 +9,10 @@ using UnityEngine.SceneManagement;
 public class GameManager : Singleton<GameManager>
 {
     Player _player;
-    PlayerInfoUI _playerInfoUI;
     public Player Player => _player;
+    PlayerInfoUI _playerInfoUI;
+    ItemInventoryUI _invenUI;
+    public ItemInventoryUI InvenUI => _invenUI;
 
     ItemDataManager _itemDataManager;
     public ItemDataManager ItemData => _itemDataManager;
@@ -28,6 +30,9 @@ public class GameManager : Singleton<GameManager>
 
     public uint _inventorySlotAmount = 20;
 
+    bool _invenUIItemSplitMode;
+    public bool InvenUIItemSplitMode => _invenUIItemSplitMode;
+
     protected override void RunOnlyOnce_Initialize()
     {
         if (_initialized == false)
@@ -38,6 +43,8 @@ public class GameManager : Singleton<GameManager>
             _inputActions.System.Enable();
             _inputActions.System.MonsterHpBarVisible.performed += OnMonster_HpBarVisible_Option_Input;
             _inputActions.System.PlayerInfoUIVisible.performed += OnUI_PlayerInfoUIVisible_Option_Input;
+            _inputActions.System.InvenUIItemSplitMode.performed += OnUI_InvenItemSplitMode_Option_Input;
+            _inputActions.System.InvenUIItemSplitMode.canceled += OnUI_InvenItemSplitMode_Option_Input;
         }
     }
     protected override void Initialize()
@@ -45,8 +52,8 @@ public class GameManager : Singleton<GameManager>
         _player = FindObjectOfType<Player>();
         _playerInfoUI = FindObjectOfType<PlayerInfoUI>();
         ItemInventory itemInventory = new ItemInventory(_inventorySlotAmount, _player);
-        ItemInventoryUI itemUI = FindObjectOfType<ItemInventoryUI>();
-        itemUI.Initialize(itemInventory);
+        _invenUI = FindObjectOfType<ItemInventoryUI>();
+        _invenUI.Initialize(itemInventory);
         StartCoroutine(Monster_Spawn(10f));
     }
     private void OnMonster_HpBarVisible_Option_Input(InputAction.CallbackContext _)
@@ -67,7 +74,12 @@ public class GameManager : Singleton<GameManager>
         }
     }
 
-    private void OnDisable()
+    private void OnUI_InvenItemSplitMode_Option_Input(InputAction.CallbackContext context)
+    {
+        _invenUIItemSplitMode = context.performed;
+    }
+
+        private void OnDisable()
     {
         _inputActions.System.PlayerInfoUIVisible.performed -= OnUI_PlayerInfoUIVisible_Option_Input;
         _inputActions.System.MonsterHpBarVisible.performed -= OnMonster_HpBarVisible_Option_Input;

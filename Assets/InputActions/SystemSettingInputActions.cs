@@ -44,6 +44,15 @@ public partial class @SystemSettingInputActions : IInputActionCollection2, IDisp
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""InvenUIItemSplitMode"",
+                    ""type"": ""Button"",
+                    ""id"": ""96aecc83-0f4d-44f5-97d0-8a3d1888014a"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -66,6 +75,17 @@ public partial class @SystemSettingInputActions : IInputActionCollection2, IDisp
                     ""processors"": """",
                     ""groups"": ""KeyBoardAndMouse"",
                     ""action"": ""PlayerInfoUIVisible"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""16285176-5f7b-459e-9211-ed39fdb4e6d5"",
+                    ""path"": ""<Keyboard>/shift"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""KeyBoardAndMouse"",
+                    ""action"": ""InvenUIItemSplitMode"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -95,6 +115,7 @@ public partial class @SystemSettingInputActions : IInputActionCollection2, IDisp
         m_System = asset.FindActionMap("System", throwIfNotFound: true);
         m_System_MonsterHpBarVisible = m_System.FindAction("MonsterHpBarVisible", throwIfNotFound: true);
         m_System_PlayerInfoUIVisible = m_System.FindAction("PlayerInfoUIVisible", throwIfNotFound: true);
+        m_System_InvenUIItemSplitMode = m_System.FindAction("InvenUIItemSplitMode", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -156,12 +177,14 @@ public partial class @SystemSettingInputActions : IInputActionCollection2, IDisp
     private ISystemActions m_SystemActionsCallbackInterface;
     private readonly InputAction m_System_MonsterHpBarVisible;
     private readonly InputAction m_System_PlayerInfoUIVisible;
+    private readonly InputAction m_System_InvenUIItemSplitMode;
     public struct SystemActions
     {
         private @SystemSettingInputActions m_Wrapper;
         public SystemActions(@SystemSettingInputActions wrapper) { m_Wrapper = wrapper; }
         public InputAction @MonsterHpBarVisible => m_Wrapper.m_System_MonsterHpBarVisible;
         public InputAction @PlayerInfoUIVisible => m_Wrapper.m_System_PlayerInfoUIVisible;
+        public InputAction @InvenUIItemSplitMode => m_Wrapper.m_System_InvenUIItemSplitMode;
         public InputActionMap Get() { return m_Wrapper.m_System; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -177,6 +200,9 @@ public partial class @SystemSettingInputActions : IInputActionCollection2, IDisp
                 @PlayerInfoUIVisible.started -= m_Wrapper.m_SystemActionsCallbackInterface.OnPlayerInfoUIVisible;
                 @PlayerInfoUIVisible.performed -= m_Wrapper.m_SystemActionsCallbackInterface.OnPlayerInfoUIVisible;
                 @PlayerInfoUIVisible.canceled -= m_Wrapper.m_SystemActionsCallbackInterface.OnPlayerInfoUIVisible;
+                @InvenUIItemSplitMode.started -= m_Wrapper.m_SystemActionsCallbackInterface.OnInvenUIItemSplitMode;
+                @InvenUIItemSplitMode.performed -= m_Wrapper.m_SystemActionsCallbackInterface.OnInvenUIItemSplitMode;
+                @InvenUIItemSplitMode.canceled -= m_Wrapper.m_SystemActionsCallbackInterface.OnInvenUIItemSplitMode;
             }
             m_Wrapper.m_SystemActionsCallbackInterface = instance;
             if (instance != null)
@@ -187,6 +213,9 @@ public partial class @SystemSettingInputActions : IInputActionCollection2, IDisp
                 @PlayerInfoUIVisible.started += instance.OnPlayerInfoUIVisible;
                 @PlayerInfoUIVisible.performed += instance.OnPlayerInfoUIVisible;
                 @PlayerInfoUIVisible.canceled += instance.OnPlayerInfoUIVisible;
+                @InvenUIItemSplitMode.started += instance.OnInvenUIItemSplitMode;
+                @InvenUIItemSplitMode.performed += instance.OnInvenUIItemSplitMode;
+                @InvenUIItemSplitMode.canceled += instance.OnInvenUIItemSplitMode;
             }
         }
     }
@@ -204,5 +233,6 @@ public partial class @SystemSettingInputActions : IInputActionCollection2, IDisp
     {
         void OnMonsterHpBarVisible(InputAction.CallbackContext context);
         void OnPlayerInfoUIVisible(InputAction.CallbackContext context);
+        void OnInvenUIItemSplitMode(InputAction.CallbackContext context);
     }
 }

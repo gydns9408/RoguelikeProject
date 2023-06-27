@@ -22,6 +22,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "InvenUIItemSplitMode",
+                    "type": "Button",
+                    "id": "96aecc83-0f4d-44f5-97d0-8a3d1888014a",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -44,6 +53,17 @@
                     "processors": "",
                     "groups": "KeyBoardAndMouse",
                     "action": "PlayerInfoUIVisible",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "16285176-5f7b-459e-9211-ed39fdb4e6d5",
+                    "path": "<Keyboard>/shift",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "KeyBoardAndMouse",
+                    "action": "InvenUIItemSplitMode",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

@@ -9,6 +9,7 @@ public class ItemIcon : PoolObjectShape, IBeginDragHandler, IDragHandler, IEndDr
 {
     Image _itemIcon;
     TextMeshProUGUI _itemAmountText;
+    Transform _firstParent;
     Transform _parentParent;
     Vector3 _position_modify_value = new Vector3(0, 12.9f, 0);
 
@@ -28,7 +29,8 @@ public class ItemIcon : PoolObjectShape, IBeginDragHandler, IDragHandler, IEndDr
     {
         _itemIcon = GetComponentInChildren<Image>();
         _itemAmountText = GetComponentInChildren<TextMeshProUGUI>();
-        _parentParent = transform.parent.parent;
+        _firstParent = transform.parent;
+        _parentParent = GameManager.Instance.InvenUI.transform;
     }
 
     public void OnBeginDrag(PointerEventData eventData)
@@ -96,11 +98,17 @@ public class ItemIcon : PoolObjectShape, IBeginDragHandler, IDragHandler, IEndDr
         }
         else
         {
-            if(OrgParent != null)
-            {
-                OrgParent.SetChild(null);
-            }
-            gameObject.SetActive(false);
+            Before_OnDisable();
         }
+    }
+
+    private void Before_OnDisable()
+    {
+        if (OrgParent != null)
+        {
+            OrgParent.SetChild(null);
+        }
+        transform.SetParent(_firstParent);
+        gameObject.SetActive(false);
     }
 }

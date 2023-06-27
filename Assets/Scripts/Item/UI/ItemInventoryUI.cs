@@ -12,12 +12,16 @@ public class ItemInventoryUI : UI_Window_Base
     ItemInventory _inven;
     public ItemInventory Inven => _inven;
 
+    ItemSpliterUI _spliter;
+    public ItemSpliterUI Spliter => _spliter;
+
     public GameObject slotPrefab;
     
     // Start is called before the first frame update
     private void Awake()
     {
-       _slots = GetComponentsInChildren<ItemSlotUI>();
+        _slots = GetComponentsInChildren<ItemSlotUI>();
+        _spliter = GetComponentInChildren<ItemSpliterUI>();
     }
 
     public void Initialize(ItemInventory inven)

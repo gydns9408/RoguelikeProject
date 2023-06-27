@@ -5161,8 +5161,9 @@ GameObject:
   - component: {fileID: 988412590}
   - component: {fileID: 988412592}
   - component: {fileID: 988412591}
+  - component: {fileID: 988412593}
   m_Layer: 5
-  m_Name: ItemSpliterUI
+  m_Name: ItemSpliter
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5233,6 +5234,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 988412589}
   m_CullTransparentMesh: 1
+--- !u!114 &988412593
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 988412589}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6bdecac5516e40e408e29eaf6805ad34, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1016419284
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6868,7 +6881,7 @@ GameObject:
   - component: {fileID: 1556297517}
   - component: {fileID: 1556297516}
   m_Layer: 5
-  m_Name: Amount+Button (1)
+  m_Name: Amount-Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7204,7 +7217,7 @@ GameObject:
   - component: {fileID: 1669187122}
   - component: {fileID: 1669187121}
   m_Layer: 5
-  m_Name: CancleButton
+  m_Name: CancelButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

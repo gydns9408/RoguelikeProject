@@ -20,37 +20,40 @@ public class ItemSlotUI : MonoBehaviour, IDropHandler
 
     public void OnDrop(PointerEventData eventData)
     {
-        ItemIcon dropItem = eventData.pointerDrag.GetComponent<ItemIcon>();
-        if (dropItem == null) return;
-        if (dropItem.OrgParent != null)
+        if (!GameManager.Instance.InvenUI.Spliter.IsOpen)
         {
-            if (Slot.ItemCode != dropItem.ItemCode)
+            ItemIcon dropItem = eventData.pointerDrag.GetComponent<ItemIcon>();
+            if (dropItem == null) return;
+            if (dropItem.OrgParent != null)
             {
-                if (_myItem != null)
+                if (Slot.ItemCode != dropItem.ItemCode)
                 {
-                    _myItem.SetParent(dropItem.OrgParent, true);
+                    if (_myItem != null)
+                    {
+                        _myItem.SetParent(dropItem.OrgParent, true);
+                    }
+                    else
+                    {
+                        dropItem.OrgParent.Slot.SlotSetting(ItemCode.None, 0);
+                    }
+                    dropItem.OrgParent.SetChild(_myItem);
+                    _myItem = dropItem;
+                    _myItem.SetParent(this);
                 }
                 else
                 {
-                    dropItem.OrgParent.Slot.SlotSetting(ItemCode.None, 0);
-                }
-                dropItem.OrgParent.SetChild(_myItem);
-                _myItem = dropItem;
-                _myItem.SetParent(this);
-            }
-            else
-            {
-                if (Slot.ItemAmount < GameManager.Instance.ItemData[Slot.ItemCode].maxAmount)
-                {
-                    int overValue = Mathf.Min((int)(GameManager.Instance.ItemData[Slot.ItemCode].maxAmount - Slot.ItemAmount), (int)dropItem.ItemAmount);
-                    _myItem.IconSetting(_myItem.ItemCode, (uint)(_myItem.ItemAmount + overValue));
-                    dropItem.IconSetting(dropItem.ItemCode, (uint)(dropItem.ItemAmount - overValue));
-                }
-                else
-                {
-                    uint temp = dropItem.ItemAmount;
-                    dropItem.IconSetting(dropItem.ItemCode, _myItem.ItemAmount);
-                    _myItem.IconSetting(_myItem.ItemCode, temp);
+                    if (Slot.ItemAmount < GameManager.Instance.ItemData[Slot.ItemCode].maxAmount)
+                    {
+                        int overValue = Mathf.Min((int)(GameManager.Instance.ItemData[Slot.ItemCode].maxAmount - Slot.ItemAmount), (int)dropItem.ItemAmount);
+                        _myItem.IconSetting(_myItem.ItemCode, (uint)(_myItem.ItemAmount + overValue));
+                        dropItem.IconSetting(dropItem.ItemCode, (uint)(dropItem.ItemAmount - overValue));
+                    }
+                    else
+                    {
+                        uint temp = dropItem.ItemAmount;
+                        dropItem.IconSetting(dropItem.ItemCode, _myItem.ItemAmount);
+                        _myItem.IconSetting(_myItem.ItemCode, temp);
+                    }
                 }
             }
         }

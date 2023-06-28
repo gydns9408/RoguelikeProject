@@ -34,6 +34,8 @@ public class ItemSpliterUI : UI_Window_Base
         }
     }
 
+    public bool IsOpen => gameObject.activeSelf;
+
     private void Awake()
     {
         Transform child = transform.GetChild(0);
@@ -48,7 +50,7 @@ public class ItemSpliterUI : UI_Window_Base
         _itemAmount_plusButton.onClick.AddListener(() => ItemSplitAmount++);
         child = transform.GetChild(4);
         _itemAmount_minusButton = child.GetComponent<Button>();
-        _itemAmount_plusButton.onClick.AddListener(() => ItemSplitAmount--);
+        _itemAmount_minusButton.onClick.AddListener(() => ItemSplitAmount--);
         child = transform.GetChild(5);
         _okButton = child.GetComponent<Button>();
         child = transform.GetChild(6);

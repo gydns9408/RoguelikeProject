@@ -35,37 +35,46 @@ public class ItemIcon : PoolObjectShape, IBeginDragHandler, IDragHandler, IEndDr
 
     public void OnBeginDrag(PointerEventData eventData)
     {
-        _orgPos = transform.position;
-        _dragOffset = (Vector2)transform.position - eventData.position;
-        transform.SetParent(_parentParent);
-        _itemIcon.raycastTarget = false;
-        Color color1 = _itemIcon.color;
-        color1.a = 0.5f;
-        _itemIcon.color = color1;
-        Color color2 = _itemAmountText.color;
-        color2.a = 0.5f;
-        _itemAmountText.color = color2;
+        if (!GameManager.Instance.InvenUI.Spliter.IsOpen)
+        {
+            _orgPos = transform.position;
+            _dragOffset = (Vector2)transform.position - eventData.position;
+            transform.SetParent(_parentParent);
+            _itemIcon.raycastTarget = false;
+            Color color1 = _itemIcon.color;
+            color1.a = 0.5f;
+            _itemIcon.color = color1;
+            Color color2 = _itemAmountText.color;
+            color2.a = 0.5f;
+            _itemAmountText.color = color2;
+        }
     }
 
     public void OnDrag(PointerEventData eventData)
     {
-        transform.position = eventData.position + _dragOffset;
+        if (!GameManager.Instance.InvenUI.Spliter.IsOpen)
+        {
+            transform.position = eventData.position + _dragOffset;
+        }
     }
 
     public void OnEndDrag(PointerEventData eventData)
     {
-        transform.position = _orgPos;
-        _itemIcon.raycastTarget = true;
-        if (transform.parent == _parentParent)
+        if (!GameManager.Instance.InvenUI.Spliter.IsOpen)
         {
-            transform.SetParent(OrgParent.transform);
+            transform.position = _orgPos;
+            _itemIcon.raycastTarget = true;
+            if (transform.parent == _parentParent)
+            {
+                transform.SetParent(OrgParent.transform);
+            }
+            Color color1 = _itemIcon.color;
+            color1.a = 1f;
+            _itemIcon.color = color1;
+            Color color2 = _itemAmountText.color;
+            color2.a = 1f;
+            _itemAmountText.color = color2;
         }
-        Color color1 = _itemIcon.color;
-        color1.a = 1f;
-        _itemIcon.color = color1;
-        Color color2 = _itemAmountText.color;
-        color2.a = 1f;
-        _itemAmountText.color = color2;
     }
 
     public void SetParent(ItemSlotUI parent, bool rePos = false)

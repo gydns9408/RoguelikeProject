@@ -64,4 +64,12 @@ public class ItemSlotUI : MonoBehaviour, IDropHandler
         _myItem = child;
     }
 
+    public void MyItemRefresh()
+    {
+        if (_myItem != null)
+        {
+            _myItem.IconSetting(Slot.ItemCode, Slot.ItemAmount, true);
+        }
+    }
+
 }

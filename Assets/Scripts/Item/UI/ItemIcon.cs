@@ -97,9 +97,12 @@ public class ItemIcon : PoolObjectShape, IBeginDragHandler, IDragHandler, IEndDr
         }
     }
 
-    public void IconSetting(ItemCode itemCode, uint itemAmount)
+    public void IconSetting(ItemCode itemCode, uint itemAmount, bool isSlotChange = false)
     {
-        OrgParent.Slot.SlotSetting(itemCode, itemAmount);
+        if (!isSlotChange)
+        {
+            OrgParent.Slot.SlotSetting(itemCode, itemAmount);
+        }
         if (itemAmount != 0)
         {
             _itemCode = itemCode;

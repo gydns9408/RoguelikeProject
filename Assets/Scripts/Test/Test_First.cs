@@ -43,6 +43,7 @@ public class Test_First : Test_Base
         slotUI3.SetChild(icon3);
         icon3.SetParent(slotUI3, true);
         icon3.IconSetting(ItemCode.BeastMeat, 10);
+        
     }
 
 }

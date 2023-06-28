@@ -16,7 +16,7 @@ public class ItemSlot
         _slotNum = slotNum;
     }
 
-    public void SlotSetting(ItemCode itemCode, uint itemAmount)
+    public void SlotSetting(ItemCode itemCode, uint itemAmount, bool isSlotChange = false)
     {
         if (itemAmount != 0)
         {
@@ -27,6 +27,10 @@ public class ItemSlot
         {
             _itemCode = ItemCode.None;
             _itemAmount = 0;
+        }
+        if (isSlotChange)
+        {
+            GameManager.Instance.InvenUI.ItemSlotUI[SlotNum].MyItemRefresh();
         }
     }
 }

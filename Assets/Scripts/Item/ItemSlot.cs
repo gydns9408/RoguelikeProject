@@ -18,6 +18,13 @@ public class ItemSlot
 
     public void SlotSetting(ItemCode itemCode, uint itemAmount, bool isSlotChange = false)
     {
+        if (_itemAmount != itemAmount && _itemAmount == 0 && isSlotChange)
+        {
+            ItemIcon icon = SpawnManager_Etc.Instance.GetObject_ItemIcon();
+            GameManager.Instance.InvenUI.ItemSlotUI[SlotNum].SetChild(icon);
+            icon.SetParent(GameManager.Instance.InvenUI.ItemSlotUI[SlotNum], true);
+            icon.IconSetting(itemCode, itemAmount, true);
+        }
         if (itemAmount != 0)
         {
             _itemCode = itemCode;

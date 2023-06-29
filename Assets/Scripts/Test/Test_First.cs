@@ -31,19 +31,30 @@ public class Test_First : Test_Base
     {
         //invenUI.Inven[0].SlotSetting(itemDataManager[ItemCode.BeastMeat], 10);
         //invenUI.ItemSlotUI[0].Refresh();
-        icon = SpawnManager_Etc.Instance.GetObject_ItemIcon();
-        slotUI.SetChild(icon);
-        icon.SetParent(slotUI, true);
-        icon.IconSetting(ItemCode.BeastMeat, 1);
-        icon2 = SpawnManager_Etc.Instance.GetObject_ItemIcon();
-        slotUI2.SetChild(icon2);
-        icon2.SetParent(slotUI2, true);
-        icon2.IconSetting(ItemCode.BeastMeat, 2);
-        icon3 = SpawnManager_Etc.Instance.GetObject_ItemIcon();
-        slotUI3.SetChild(icon3);
-        icon3.SetParent(slotUI3, true);
-        icon3.IconSetting(ItemCode.BeastMeat, 10);
-        
+        //icon = SpawnManager_Etc.Instance.GetObject_ItemIcon();
+        //slotUI.SetChild(icon);
+        //icon.SetParent(slotUI, true);
+        //icon.IconSetting(ItemCode.BeastMeat, 1);
+        //icon2 = SpawnManager_Etc.Instance.GetObject_ItemIcon();
+        //slotUI2.SetChild(icon2);
+        //icon2.SetParent(slotUI2, true);
+        //icon2.IconSetting(ItemCode.BeastMeat, 2);
+        //icon3 = SpawnManager_Etc.Instance.GetObject_ItemIcon();
+        //slotUI3.SetChild(icon3);
+        //icon3.SetParent(slotUI3, true);
+        //icon3.IconSetting(ItemCode.BeastMeat, 10);
+        if (!GameManager.Instance.InvenUI.Inven.AddItem(ItemCode.BeastMeat, 1, out uint overCount))
+        {
+            Debug.Log("아이템 추가 실패");
+        }
+        if (!GameManager.Instance.InvenUI.Inven.AddItem(ItemCode.BeastMeat, 2, out uint overCount2))
+        {
+            Debug.Log("아이템 추가 실패");
+        }
+        if (!GameManager.Instance.InvenUI.Inven.AddItem(ItemCode.BeastMeat, 10, out uint overCount3))
+        {
+            Debug.Log("아이템 추가 실패");
+        }
     }
 
 }

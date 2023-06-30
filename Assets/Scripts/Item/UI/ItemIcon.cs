@@ -91,7 +91,7 @@ public class ItemIcon : PoolObjectShape, IBeginDragHandler, IDragHandler, IEndDr
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        if (GameManager.Instance.InvenUIItemSplitMode)
+        if (GameManager.Instance.InvenUIItemSplitMode && _itemAmount > 1)
         {
             GameManager.Instance.InvenUI.Spliter.Open(OrgParent.Slot);
         }

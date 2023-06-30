@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class IdleStateClass : StateMachineBehaviour
+public class ClosedStateClass : StateMachineBehaviour
 {
     ItemSpliterUI _spliter;
 
@@ -13,11 +13,6 @@ public class IdleStateClass : StateMachineBehaviour
 
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        _spliter.FullOpen();
-    }
-
-    override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
-    {
-        _spliter.StartClose();
+        _spliter.Close();
     }
 }

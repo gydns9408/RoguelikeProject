@@ -39,6 +39,8 @@ public class ItemSpliterUI : UI_Window_Base
 
     public bool IsOpen => gameObject.activeSelf;
 
+    readonly int _isCloseHash = Animator.StringToHash("IsClose");
+
     private void Awake()
     {
         Transform child = transform.GetChild(0);
@@ -46,26 +48,33 @@ public class ItemSpliterUI : UI_Window_Base
         _itemAmount_slider = GetComponentInChildren<Slider>();
         _itemAmount_slider.onValueChanged.AddListener(ItemAmount_SliderChange);
         _itemAmount_slider.minValue = _itemSplitAmount_min;
+        _itemAmount_slider.interactable = false;
         _itemAmount_inputField = GetComponentInChildren<TMP_InputField>();
         _itemAmount_inputField.onValueChanged.AddListener(ItemAmount_InputFieldChange);
+        _itemAmount_inputField.interactable = false;
         child = transform.GetChild(3);
         _itemAmount_plusButton = child.GetComponent<Button>();
-        _itemAmount_plusButton.onClick.AddListener(() =>
-        {
-            if (_isFullOpen)
-            {
-                ItemSplitAmount++;
-            }
-        });
+        _itemAmount_plusButton.onClick.AddListener(() => ItemSplitAmount++);
+        _itemAmount_plusButton.enabled = false;
         child = transform.GetChild(4);
         _itemAmount_minusButton = child.GetComponent<Button>();
         _itemAmount_minusButton.onClick.AddListener(() => ItemSplitAmount--);
-        child = transform.GetChild(5);
+        _itemAmount_minusButton.enabled = false;
+         child = transform.GetChild(5);
         _okButton = child.GetComponent<Button>();
+        _okButton.enabled = false;
         child = transform.GetChild(6);
         _okButton.onClick.AddListener(ItemSplit);
         _cancelButton = child.GetComponent<Button>();
-        _cancelButton.onClick.AddListener(() => Close());
+        _cancelButton.onClick.AddListener(() => 
+        {
+            if (_isFullOpen)
+            {
+                _isFullOpen = false;
+                StartClose();
+            }
+        });
+        _cancelButton.enabled = false;
         _anim = GetComponent<Animator>();
     }
 
@@ -87,6 +96,7 @@ public class ItemSpliterUI : UI_Window_Base
     {
         if (_isFullOpen)
         {
+            _isFullOpen = false;
             if (!GameManager.Instance.InvenUI.Inven.AddItem_EmptySlot(_linked_itemSlot.ItemCode, ItemSplitAmount))
             {
                 Debug.Log("ºóÄ­¾ø¾î");
@@ -95,7 +105,7 @@ public class ItemSpliterUI : UI_Window_Base
             {
                 _linked_itemSlot.SlotSetting(_linked_itemSlot.ItemCode, _linked_itemSlot.ItemAmount - ItemSplitAmount, true);
             }
-            Close();
+            StartClose();
         }
     }
 
@@ -119,11 +129,23 @@ public class ItemSpliterUI : UI_Window_Base
 
     public void FullOpen()
     {
+        _itemAmount_plusButton.enabled = true;
+        _itemAmount_minusButton.enabled = true;
+        _okButton.enabled = true;
+        _cancelButton.enabled = true;
+        _itemAmount_slider.interactable = true;
+        _itemAmount_inputField.interactable = true;
         _isFullOpen = true;
     }
 
     public void StartClose()
     {
-        _isFullOpen = false;
+        _itemAmount_plusButton.enabled = false;
+        _itemAmount_minusButton.enabled = false;
+        _okButton.enabled = false;
+        _cancelButton.enabled = false;
+        _itemAmount_slider.interactable = false;
+        _itemAmount_inputField.interactable = false;
+        _anim.SetTrigger(_isCloseHash);
     }
 }

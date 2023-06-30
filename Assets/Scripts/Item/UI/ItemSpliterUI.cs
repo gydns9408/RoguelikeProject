@@ -6,6 +6,8 @@ using UnityEngine.UI;
 
 public class ItemSpliterUI : UI_Window_Base
 {
+    bool _isFullOpen = false;
+
     ItemSlot _linked_itemSlot;
 
     Image _itemImage;
@@ -15,6 +17,7 @@ public class ItemSpliterUI : UI_Window_Base
     Button _itemAmount_minusButton;
     Button _okButton;
     Button _cancelButton;
+    Animator _anim;
 
     const uint _itemSplitAmount_min = 1;
 
@@ -47,15 +50,23 @@ public class ItemSpliterUI : UI_Window_Base
         _itemAmount_inputField.onValueChanged.AddListener(ItemAmount_InputFieldChange);
         child = transform.GetChild(3);
         _itemAmount_plusButton = child.GetComponent<Button>();
-        _itemAmount_plusButton.onClick.AddListener(() => ItemSplitAmount++);
+        _itemAmount_plusButton.onClick.AddListener(() =>
+        {
+            if (_isFullOpen)
+            {
+                ItemSplitAmount++;
+            }
+        });
         child = transform.GetChild(4);
         _itemAmount_minusButton = child.GetComponent<Button>();
         _itemAmount_minusButton.onClick.AddListener(() => ItemSplitAmount--);
         child = transform.GetChild(5);
         _okButton = child.GetComponent<Button>();
         child = transform.GetChild(6);
+        _okButton.onClick.AddListener(ItemSplit);
         _cancelButton = child.GetComponent<Button>();
         _cancelButton.onClick.AddListener(() => Close());
+        _anim = GetComponent<Animator>();
     }
 
     private void Start()
@@ -72,6 +83,23 @@ public class ItemSpliterUI : UI_Window_Base
         gameObject.SetActive(true);
     }
 
+    private void ItemSplit()
+    {
+        if (_isFullOpen)
+        {
+            if (!GameManager.Instance.InvenUI.Inven.AddItem_EmptySlot(_linked_itemSlot.ItemCode, ItemSplitAmount))
+            {
+                Debug.Log("ºóÄ­¾ø¾î");
+            }
+            else
+            {
+                _linked_itemSlot.SlotSetting(_linked_itemSlot.ItemCode, _linked_itemSlot.ItemAmount - ItemSplitAmount, true);
+            }
+            Close();
+        }
+    }
+
+
     private void ItemAmount_InputFieldChange(string value)
     {
         if (uint.TryParse(value, out uint result))
@@ -87,5 +115,15 @@ public class ItemSpliterUI : UI_Window_Base
     private void ItemAmount_SliderChange(float value)
     {
         ItemSplitAmount = (uint)value;
+    }
+
+    public void FullOpen()
+    {
+        _isFullOpen = true;
+    }
+
+    public void StartClose()
+    {
+        _isFullOpen = false;
     }
 }

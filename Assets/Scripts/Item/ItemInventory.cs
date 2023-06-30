@@ -47,96 +47,11 @@ public class ItemInventory
         return result;
     }
 
-    public bool CheckIsPossibleAddItem(ItemCode itemCode, uint itemAmount, out uint overAmount)
+    public bool AddItem(ItemCode itemCode, uint itemAmount, out uint overCount)
     {
         bool result = false;
-        uint startIndex = 0;
-        ItemSlot targetSlot = null;
-        uint first_itemAmount = itemAmount;
-        overAmount = itemAmount;
-
-        while (true)
-        {
-            targetSlot = FindSameItemHaveSlot(itemCode, startIndex);
-            if (targetSlot != null)
-            {
-                uint remainAmount = GameManager.Instance.ItemData[itemCode].maxAmount - targetSlot.ItemAmount;
-                if (itemAmount > remainAmount)
-                {
-                    itemAmount -= remainAmount;
-                    startIndex = targetSlot.SlotNum + 1;
-                }
-                else
-                {
-                    result = true;
-                    break;
-                }
-            }
-            else
-            {
-                break;
-            }
-        }
-
-        if (!result)
-        { 
-            startIndex = 0;
-            while (true)
-            {
-                targetSlot = FindSameItemHaveSlot(ItemCode.None, startIndex);
-                if (targetSlot != null)
-                {
-                    if (itemAmount > GameManager.Instance.ItemData[itemCode].maxAmount)
-                    {
-                        itemAmount -= GameManager.Instance.ItemData[itemCode].maxAmount;
-                        startIndex = targetSlot.SlotNum + 1;
-                    }
-                    else
-                    {
-                        result = true;
-                        break;
-                    }
-                }
-                else
-                {
-                    break;
-                }
-            }
-        }
-        if (!result && first_itemAmount > itemAmount)
-        {
-            overAmount = first_itemAmount - itemAmount;
-        }
-        return result;
-    }
-
-    public bool AddItem(ItemCode itemCode, uint itemAmount, out uint overCount, bool firstRun = true)
-    {
-        bool result = false;
-        bool checkPass = !firstRun;
+        bool last = true;
         overCount = itemAmount;
-
-        if (!checkPass)
-        {
-            if (!CheckIsPossibleAddItem(itemCode, itemAmount, out uint overAmount))
-            {
-                if (overAmount == itemAmount)
-                {
-                    return false;
-                }
-                else
-                {
-                    overCount = overAmount;
-                    result = AddItem(itemCode, itemAmount - overAmount, out uint overC, false);
-                }
-            }
-            else
-            {
-                overCount = 0;
-            }
-        }
-
-        if (result) return true;
 
         ItemSlot targetSlot = FindSameItemHaveSlot(itemCode);
         if (targetSlot != null)
@@ -145,11 +60,14 @@ public class ItemInventory
             if (remainAmount < itemAmount)
             {
                 targetSlot.SlotSetting(itemCode, GameManager.Instance.ItemData[itemCode].maxAmount, true);
-                result = AddItem(itemCode, itemAmount - remainAmount, out uint overC, false);
+                result = AddItem(itemCode, itemAmount - remainAmount, out uint overC);
+                last = false;
+                overCount = overC;
             }
             else
             {
                 targetSlot.SlotSetting(itemCode, targetSlot.ItemAmount + itemAmount, true);
+                overCount = 0;
                 result = true;
             }
         }
@@ -161,17 +79,37 @@ public class ItemInventory
                 if (GameManager.Instance.ItemData[itemCode].maxAmount < itemAmount)
                 {
                     targetSlot.SlotSetting(itemCode, GameManager.Instance.ItemData[itemCode].maxAmount, true);
-                    result = AddItem(itemCode, itemAmount - GameManager.Instance.ItemData[itemCode].maxAmount, out uint overC, false);
+                    result = AddItem(itemCode, itemAmount - GameManager.Instance.ItemData[itemCode].maxAmount, out uint overC);
+                    last = false;
+                    overCount = overC;
                 }
                 else
                 {
                     targetSlot.SlotSetting(itemCode, itemAmount, true);
+                    overCount = 0;
                     result = true;
                 }
             }
         }
-   
+
+        if (last)
+        {
+            overCount = itemAmount;
+        }
+
         return result;
     }
 
-}
+    public bool AddItem_EmptySlot(ItemCode itemCode, uint itemAmount)
+    {
+        bool result = false;
+        ItemSlot targetSlot = FindSameItemHaveSlot(ItemCode.None);
+        if (targetSlot != null)
+        {
+            targetSlot.SlotSetting(itemCode, itemAmount, true);
+            result = true;
+        }
+        return result;
+    }
+
+    }

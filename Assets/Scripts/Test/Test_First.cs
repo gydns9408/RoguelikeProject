@@ -45,15 +45,15 @@ public class Test_First : Test_Base
         //icon3.IconSetting(ItemCode.BeastMeat, 10);
         if (!GameManager.Instance.InvenUI.Inven.AddItem(ItemCode.BeastMeat, 1, out uint overCount))
         {
-            Debug.Log("아이템 추가 실패");
+            Debug.Log($"아이템 {overCount}개 추가 실패");
         }
-        if (!GameManager.Instance.InvenUI.Inven.AddItem(ItemCode.BeastMeat, 2, out uint overCount2))
+        if (!GameManager.Instance.InvenUI.Inven.AddItem(ItemCode.BeastMeat, 3, out uint overCount2))
         {
-            Debug.Log("아이템 추가 실패");
+            Debug.Log($"아이템 {overCount2}개 추가 실패");
         }
         if (!GameManager.Instance.InvenUI.Inven.AddItem(ItemCode.BeastMeat, 10, out uint overCount3))
         {
-            Debug.Log("아이템 추가 실패");
+            Debug.Log($"아이템 {overCount3}개 추가 실패");
         }
     }
 

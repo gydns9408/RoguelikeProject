@@ -6,6 +6,7 @@ using UnityEngine;
 public class UI_Window_HaveOpenCloseAnim : UI_Window_Base
 {
     protected bool _isFullOpen = false;
+    public bool IsFullOpen => _isFullOpen;
     protected Animator _anim;
 
     readonly int _isCloseHash = Animator.StringToHash("IsClose");
@@ -27,6 +28,7 @@ public class UI_Window_HaveOpenCloseAnim : UI_Window_Base
 
     public virtual void StartClose()
     {
+        _isFullOpen = false;
         _anim.SetTrigger(_isCloseHash);
     }
 

@@ -10,12 +10,20 @@ public class ItemSlotUI : MonoBehaviour, IDropHandler
     ItemSlot _slot;
     public ItemSlot Slot => _slot;
     ItemIcon _myItem;
+    Image _image;
 
     public bool IsEmpty => _slot.ItemCode == ItemCode.None;
+
+    private void Awake()
+    {
+        _image = GetComponent<Image>();
+    }
+
 
     public void Initialize(ItemSlot slot)
     {
         _slot = slot;
+        SetRaycastTarget(false);
     }
 
     public void OnDrop(PointerEventData eventData)
@@ -72,4 +80,12 @@ public class ItemSlotUI : MonoBehaviour, IDropHandler
         }
     }
 
+    public void SetRaycastTarget(bool value)
+    {
+        _image.raycastTarget = value;
+        if (_myItem != null)
+        {
+            _myItem.SetRaycastTarget(value);
+        }
+    }
 }

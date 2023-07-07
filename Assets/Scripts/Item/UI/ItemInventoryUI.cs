@@ -33,7 +33,7 @@ public class ItemInventoryUI : UI_Window_HaveOpenCloseAnim
 
     }
 
-    public void Initialize(ItemInventory inven)
+        public void Initialize(ItemInventory inven)
     {
         _inven = inven;
         if (_slots.Length != inven.InventorySize)
@@ -69,5 +69,23 @@ public class ItemInventoryUI : UI_Window_HaveOpenCloseAnim
             _slots[i].Initialize(inven[i]);
         }
         Close();
+    }
+
+    public override void FullOpen()
+    {
+        for (uint i = 0; i < _slots.Length; i++)
+        {
+            _slots[i].SetRaycastTarget(true);
+        }
+        base.FullOpen();
+    }
+
+    public override void StartClose()
+    {
+        for (uint i = 0; i < _slots.Length; i++)
+        {
+            _slots[i].SetRaycastTarget(false);
+        }
+        base.StartClose();
     }
 }

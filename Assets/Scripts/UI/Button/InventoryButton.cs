@@ -12,7 +12,11 @@ public class InventoryButton : Button_Base
         }
         else
         {
-            GameManager.Instance.InvenUI.Close();
+            if (GameManager.Instance.InvenUI.IsFullOpen)
+            {
+                GameManager.Instance.InvenUI.StartClose();
+            }
         }
+        Debug.Log(GameManager.Instance.InvenUI.IsFullOpen);
     }
 }

@@ -18,7 +18,6 @@ public class ItemIcon : PoolObjectShape, IBeginDragHandler, IDragHandler, IEndDr
     uint _itemAmount;
     public uint ItemAmount => _itemAmount;
 
-    Vector3 _orgPos;
     public ItemSlotUI OrgParent
     {
         get; private set;
@@ -37,7 +36,6 @@ public class ItemIcon : PoolObjectShape, IBeginDragHandler, IDragHandler, IEndDr
     {
         if (!GameManager.Instance.InvenUI.Spliter.IsOpen)
         {
-            _orgPos = transform.position;
             _dragOffset = (Vector2)transform.position - eventData.position;
             transform.SetParent(_parentParent);
             _itemIcon.raycastTarget = false;
@@ -65,13 +63,14 @@ public class ItemIcon : PoolObjectShape, IBeginDragHandler, IDragHandler, IEndDr
         if (!GameManager.Instance.InvenUI.Spliter.IsOpen)
         {
             bool isParentChange = true;
-            transform.position = _orgPos;
             _itemIcon.raycastTarget = true;
             if (transform.parent == _parentParent)
             {
                 transform.SetParent(OrgParent.transform);
                 isParentChange = false;
             }
+            transform.localPosition = _position_modify_value;
+
             Color color1 = _itemIcon.color;
             color1.a = 1f;
             _itemIcon.color = color1;
@@ -90,10 +89,10 @@ public class ItemIcon : PoolObjectShape, IBeginDragHandler, IDragHandler, IEndDr
     public void SetParent(ItemSlotUI parent, bool rePos = false)
     {
         transform.SetParent(parent.transform);
-        _orgPos = parent.transform.position + _position_modify_value;
+        transform.localScale = Vector3.one;
         if(rePos)
         {
-            transform.position = parent.transform.position + _position_modify_value;
+            transform.localPosition = _position_modify_value;
         }
         OrgParent = parent;
         OrgParent.Slot.SlotSetting(_itemCode, _itemAmount);
@@ -125,6 +124,16 @@ public class ItemIcon : PoolObjectShape, IBeginDragHandler, IDragHandler, IEndDr
         {
             Before_OnDisable();
         }
+    }
+
+    public void SetRaycastTarget(bool value)
+    {
+        _itemIcon.raycastTarget = value;
+    }
+
+    public void SetScale(Vector3 value)
+    {
+        transform.localScale = value;
     }
 
     private void Before_OnDisable()

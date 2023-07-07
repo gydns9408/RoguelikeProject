@@ -31,6 +31,7 @@ public class SpawnManager_Etc : Singleton<SpawnManager_Etc>
     {
         return _objectPool_dropItem.GetObject();
     }
+
     public ItemIcon GetObject_ItemIcon()
     {
         return _objectPool_itemIcon.GetObject();

@@ -4,21 +4,15 @@ using UnityEngine;
 
 public class InventoryButton : Button_Base
 {
-    ItemInventoryUI _itemInventoryUI;
-    private void Start()
-    {
-        _itemInventoryUI = FindObjectOfType<ItemInventoryUI>();
-    }
-
     protected override void ButtonClickEvent()
     {
-        if (_itemInventoryUI.gameObject.activeSelf == false)
+        if (GameManager.Instance.InvenUI.gameObject.activeSelf == false)
         {
-            _itemInventoryUI.Open();
+            GameManager.Instance.InvenUI.Open();
         }
         else
         {
-            _itemInventoryUI.Close();
+            GameManager.Instance.InvenUI.Close();
         }
     }
 }

@@ -50,9 +50,9 @@ public class GameManager : Singleton<GameManager>
     protected override void Initialize()
     {
         _player = FindObjectOfType<Player>();
-        _playerInfoUI = FindObjectOfType<PlayerInfoUI>();
+        _playerInfoUI = FindObjectOfType<PlayerInfoUI>(true);
         ItemInventory itemInventory = new ItemInventory(_inventorySlotAmount, _player);
-        _invenUI = FindObjectOfType<ItemInventoryUI>();
+        _invenUI = FindObjectOfType<ItemInventoryUI>(true);
         _invenUI.Initialize(itemInventory);
         StartCoroutine(Monster_Spawn(10f));
     }

@@ -4,9 +4,8 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ItemSpliterUI : UI_Window_Base
+public class ItemSpliterUI : UI_Window_HaveOpenCloseAnim
 {
-    bool _isFullOpen = false;
 
     ItemSlot _linked_itemSlot;
 
@@ -17,7 +16,6 @@ public class ItemSpliterUI : UI_Window_Base
     Button _itemAmount_minusButton;
     Button _okButton;
     Button _cancelButton;
-    Animator _anim;
 
     const uint _itemSplitAmount_min = 1;
 
@@ -39,10 +37,9 @@ public class ItemSpliterUI : UI_Window_Base
 
     public bool IsOpen => gameObject.activeSelf;
 
-    readonly int _isCloseHash = Animator.StringToHash("IsClose");
-
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
         Transform child = transform.GetChild(0);
         _itemImage = child.GetComponent<Image>();
         _itemAmount_slider = GetComponentInChildren<Slider>();
@@ -75,12 +72,6 @@ public class ItemSpliterUI : UI_Window_Base
             }
         });
         _cancelButton.enabled = false;
-        _anim = GetComponent<Animator>();
-    }
-
-    private void Start()
-    {
-        Close();
     }
 
     public void Open(ItemSlot itemSlot)
@@ -127,7 +118,7 @@ public class ItemSpliterUI : UI_Window_Base
         ItemSplitAmount = (uint)value;
     }
 
-    public void FullOpen()
+    public override void FullOpen()
     {
         _itemAmount_plusButton.enabled = true;
         _itemAmount_minusButton.enabled = true;
@@ -135,10 +126,10 @@ public class ItemSpliterUI : UI_Window_Base
         _cancelButton.enabled = true;
         _itemAmount_slider.interactable = true;
         _itemAmount_inputField.interactable = true;
-        _isFullOpen = true;
+        base.FullOpen();
     }
 
-    public void StartClose()
+    public override void StartClose()
     {
         _itemAmount_plusButton.enabled = false;
         _itemAmount_minusButton.enabled = false;
@@ -146,6 +137,6 @@ public class ItemSpliterUI : UI_Window_Base
         _cancelButton.enabled = false;
         _itemAmount_slider.interactable = false;
         _itemAmount_inputField.interactable = false;
-        _anim.SetTrigger(_isCloseHash);
+        base.StartClose();
     }
 }

@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using TMPro;
 
-public class ItemIcon : PoolObjectShape, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerClickHandler
+public class ItemIcon : PoolObjectShape, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler, IPointerMoveHandler
 {
     Image _itemIcon;
     TextMeshProUGUI _itemAmountText;
@@ -47,6 +47,8 @@ public class ItemIcon : PoolObjectShape, IBeginDragHandler, IDragHandler, IEndDr
             Color color2 = _itemAmountText.color;
             color2.a = 0.5f;
             _itemAmountText.color = color2;
+
+            GameManager.Instance.InvenUI.ExplanWindow.IsOff = true;
         }
     }
 
@@ -62,11 +64,13 @@ public class ItemIcon : PoolObjectShape, IBeginDragHandler, IDragHandler, IEndDr
     {
         if (!GameManager.Instance.InvenUI.Spliter.IsOpen)
         {
+            bool isParentChange = true;
             transform.position = _orgPos;
             _itemIcon.raycastTarget = true;
             if (transform.parent == _parentParent)
             {
                 transform.SetParent(OrgParent.transform);
+                isParentChange = false;
             }
             Color color1 = _itemIcon.color;
             color1.a = 1f;
@@ -74,6 +78,12 @@ public class ItemIcon : PoolObjectShape, IBeginDragHandler, IDragHandler, IEndDr
             Color color2 = _itemAmountText.color;
             color2.a = 1f;
             _itemAmountText.color = color2;
+
+            GameManager.Instance.InvenUI.ExplanWindow.IsOff = false;
+            if (isParentChange)
+            {
+                GameManager.Instance.InvenUI.ExplanWindow.Open(_itemCode);
+            }
         }
     }
 
@@ -125,5 +135,20 @@ public class ItemIcon : PoolObjectShape, IBeginDragHandler, IDragHandler, IEndDr
         }
         transform.SetParent(_firstParent);
         gameObject.SetActive(false);
+    }
+
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        GameManager.Instance.InvenUI.ExplanWindow.Open(_itemCode);
+    }
+
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        GameManager.Instance.InvenUI.ExplanWindow.Close();
+    }
+
+    public void OnPointerMove(PointerEventData eventData)
+    {
+        GameManager.Instance.InvenUI.ExplanWindow.PositionSetting(eventData.position);
     }
 }

@@ -1,10 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.XR.OpenVR;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class ItemInventoryUI : UI_Window_Base
+public class ItemInventoryUI : UI_Window_HaveOpenCloseAnim
 {
     ItemSlotUI[] _slots;
     public ItemSlotUI[] ItemSlotUI => _slots;
@@ -14,14 +15,22 @@ public class ItemInventoryUI : UI_Window_Base
 
     ItemSpliterUI _spliter;
     public ItemSpliterUI Spliter => _spliter;
+    ItemExplanWindowUI _explanWindow;
+    public ItemExplanWindowUI ExplanWindow => _explanWindow;
 
     public GameObject slotPrefab;
     
-    // Start is called before the first frame update
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
         _slots = GetComponentsInChildren<ItemSlotUI>();
         _spliter = GetComponentInChildren<ItemSpliterUI>();
+        _explanWindow = GetComponentInChildren<ItemExplanWindowUI>();
+    }
+
+    protected override void Start()
+    {
+
     }
 
     public void Initialize(ItemInventory inven)
@@ -59,5 +68,6 @@ public class ItemInventoryUI : UI_Window_Base
         {
             _slots[i].Initialize(inven[i]);
         }
+        Close();
     }
 }

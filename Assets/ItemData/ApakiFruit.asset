@@ -17,5 +17,5 @@ MonoBehaviour:
   itemIcon: {fileID: 21300000, guid: 99fde261d5ddd47498b27531f92ab693, type: 3}
   maxAmount: 20
   itemExplan: "\uC6A9\uC554\uC9C0\uB300\uC5D0\uC11C \uC790\uB77C\uB294 \uC544\uD30C\uD0A4\uB098\uBB34\uC758
-    \uC5F4\uB9E4"
+    \uC5F4\uB9E4(\uC0AC\uC6A9\uC2DC HP + 15)"
   _healAmount: 15

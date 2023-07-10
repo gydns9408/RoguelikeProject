@@ -2,8 +2,16 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
-using Unity.Mathematics;
 using UnityEngine;
+
+[System.Serializable]
+public struct DropItemInfo
+{
+    public ItemCode itemcode;
+    [Range(0.0f, 1.0f)]
+    public float dropProbability;
+    public uint dropMaxAmount;
+}
 
 public class Monster_Base : Unit_Base
 {
@@ -90,6 +98,8 @@ public class Monster_Base : Unit_Base
     //public Transform Position => _position;
     protected Monster_HpBar _hpBar;
     public Monster_HpBar HPBar => _hpBar;
+
+    public List<DropItemInfo> _dropItemList;
 
     Vector3 _hpBar_localScale = new Vector3(1.5f, 0.2f, 1f);
     Vector3 _hpBar_localScale_reverse = new Vector3(-1.5f, 0.2f, 1f);
@@ -448,7 +458,22 @@ public class Monster_Base : Unit_Base
         }
         color2.a = 0f;
         _position_sprite.color = color2;
+        DropPlunder();
         gameObject.SetActive(false);
+    }
+
+    private void DropPlunder()
+    {
+        foreach (var item in _dropItemList)
+        {
+            float randomValue = UnityEngine.Random.value;
+            if (item.dropProbability > randomValue)
+            {
+                int randomValue2 = UnityEngine.Random.Range(1, (int)item.dropMaxAmount + 1);
+                DropItem dropItem = SpawnManager_Etc.Instance.GetObject_DropItem(item.itemcode, (uint)randomValue2);
+                dropItem.transform.position = _position.position;
+            }
+        }
     }
 
     protected override void FixedUpdate()

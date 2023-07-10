@@ -550,12 +550,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _maxHp: 25
   _moveSpeed: 1
+  _attackPower: 3
+  _defencePower: 0
+  _hit_invincibleTime: 0.6
+  _hit_blinking_interval: 0.1
   _idleTime: 3
   _dieTime: 1
   _attack_coolTime: 6
   _attack_beforeDelayTime: 0.33
-  _hit_invincibleTime: 0.6
-  _hit_blinking_interval: 0.1
+  _dropItemList:
+  - itemcode: 1
+    dropProbability: 0.3
+    dropMaxAmount: 2
 --- !u!114 &4661172263705825465
 MonoBehaviour:
   m_ObjectHideFlags: 0

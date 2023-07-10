@@ -12,7 +12,6 @@ public class Player : Unit_Base
     //[SerializeField]
     //float _maxHp = 100;
     
-    public float MaxHP => _maxHp;
     //float _hp = 100;
     public override float HP
     {
@@ -148,7 +147,15 @@ public class Player : Unit_Base
             DropItem dropItem = collider.GetComponent<DropItem>();
             if (dropItem != null)
             {
-                dropItem.PickUp();
+                if (GameManager.Instance.InvenUI.Inven.AddItem(dropItem.ItemCode, dropItem.ItemAmount, out uint overCount))
+                {
+                    dropItem.PickUp();
+                }
+                else
+                {
+                    Debug.Log($"아이템 {overCount}개 추가 실패");
+                    dropItem.DropItemSetting(dropItem.ItemCode, overCount);
+                }
             }
         }
     }
@@ -227,8 +234,5 @@ public class Player : Unit_Base
     //    _rigid.velocity = Vector2.zero;
     //}
 
-    public void Test_HPChange(float value)
-    {
-        HP += value;
-    }
+
 }

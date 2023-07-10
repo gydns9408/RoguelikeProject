@@ -6,7 +6,9 @@ using UnityEngine;
 public class Unit_Base : MonoBehaviour
 {
     [Header("유닛 기본 데이터")]
-    public float _maxHp = 25f;
+    [SerializeField]
+    protected float _maxHp = 25f;
+    public float MaxHP => _maxHp;
     protected float _hp;
     public virtual float HP
     {
@@ -68,17 +70,22 @@ public class Unit_Base : MonoBehaviour
         //_position_sprite.color = color;
         //_collider.enabled = false;
     }
+    public void HPChange(float value)
+    {
+        HP += value;
+    }
 
     public void SufferDamage(float damage)
     {
         if (_hit_invincibleTime_value < 0)
         {
             _hit_invincibleTime_value = _hit_invincibleTime;
-            float fianl_Damage = damage * (1 - (_defencePower / (100f + _defencePower)));
-            HP -= fianl_Damage;
-
+            float final_Damage = damage * (1 - (_defencePower / (100f + _defencePower)));
+            HPChange(-final_Damage);
         }
     }
+
+
 
     protected virtual void FixedUpdate()
     {

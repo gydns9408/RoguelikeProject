@@ -27,9 +27,11 @@ public class SpawnManager_Etc : Singleton<SpawnManager_Etc>
         }
     }
 
-    public DropItem GetObject_DropItem()
+    public DropItem GetObject_DropItem(ItemCode itemCode, uint itemAmount)
     {
-        return _objectPool_dropItem.GetObject();
+        DropItem dropItem = _objectPool_dropItem.GetObject();
+        dropItem.DropItemSetting(itemCode, itemAmount);
+        return dropItem;
     }
 
     public ItemIcon GetObject_ItemIcon()

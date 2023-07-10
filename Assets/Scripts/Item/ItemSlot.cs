@@ -40,4 +40,16 @@ public class ItemSlot
             GameManager.Instance.InvenUI.ItemSlotUI[SlotNum].MyItemRefresh();
         }
     }
+
+    public void UseItem()
+    {
+        IUsable iUsable = GameManager.Instance.ItemData[_itemCode] as IUsable;
+        if (iUsable != null)
+        {
+            if (iUsable.Use(GameManager.Instance.Player))
+            {
+                SlotSetting(_itemCode, _itemAmount - 1, true);
+            }
+        }
+    }
 }

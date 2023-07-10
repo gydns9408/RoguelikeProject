@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 60e45c444b0bd734495fcfe15935e20b, type: 3}
+  m_Name: ApakiFruit
+  m_EditorClassIdentifier: 
+  itmeCode: 2
+  itemName: "\uC544\uD30C\uD0A4\uC5F4\uB9E4"
+  itemIcon: {fileID: 21300000, guid: 99fde261d5ddd47498b27531f92ab693, type: 3}
+  maxAmount: 20
+  itemExplan: "\uC6A9\uC554\uC9C0\uB300\uC5D0\uC11C \uC790\uB77C\uB294 \uC544\uD30C\uD0A4\uB098\uBB34\uC758
+    \uC5F4\uB9E4"
+  _healAmount: 15

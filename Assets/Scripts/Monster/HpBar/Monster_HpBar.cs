@@ -26,7 +26,7 @@ public class Monster_HpBar : MonoBehaviour
         Transform child = transform.GetChild(1);
         _background_sprite = child.GetComponent<SpriteRenderer>();
         Monster_Base parent = GetComponentInParent<Monster_Base>();
-        _maxHp = parent._maxHp;
+        _maxHp = parent.MaxHP;
         _position = parent.Position;
         parent._onChangeHP += Refresh;
     }

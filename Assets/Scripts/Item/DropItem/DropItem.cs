@@ -10,10 +10,11 @@ public class DropItem : PoolObjectShape
         get => _itemCode;
         private set
         {
-            if (_itemCode == ItemCode.None) 
-            { 
-                _itemCode = value;
+            if (_itemCode != value)
+            {
+                _sprite.sprite = GameManager.Instance.ItemData[value].itemIcon;
             }
+            _itemCode = value;
         }
     }
 
@@ -23,10 +24,7 @@ public class DropItem : PoolObjectShape
         get => _itemAmount;
         private set
         {
-            if (_itemAmount == 0)
-            {
-                _itemAmount = value;
-            }
+            _itemAmount = value;
         }
     }
 
@@ -53,15 +51,21 @@ public class DropItem : PoolObjectShape
         _sprite.color = Color.white;
         _moveDir = Vector2.zero;
         StopAllCoroutines();
-        if (gameObject.activeSelf == true)
-        {
-            StartCoroutine(LifeOver(_remainTime));
-        }
+        StartCoroutine(LifeOver(_remainTime));
         _isAlive = true;
     }
 
-    public void DropItemSetting()
+    protected override IEnumerator LifeOver(float remainingTime = 0.0f)
     {
+        yield return new WaitForSeconds(remainingTime);
+        _isAlive = false;
+        StartCoroutine(Disappearing());
+    }
+
+    public void DropItemSetting(ItemCode itemCode, uint itemAmount)
+    {
+        _itemCode = itemCode;
+        _itemAmount = itemAmount;
         
     }
     private void FixedUpdate()
@@ -75,6 +79,7 @@ public class DropItem : PoolObjectShape
         if (_isAlive)
         {
             _isAlive = false;
+            StopAllCoroutines();
             StartCoroutine(PickingUp());
         }
     }
@@ -91,6 +96,18 @@ public class DropItem : PoolObjectShape
                 Vector3 moveDir = (GameManager.Instance.Player.Position.position - _position.position).normalized;
                 _moveDir = moveDir;
             }
+            yield return null;
+        }
+        gameObject.SetActive(false);
+    }
+
+    private IEnumerator Disappearing()
+    {
+        Color color = _sprite.color;
+        while (color.a > 0f)
+        {
+            color.a -= Time.deltaTime;
+            _sprite.color = color;
             yield return null;
         }
         gameObject.SetActive(false);

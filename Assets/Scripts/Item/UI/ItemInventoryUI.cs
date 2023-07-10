@@ -17,6 +17,8 @@ public class ItemInventoryUI : UI_Window_HaveOpenCloseAnim
     public ItemSpliterUI Spliter => _spliter;
     ItemExplanWindowUI _explanWindow;
     public ItemExplanWindowUI ExplanWindow => _explanWindow;
+    ItemSortOptionWindowUI _sortWindow;
+    public ItemSortOptionWindowUI SortWindow => _sortWindow;
 
     public GameObject slotPrefab;
     
@@ -26,6 +28,7 @@ public class ItemInventoryUI : UI_Window_HaveOpenCloseAnim
         _slots = GetComponentsInChildren<ItemSlotUI>();
         _spliter = GetComponentInChildren<ItemSpliterUI>();
         _explanWindow = GetComponentInChildren<ItemExplanWindowUI>();
+        _sortWindow = GetComponentInChildren<ItemSortOptionWindowUI>();
     }
 
     protected override void Start()
@@ -77,6 +80,7 @@ public class ItemInventoryUI : UI_Window_HaveOpenCloseAnim
         {
             _slots[i].SetRaycastTarget(true);
         }
+        SortWindow.AllButtonActivate();
         base.FullOpen();
     }
 
@@ -86,6 +90,13 @@ public class ItemInventoryUI : UI_Window_HaveOpenCloseAnim
         {
             _slots[i].SetRaycastTarget(false);
         }
+        SortWindow.AllButtonDeactivate();
         base.StartClose();
+    }
+
+    public void EndClose()
+    {
+        Spliter.Close();
+        Close();
     }
 }

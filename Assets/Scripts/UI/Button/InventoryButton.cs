@@ -17,6 +17,5 @@ public class InventoryButton : Button_Base
                 GameManager.Instance.InvenUI.StartClose();
             }
         }
-        Debug.Log(GameManager.Instance.InvenUI.IsFullOpen);
     }
 }

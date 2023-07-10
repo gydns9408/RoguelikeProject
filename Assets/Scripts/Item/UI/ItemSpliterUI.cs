@@ -4,7 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ItemSpliterUI : UI_Window_HaveOpenCloseAnim
+public class ItemSpliterUI : UI_Window_HaveOpenCloseAnim, IHaveButtonUI
 {
 
     ItemSlot _linked_itemSlot;
@@ -45,21 +45,16 @@ public class ItemSpliterUI : UI_Window_HaveOpenCloseAnim
         _itemAmount_slider = GetComponentInChildren<Slider>();
         _itemAmount_slider.onValueChanged.AddListener(ItemAmount_SliderChange);
         _itemAmount_slider.minValue = _itemSplitAmount_min;
-        _itemAmount_slider.interactable = false;
         _itemAmount_inputField = GetComponentInChildren<TMP_InputField>();
         _itemAmount_inputField.onValueChanged.AddListener(ItemAmount_InputFieldChange);
-        _itemAmount_inputField.interactable = false;
         child = transform.GetChild(3);
         _itemAmount_plusButton = child.GetComponent<Button>();
         _itemAmount_plusButton.onClick.AddListener(() => ItemSplitAmount++);
-        _itemAmount_plusButton.enabled = false;
         child = transform.GetChild(4);
         _itemAmount_minusButton = child.GetComponent<Button>();
         _itemAmount_minusButton.onClick.AddListener(() => ItemSplitAmount--);
-        _itemAmount_minusButton.enabled = false;
          child = transform.GetChild(5);
         _okButton = child.GetComponent<Button>();
-        _okButton.enabled = false;
         child = transform.GetChild(6);
         _okButton.onClick.AddListener(ItemSplit);
         _cancelButton = child.GetComponent<Button>();
@@ -71,7 +66,7 @@ public class ItemSpliterUI : UI_Window_HaveOpenCloseAnim
                 StartClose();
             }
         });
-        _cancelButton.enabled = false;
+        AllButtonDeactivate();
     }
 
     public void Open(ItemSlot itemSlot)
@@ -120,16 +115,27 @@ public class ItemSpliterUI : UI_Window_HaveOpenCloseAnim
 
     public override void FullOpen()
     {
+        AllButtonActivate();
+        base.FullOpen();
+    }
+
+    public override void StartClose()
+    {
+        AllButtonDeactivate();
+        base.StartClose();
+    }
+
+    public void AllButtonActivate()
+    {
         _itemAmount_plusButton.enabled = true;
         _itemAmount_minusButton.enabled = true;
         _okButton.enabled = true;
         _cancelButton.enabled = true;
         _itemAmount_slider.interactable = true;
         _itemAmount_inputField.interactable = true;
-        base.FullOpen();
     }
 
-    public override void StartClose()
+    public void AllButtonDeactivate()
     {
         _itemAmount_plusButton.enabled = false;
         _itemAmount_minusButton.enabled = false;
@@ -137,6 +143,5 @@ public class ItemSpliterUI : UI_Window_HaveOpenCloseAnim
         _cancelButton.enabled = false;
         _itemAmount_slider.interactable = false;
         _itemAmount_inputField.interactable = false;
-        base.StartClose();
     }
 }

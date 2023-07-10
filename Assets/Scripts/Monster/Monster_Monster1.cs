@@ -31,8 +31,4 @@ public class Monster_Monster1 : Monster_Base
         _attackEffect1.gameObject.SetActive(false);
         _NowState = EnemyState.Chase;
     }
-    public void Test1()
-    {
-        _sprite.color = Color.clear;
-    }
 }

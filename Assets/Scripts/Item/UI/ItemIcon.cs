@@ -11,7 +11,9 @@ public class ItemIcon : PoolObjectShape, IBeginDragHandler, IDragHandler, IEndDr
     TextMeshProUGUI _itemAmountText;
     Transform _firstParent;
     Transform _parentParent;
-    Vector3 _position_modify_value = new Vector3(0, 12.9f, 0);
+
+    static uint _spiltItem_minItemAmount = 2;
+    static Vector3 _position_modify_value = new Vector3(0, 12.9f, 0);
 
     ItemCode _itemCode;
     public ItemCode ItemCode => _itemCode;
@@ -23,6 +25,8 @@ public class ItemIcon : PoolObjectShape, IBeginDragHandler, IDragHandler, IEndDr
         get; private set;
     }
     Vector2 _dragOffset;
+
+    bool _isPointerEnter = false;
 
     private void Awake()
     {
@@ -100,9 +104,16 @@ public class ItemIcon : PoolObjectShape, IBeginDragHandler, IDragHandler, IEndDr
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        if (GameManager.Instance.InvenUIItemSplitMode && _itemAmount > 1)
+        if (GameManager.Instance.InvenUIItemSplitMode)
         {
-            GameManager.Instance.InvenUI.Spliter.Open(OrgParent.Slot);
+            if (_itemAmount >= _spiltItem_minItemAmount) 
+            {
+                GameManager.Instance.InvenUI.Spliter.Open(OrgParent.Slot);
+            }
+        }
+        else if(eventData.clickCount >= 2)
+        {
+            OrgParent.Slot.UseItem();
         }
     }
 
@@ -131,11 +142,6 @@ public class ItemIcon : PoolObjectShape, IBeginDragHandler, IDragHandler, IEndDr
         _itemIcon.raycastTarget = value;
     }
 
-    public void SetScale(Vector3 value)
-    {
-        transform.localScale = value;
-    }
-
     private void Before_OnDisable()
     {
         if (OrgParent != null)
@@ -143,21 +149,32 @@ public class ItemIcon : PoolObjectShape, IBeginDragHandler, IDragHandler, IEndDr
             OrgParent.SetChild(null);
         }
         transform.SetParent(_firstParent);
+        if(_isPointerEnter)
+        {
+            ExplanWindowClose();
+        }
         gameObject.SetActive(false);
     }
 
     public void OnPointerEnter(PointerEventData eventData)
     {
         GameManager.Instance.InvenUI.ExplanWindow.Open(_itemCode);
+        _isPointerEnter = true;
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        GameManager.Instance.InvenUI.ExplanWindow.Close();
+        ExplanWindowClose();
     }
 
     public void OnPointerMove(PointerEventData eventData)
     {
         GameManager.Instance.InvenUI.ExplanWindow.PositionSetting(eventData.position);
+    }
+
+    private void ExplanWindowClose()
+    {
+        GameManager.Instance.InvenUI.ExplanWindow.Close();
+        _isPointerEnter = false;
     }
 }

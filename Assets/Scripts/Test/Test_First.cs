@@ -19,12 +19,13 @@ public class Test_First : Test_Base
     // Start is called before the first frame update
     protected override void Test_Action1(InputAction.CallbackContext _)
     {
-        player.Test_HPChange(10);
+        DropItem drop = SpawnManager_Etc.Instance.GetObject_DropItem(ItemCode.BeastMeat, 8);
+        drop.transform.position = new Vector3(-6.27f, 0, 0);
     }
 
     protected override void Test_Action2(InputAction.CallbackContext _)
     {
-        player.Test_HPChange(-10);
+        player.HPChange(-10);
     }
 
     protected override void Test_Action3(InputAction.CallbackContext _)
@@ -54,6 +55,14 @@ public class Test_First : Test_Base
         if (!GameManager.Instance.InvenUI.Inven.AddItem(ItemCode.BeastMeat, 10, out uint overCount3))
         {
             Debug.Log($"아이템 {overCount3}개 추가 실패");
+        }
+    }
+
+    protected override void Test_Action4(InputAction.CallbackContext _)
+    {
+        if (!GameManager.Instance.InvenUI.Inven.AddItem(ItemCode.ApakiFruit, 3, out uint overCount))
+        {
+            Debug.Log($"아이템 {overCount}개 추가 실패");
         }
     }
 

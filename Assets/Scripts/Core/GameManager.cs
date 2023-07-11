@@ -23,15 +23,18 @@ public class GameManager : Singleton<GameManager>
 
     SystemSettingInputActions _inputActions;
 
-    public float _randomSpawnArea_minX = -8.58f;
-    public float _randomSpawnArea_maxX = 8.58f;
-    public float _randomSpawnArea_minY = -4.89f;
-    public float _randomSpawnArea_maxY = 4.89f;
+    public float _randomSpawnArea_minX = -8.5f;
+    public float _randomSpawnArea_maxX = 30f;
+    public float _randomSpawnArea_minY = -13.5f;
+    public float _randomSpawnArea_maxY = 15f;
 
     public uint _inventorySlotAmount = 20;
 
     bool _invenUIItemSplitMode;
     public bool InvenUIItemSplitMode => _invenUIItemSplitMode;
+
+    Room[] rooms;
+    Room _nowRoom; 
 
     protected override void RunOnlyOnce_Initialize()
     {
@@ -45,6 +48,86 @@ public class GameManager : Singleton<GameManager>
             _inputActions.System.PlayerInfoUIVisible.performed += OnUI_PlayerInfoUIVisible_Option_Input;
             _inputActions.System.InvenUIItemSplitMode.performed += OnUI_InvenItemSplitMode_Option_Input;
             _inputActions.System.InvenUIItemSplitMode.canceled += OnUI_InvenItemSplitMode_Option_Input;
+
+            int roomAmount = UnityEngine.Random.Range(10, 15);
+            rooms = new Room[roomAmount];
+            for (int i = 0; i < roomAmount; i++)
+            {
+                List<SpawnMonsterInfo> spawnList = new List<SpawnMonsterInfo>();
+                int monsterAmount = UnityEngine.Random.Range(10, 15);
+                SpawnMonsterInfo spawnMonsterInfo = new SpawnMonsterInfo(Monster_Type.WildBoar , (uint)monsterAmount);
+                spawnList.Add(spawnMonsterInfo);
+                Room room = new Room(spawnList);
+                rooms[i] = room;
+            }
+            Stack<int> roomStack = new Stack<int>();
+            roomStack.Push(0);
+            int currentRoomNumber = 1;
+            int[] arrowOrder = new int[] { 0, 1, 2, 3 };
+            
+           
+            while (true)
+            {
+                if (roomStack.Count < 1)
+                {
+                    break;
+                }
+                int selectRoomNumber = roomStack.Pop();
+                int linkRoomAmount = 0;
+                if (selectRoomNumber == 0)
+                {
+                    linkRoomAmount = UnityEngine.Random.Range(1, 5);
+                }
+                else
+                {
+                    int linkedRoomAmount = 0;
+                    for (int i = 0; i < rooms[selectRoomNumber].linkedRooms.Length; i++)
+                    {
+                    }
+                    linkRoomAmount = UnityEngine.Random.Range(0, 4);
+                }
+                arrowOrder = SuffleArray(arrowOrder);
+                for (int i = 0; i < linkRoomAmount; i++)
+                {
+                    int j = i % arrowOrder.Length;
+
+                    switch (arrowOrder[i])
+                    {
+                        case 0:
+                            if (rooms[selectRoomNumber]._northRoom != null)
+                            {
+                            }
+                            rooms[selectRoomNumber]._northRoom = rooms[currentRoomNumber];
+                            rooms[currentRoomNumber]._southRoom = rooms[selectRoomNumber];
+
+                            break;
+                        case 1:
+                            if (rooms[selectRoomNumber]._southRoom != null)
+                            {
+                            }
+                            rooms[selectRoomNumber]._southRoom = rooms[currentRoomNumber];
+                            rooms[currentRoomNumber]._northRoom = rooms[selectRoomNumber];
+                            break;
+                        case 2:
+                            if (rooms[selectRoomNumber]._eastRoom != null)
+                            {
+                            }
+                            rooms[selectRoomNumber]._eastRoom = rooms[currentRoomNumber];
+                            rooms[currentRoomNumber]._westRoom = rooms[selectRoomNumber];
+                            break;
+                        case 3:
+                        default:
+                            if (rooms[selectRoomNumber]._westRoom != null)
+                            {
+                            }
+                            rooms[selectRoomNumber]._westRoom = rooms[currentRoomNumber];
+                            rooms[currentRoomNumber]._eastRoom = rooms[selectRoomNumber];
+                            break;
+                    }
+                    roomStack.Push(currentRoomNumber);
+                    currentRoomNumber++;
+                }
+            }
         }
     }
     protected override void Initialize()
@@ -79,7 +162,7 @@ public class GameManager : Singleton<GameManager>
         _invenUIItemSplitMode = context.performed;
     }
 
-        private void OnDisable()
+    private void OnDisable()
     {
         _inputActions.System.PlayerInfoUIVisible.performed -= OnUI_PlayerInfoUIVisible_Option_Input;
         _inputActions.System.MonsterHpBarVisible.performed -= OnMonster_HpBarVisible_Option_Input;
@@ -94,5 +177,22 @@ public class GameManager : Singleton<GameManager>
             Monster_Base mob = SpawnManager_Monster.Instance.GetObject(Monster_Type.WildBoar);
             mob.transform.position = new Vector3(UnityEngine.Random.Range(_randomSpawnArea_minX, _randomSpawnArea_maxX), UnityEngine.Random.Range(_randomSpawnArea_minY, _randomSpawnArea_maxY), 0f);
         }
+    }
+
+    private T[] SuffleArray<T> (T[] array)
+    {
+        int changeTarget1, changeTarget2;
+        T temp;
+        for (int i = 0; i < array.Length; i++)
+        {
+            changeTarget1 = UnityEngine.Random.Range(0, array.Length);
+            changeTarget2 = UnityEngine.Random.Range(0, array.Length);
+
+            temp = array[changeTarget1];
+            array[changeTarget1] = array[changeTarget2];
+            array[changeTarget2] = temp;
+        }
+
+        return array;
     }
 }

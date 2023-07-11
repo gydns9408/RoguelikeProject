@@ -74,10 +74,10 @@ public class Monster_Base : Unit_Base
     public float _dieTime = 1.0f;
     protected float _dieTime_reciprocal;
 
-    protected float _randomGoalArea_minX = -8.58f;
-    protected float _randomGoalArea_maxX = 8.58f;
-    protected float _randomGoalArea_minY = -4.89f;
-    protected float _randomGoalArea_maxY = 4.89f;
+    protected float _randomGoalArea_minX = -8.5f;
+    protected float _randomGoalArea_maxX = 30f;
+    protected float _randomGoalArea_minY = -13.5f;
+    protected float _randomGoalArea_maxY = 15f;
     protected float _randomGoalArea_X;
     protected float _randomGoalArea_Y;
     protected Vector3 _randomGoalArea_moveDir;

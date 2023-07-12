@@ -24,7 +24,7 @@ public class SpawnManager_Monster : Singleton<SpawnManager_Monster>
         {
             _objectPool[i].Initialize();
         }
-
+        GameManager.Instance.Monster_Spawn();
     }
 
     public Monster_Base GetObject(Monster_Type mon_type)

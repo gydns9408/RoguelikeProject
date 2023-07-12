@@ -34,7 +34,26 @@ public class GameManager : Singleton<GameManager>
     public bool InvenUIItemSplitMode => _invenUIItemSplitMode;
 
     Room[] rooms;
-    Room _nowRoom; 
+    Room _nowRoom;
+
+    uint monster_totalAmount;
+    uint monster_killAmount;
+    public uint Monster_KillAmount
+    {
+        set
+        {
+            if (isMonsterSpawn)
+            {
+                monster_killAmount = value;
+                if (monster_killAmount >= monster_totalAmount && !_nowRoom.IsClear)
+                {
+                    _nowRoom.IsClear = true;
+                    StageClear();
+                }
+            }
+        }
+    }
+    bool isMonsterSpawn;
 
     protected override void RunOnlyOnce_Initialize()
     {
@@ -55,17 +74,19 @@ public class GameManager : Singleton<GameManager>
             {
                 List<SpawnMonsterInfo> spawnList = new List<SpawnMonsterInfo>();
                 int monsterAmount = UnityEngine.Random.Range(10, 15);
-                SpawnMonsterInfo spawnMonsterInfo = new SpawnMonsterInfo(Monster_Type.WildBoar , (uint)monsterAmount);
+                SpawnMonsterInfo spawnMonsterInfo = new SpawnMonsterInfo(Monster_Type.WildBoar, (uint)monsterAmount);
                 spawnList.Add(spawnMonsterInfo);
                 Room room = new Room(spawnList);
+
                 rooms[i] = room;
             }
+
+            rooms[roomAmount - 1].IsBossroom = true;
             Stack<int> roomStack = new Stack<int>();
             roomStack.Push(0);
             int currentRoomNumber = 1;
-            int[] arrowOrder = new int[] { 0, 1, 2, 3 };
-            
-           
+            Arrow[] arrowOrder = new Arrow[] { Arrow.North, Arrow.East, Arrow.South, Arrow.West };
+
             while (true)
             {
                 if (roomStack.Count < 1)
@@ -76,12 +97,12 @@ public class GameManager : Singleton<GameManager>
                 int linkRoomAmount = 0;
 
                 int linkedRoomAmount = 0;
-                for (int i = 0; i < rooms[selectRoomNumber].linkedRooms.Length; i++)
+                for (int i = 0; i < rooms[selectRoomNumber].LinkedRooms.Length; i++)
                 {
-                     if (rooms[selectRoomNumber].linkedRooms[i] != null)
-                     { 
+                    if (rooms[selectRoomNumber].LinkedRooms[i] != null)
+                    {
                         linkedRoomAmount++;
-                     }
+                    }
                 }
                 int minAddRoomAmount = 0;
                 int maxAddRoomAmount = Mathf.Min(5 - linkedRoomAmount, roomAmount - currentRoomNumber + 1);
@@ -95,48 +116,26 @@ public class GameManager : Singleton<GameManager>
                 }
 
                 linkRoomAmount = UnityEngine.Random.Range(minAddRoomAmount, maxAddRoomAmount);
-              
+
                 arrowOrder = SuffleArray(arrowOrder);
                 for (int i = 0; i < linkRoomAmount; i++)
                 {
                     int j = i % arrowOrder.Length;
 
-                    switch (arrowOrder[i])
+                    if (rooms[selectRoomNumber].LinkedRooms[(int)arrowOrder[j]] != null)
                     {
-                        case 0:
-                            if (rooms[selectRoomNumber].linkedRooms[(int)Arrow.North] != null)
-                            {
-                            }
-                            rooms[selectRoomNumber].linkedRooms[(int)Arrow.North] = rooms[currentRoomNumber];
-                            rooms[currentRoomNumber].linkedRooms[(int)Arrow.South] = rooms[selectRoomNumber];
-                            break;
-                        case 1:
-                            if (rooms[selectRoomNumber]._southRoom != null)
-                            {
-                            }
-                            rooms[selectRoomNumber]._southRoom = rooms[currentRoomNumber];
-                            rooms[currentRoomNumber]._northRoom = rooms[selectRoomNumber];
-                            break;
-                        case 2:
-                            if (rooms[selectRoomNumber]._eastRoom != null)
-                            {
-                            }
-                            rooms[selectRoomNumber]._eastRoom = rooms[currentRoomNumber];
-                            rooms[currentRoomNumber]._westRoom = rooms[selectRoomNumber];
-                            break;
-                        case 3:
-                        default:
-                            if (rooms[selectRoomNumber]._westRoom != null)
-                            {
-                            }
-                            rooms[selectRoomNumber]._westRoom = rooms[currentRoomNumber];
-                            rooms[currentRoomNumber]._eastRoom = rooms[selectRoomNumber];
-                            break;
+                        linkRoomAmount++;
+                        continue;
                     }
+                    rooms[selectRoomNumber].LinkedRooms[(int)arrowOrder[j]] = rooms[currentRoomNumber];
+                    int k = ((int)arrowOrder[j] + 2) % 4;
+                    rooms[currentRoomNumber].LinkedRooms[k] = rooms[selectRoomNumber];
+                    rooms[currentRoomNumber].SettingDepth(rooms[selectRoomNumber].Depth + 1);
                     roomStack.Push(currentRoomNumber);
                     currentRoomNumber++;
                 }
             }
+            _nowRoom = rooms[0];
         }
     }
     protected override void Initialize()
@@ -146,8 +145,10 @@ public class GameManager : Singleton<GameManager>
         ItemInventory itemInventory = new ItemInventory(_inventorySlotAmount, _player);
         _invenUI = FindObjectOfType<ItemInventoryUI>(true);
         _invenUI.Initialize(itemInventory);
-        StartCoroutine(Monster_Spawn(10f));
     }
+
+
+
     private void OnMonster_HpBarVisible_Option_Input(InputAction.CallbackContext _)
     {
         _isVisible_enemyHpBar = !_isVisible_enemyHpBar;
@@ -178,17 +179,36 @@ public class GameManager : Singleton<GameManager>
         _inputActions.System.Disable();
     }
 
-    private IEnumerator Monster_Spawn(float intervalTime)
+    public void Monster_Spawn()
     {
-        while(true)
+        monster_killAmount = 0;
+        monster_totalAmount = 0;
+        if (!_nowRoom.IsClear)
         {
-            yield return new WaitForSeconds(intervalTime);
-            Monster_Base mob = SpawnManager_Monster.Instance.GetObject(Monster_Type.WildBoar);
+            foreach (var spawnInfo in _nowRoom.SpawnMonsterList)
+            {
+                monster_totalAmount += spawnInfo.spawnAmount;
+                Monster_Spawn(spawnInfo.monsterType, spawnInfo.spawnAmount);
+            }
+        }
+        isMonsterSpawn = true;
+    }
+
+    private void Monster_Spawn(Monster_Type type, uint spawnAmount)
+    {
+        for(int i = 0; i < spawnAmount; i++)
+        {
+            Monster_Base mob = SpawnManager_Monster.Instance.GetObject(type);
             mob.transform.position = new Vector3(UnityEngine.Random.Range(_randomSpawnArea_minX, _randomSpawnArea_maxX), UnityEngine.Random.Range(_randomSpawnArea_minY, _randomSpawnArea_maxY), 0f);
         }
     }
 
-    private T[] SuffleArray<T> (T[] array)
+    private void StageClear()
+    {
+
+    }
+
+    private T[] SuffleArray<T>(T[] array)
     {
         int changeTarget1, changeTarget2;
         T temp;

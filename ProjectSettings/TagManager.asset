@@ -43,6 +43,9 @@ TagManager:
   - name: Ground
     uniqueID: 3010111655
     locked: 0
+  - name: Door
+    uniqueID: 317988125
+    locked: 0
   - name: AttackRange
     uniqueID: 1017135829
     locked: 0

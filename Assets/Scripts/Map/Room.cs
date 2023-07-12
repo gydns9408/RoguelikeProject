@@ -5,8 +5,8 @@ using UnityEngine;
 public enum Arrow
 {
     North,
-    South,
     East,
+    South,
     West
 }
 
@@ -24,13 +24,11 @@ public struct SpawnMonsterInfo
 
 public class Room
 {
-    public Room _northRoom;
-    public Room _southRoom;
-    public Room _eastRoom;
-    public Room _westRoom;
+    uint _depth;
+    public uint Depth => _depth;
 
-    public Room[] linkedRooms;
-
+    Room[] _linkedRooms;
+    public Room[] LinkedRooms => _linkedRooms;
 
     List<SpawnMonsterInfo> _spawnMonsterList;
     public List<SpawnMonsterInfo> SpawnMonsterList
@@ -40,11 +38,39 @@ public class Room
     }
 
     bool _isClear;
-    public bool IsClear => _isClear;
+    public bool IsClear
+    {
+        get => _isClear;
+        set
+        {
+            if (!_isClear)
+            {
+                _isClear = value;
+            }
+        }
+    }
+
+    bool _isBossroom;
+    public bool IsBossroom
+    {
+        get => _isBossroom;
+        set
+        {
+            if (!_isBossroom)
+            {
+                _isBossroom = value;
+            }
+        }
+    }
 
     public Room(List<SpawnMonsterInfo> spawnMonsterList)
     {
         SpawnMonsterList = spawnMonsterList;
-        linkedRooms = new Room[4];
+        _linkedRooms = new Room[4];
+    }
+
+    public void SettingDepth(uint depth)
+    {
+        _depth = depth;
     }
 }

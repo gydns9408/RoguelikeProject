@@ -74,18 +74,28 @@ public class GameManager : Singleton<GameManager>
                 }
                 int selectRoomNumber = roomStack.Pop();
                 int linkRoomAmount = 0;
-                if (selectRoomNumber == 0)
+
+                int linkedRoomAmount = 0;
+                for (int i = 0; i < rooms[selectRoomNumber].linkedRooms.Length; i++)
                 {
-                    linkRoomAmount = UnityEngine.Random.Range(1, 5);
+                     if (rooms[selectRoomNumber].linkedRooms[i] != null)
+                     { 
+                        linkedRoomAmount++;
+                     }
+                }
+                int minAddRoomAmount = 0;
+                int maxAddRoomAmount = Mathf.Min(5 - linkedRoomAmount, roomAmount - currentRoomNumber + 1);
+                if (roomStack.Count < 1 && currentRoomNumber < roomAmount)
+                {
+                    minAddRoomAmount = 1;
                 }
                 else
                 {
-                    int linkedRoomAmount = 0;
-                    for (int i = 0; i < rooms[selectRoomNumber].linkedRooms.Length; i++)
-                    {
-                    }
-                    linkRoomAmount = UnityEngine.Random.Range(0, 4);
+                    minAddRoomAmount = 0;
                 }
+
+                linkRoomAmount = UnityEngine.Random.Range(minAddRoomAmount, maxAddRoomAmount);
+              
                 arrowOrder = SuffleArray(arrowOrder);
                 for (int i = 0; i < linkRoomAmount; i++)
                 {
@@ -94,12 +104,11 @@ public class GameManager : Singleton<GameManager>
                     switch (arrowOrder[i])
                     {
                         case 0:
-                            if (rooms[selectRoomNumber]._northRoom != null)
+                            if (rooms[selectRoomNumber].linkedRooms[(int)Arrow.North] != null)
                             {
                             }
-                            rooms[selectRoomNumber]._northRoom = rooms[currentRoomNumber];
-                            rooms[currentRoomNumber]._southRoom = rooms[selectRoomNumber];
-
+                            rooms[selectRoomNumber].linkedRooms[(int)Arrow.North] = rooms[currentRoomNumber];
+                            rooms[currentRoomNumber].linkedRooms[(int)Arrow.South] = rooms[selectRoomNumber];
                             break;
                         case 1:
                             if (rooms[selectRoomNumber]._southRoom != null)

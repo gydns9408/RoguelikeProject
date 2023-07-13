@@ -30,8 +30,8 @@ public class Unit_Base : MonoBehaviour
     public float _moveSpeed = 1f;
     protected Vector2 _moveDir;
 
-    protected static float trueValue = 0f;
-    protected static float falseValue = 1f;
+    protected const float trueValue = 0f;
+    protected const float falseValue = 1f;
 
     protected float _isAttack = falseValue;
 

@@ -3,11 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-//public  struct TileData
-//{
-
-//}
-
 public class Node : IComparable<Node>
 {
     public int x_coordinate;
@@ -28,7 +23,6 @@ public class Node : IComparable<Node>
 
     public GridType gridType;
 
-    //List<List<TileData>> map = new List<List<TileData>>();
 
     public Node(int x, int y, GridType type = GridType.Plain)
     {

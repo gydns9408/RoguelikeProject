@@ -16,6 +16,8 @@ public class Test_First : Test_Base
     public ItemSlotUI slotUI3;
     ItemIcon icon3;
 
+    public MapManager mapManager;
+
     // Start is called before the first frame update
     protected override void Test_Action1(InputAction.CallbackContext _)
     {
@@ -25,7 +27,15 @@ public class Test_First : Test_Base
 
     protected override void Test_Action2(InputAction.CallbackContext _)
     {
-        player.HPChange(-10);
+        Node node = mapManager.GridMap.GetNode(new Vector3(-9.57f, 15.14f, 0));
+        if (node != null)
+        {
+            Debug.Log($"({node.x_coordinate}, {node.y_coordinate})");
+        }
+        else
+        {
+            Debug.Log("Range over");
+        }
     }
 
     protected override void Test_Action3(InputAction.CallbackContext _)

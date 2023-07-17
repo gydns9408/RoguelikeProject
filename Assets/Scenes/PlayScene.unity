@@ -1095,6 +1095,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 224366969}
+  - component: {fileID: 224366970}
   m_Layer: 0
   m_Name: MapManager
   m_TagString: Untagged
@@ -1117,6 +1118,18 @@ Transform:
   m_Father: {fileID: 294392915}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &224366970
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 224366968}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f0bfec4f51c92c419e4c0051fb5af14, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &225009884
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -14503,6 +14516,7 @@ Transform:
   m_Children:
   - {fileID: 2029395954}
   - {fileID: 1483035170}
+  - {fileID: 1871670261}
   m_Father: {fileID: 0}
   m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -14724,6 +14738,7 @@ MonoBehaviour:
   slotUI: {fileID: 3594013619186064868}
   slotUI2: {fileID: 1583959608}
   slotUI3: {fileID: 2138946055}
+  mapManager: {fileID: 224366970}
 --- !u!4 &613454848
 Transform:
   m_ObjectHideFlags: 0
@@ -20373,13 +20388,59 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1802968940}
   m_LocalRotation: {x: -0, y: -0, z: 0.7071068, w: 0.7071068}
-  m_LocalPosition: {x: -9.81, y: -4.47, z: 0}
+  m_LocalPosition: {x: -6.9700003, y: 13.43, z: 0}
   m_LocalScale: {x: 0.16, y: 0.26999998, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 90}
+--- !u!1 &1871670260
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1871670261}
+  - component: {fileID: 1871670262}
+  m_Layer: 0
+  m_Name: ObjectPool_BlackTombstone
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1871670261
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1871670260}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 500055263}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1871670262
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1871670260}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3d8593032a4b3b44d85bb2421da1b9dd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _copyPrefab: {fileID: 2031372657595239054, guid: 88e05f944f7f78f45890afaf9eb65f9a, type: 3}
+  _poolSize: 16
 --- !u!1 &1904812848
 GameObject:
   m_ObjectHideFlags: 0
@@ -21423,6 +21484,63 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 32f8276c5eb715943bd0254972c2a35a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1001 &2031372656954086335
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 2031372657595239053, guid: 88e05f944f7f78f45890afaf9eb65f9a, type: 3}
+      propertyPath: m_RootOrder
+      value: 16
+      objectReference: {fileID: 0}
+    - target: {fileID: 2031372657595239053, guid: 88e05f944f7f78f45890afaf9eb65f9a, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -6.96
+      objectReference: {fileID: 0}
+    - target: {fileID: 2031372657595239053, guid: 88e05f944f7f78f45890afaf9eb65f9a, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 13.63
+      objectReference: {fileID: 0}
+    - target: {fileID: 2031372657595239053, guid: 88e05f944f7f78f45890afaf9eb65f9a, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2031372657595239053, guid: 88e05f944f7f78f45890afaf9eb65f9a, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2031372657595239053, guid: 88e05f944f7f78f45890afaf9eb65f9a, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2031372657595239053, guid: 88e05f944f7f78f45890afaf9eb65f9a, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2031372657595239053, guid: 88e05f944f7f78f45890afaf9eb65f9a, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2031372657595239053, guid: 88e05f944f7f78f45890afaf9eb65f9a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2031372657595239053, guid: 88e05f944f7f78f45890afaf9eb65f9a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2031372657595239053, guid: 88e05f944f7f78f45890afaf9eb65f9a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2031372657595239054, guid: 88e05f944f7f78f45890afaf9eb65f9a, type: 3}
+      propertyPath: m_Name
+      value: BlackTombstone
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 88e05f944f7f78f45890afaf9eb65f9a, type: 3}
 --- !u!1 &2326639109046170772
 GameObject:
   m_ObjectHideFlags: 0

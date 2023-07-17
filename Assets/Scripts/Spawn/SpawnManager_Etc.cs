@@ -6,14 +6,14 @@ public class SpawnManager_Etc : Singleton<SpawnManager_Etc>
 {
     ObjectPool_DropItem _objectPool_dropItem;
     ObjectPool_ItemIcon _objectPool_itemIcon;
-    ObjectPool_BlackTombstone _objectPool_blackTombstone;
+    ObjectPool_Wall_BlackTombstone _objectPool_wall_blackTombstone;
     protected override void RunOnlyOnce_Initialize()
     {
         if (_initialized == false)
         {
             _objectPool_dropItem = GetComponentInChildren<ObjectPool_DropItem>();
             _objectPool_itemIcon = GetComponentInChildren<ObjectPool_ItemIcon>();
-            _objectPool_blackTombstone = GetComponentInChildren<ObjectPool_BlackTombstone>();
+            _objectPool_wall_blackTombstone = GetComponentInChildren<ObjectPool_Wall_BlackTombstone>();
         }
     }
 
@@ -27,9 +27,9 @@ public class SpawnManager_Etc : Singleton<SpawnManager_Etc>
         {
             _objectPool_itemIcon.Initialize();
         }
-        if (_objectPool_blackTombstone != null)
+        if (_objectPool_wall_blackTombstone != null)
         {
-            _objectPool_blackTombstone.Initialize();
+            _objectPool_wall_blackTombstone.Initialize();
         }
     }
 
@@ -45,9 +45,9 @@ public class SpawnManager_Etc : Singleton<SpawnManager_Etc>
         return _objectPool_itemIcon.GetObject();
     }
 
-    public BlackTombstone GetObject_BlackTombstone()
+    public Wall_BlackTombstone GetObject_Wall_BlackTombstone()
     {
-        return _objectPool_blackTombstone.GetObject();
+        return _objectPool_wall_blackTombstone.GetObject();
     }
 
 }

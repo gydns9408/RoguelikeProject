@@ -18,6 +18,7 @@ public class Node : IComparable<Node>
     {
         Plain = 0,
         Wall,
+        Door,
         Monster
     }
 

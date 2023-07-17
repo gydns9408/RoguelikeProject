@@ -42,6 +42,7 @@ public class GridMap
 
         _nodes = new Node[_width * _height];
         _plainNodes = new List<Node>(_nodes.Length);
+        _notPlainNodes = new List<Node>(_nodes.Length);
         int north_and_south_possibleDoorRange = Mathf.Max(_width - Side_Impossible_DoorRange, 0);
         _possibleNorthDoorNodes = new List<Node>(north_and_south_possibleDoorRange);
         _possibleSouthDoorNodes = new List<Node>(north_and_south_possibleDoorRange);
@@ -176,11 +177,79 @@ public class GridMap
             _plainNodes.Add(node);
             _notPlainNodes.RemoveAt(0);
         }
+
+        count = _impossibleNorthDoorNodes.Count;
+        for (int i = 0; i < count; i++)
+        {
+            Node node = _impossibleNorthDoorNodes[0];
+            _possibleNorthDoorNodes.Add(node);
+            _impossibleNorthDoorNodes.RemoveAt(0);
+        }
+
+        count = _impossibleEastDoorNodes.Count;
+        for (int i = 0; i < count; i++)
+        {
+            Node node = _impossibleEastDoorNodes[0];
+            _possibleEastDoorNodes.Add(node);
+            _impossibleEastDoorNodes.RemoveAt(0);
+        }
+
+        count = _impossibleSouthDoorNodes.Count;
+        for (int i = 0; i < count; i++)
+        {
+            Node node = _impossibleSouthDoorNodes[0];
+            _possibleSouthDoorNodes.Add(node);
+            _impossibleSouthDoorNodes.RemoveAt(0);
+        }
+
+        count = _impossibleWestDoorNodes.Count;
+        for (int i = 0; i < count; i++)
+        {
+            Node node = _impossibleWestDoorNodes[0];
+            _possibleWestDoorNodes.Add(node);
+            _impossibleWestDoorNodes.RemoveAt(0);
+        }
     }
 
     public void PlainNodes_Remove(Node node)
     { 
         _plainNodes.Remove(node);
         _notPlainNodes.Add(node);
+    }
+
+    public void PossibleNorthDoorNodes_Remove(Node node)
+    {
+        if (_possibleNorthDoorNodes.Contains(node))
+        {
+            _possibleNorthDoorNodes.Remove(node);
+            _impossibleNorthDoorNodes.Add(node);
+        }
+    }
+
+    public void PossibleEastDoorNodes_Remove(Node node)
+    {
+        if (_possibleEastDoorNodes.Contains(node))
+        {
+            _possibleEastDoorNodes.Remove(node);
+            _impossibleEastDoorNodes.Add(node);
+        }
+    }
+
+    public void PossibleSouthDoorNodes_Remove(Node node)
+    {
+        if (_possibleSouthDoorNodes.Contains(node))
+        {
+            _possibleSouthDoorNodes.Remove(node);
+            _impossibleSouthDoorNodes.Add(node);
+        }
+    }
+
+    public void PossibleWestDoorNodes_Remove(Node node)
+    {
+        if (_possibleWestDoorNodes.Contains(node))
+        {
+            _possibleWestDoorNodes.Remove(node);
+            _impossibleWestDoorNodes.Add(node);
+        }
     }
 }

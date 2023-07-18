@@ -57,4 +57,14 @@ public class Node : IComparable<Node>
     {
         return HashCode.Combine(x_coordinate, y_coordinate);
     }
+
+    public static bool operator ==(Node left, Vector2Int right)
+    {
+        return left.x_coordinate == right.x && left.y_coordinate == right.y;
+    }
+
+    public static bool operator !=(Node left, Vector2Int right)
+    {
+        return left.x_coordinate != right.x || left.y_coordinate != right.y;
+    }
 }

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public enum Arrow
 {
-    North,
+    North = 0,
     East,
     South,
     West

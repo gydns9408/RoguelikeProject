@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
+using UnityEngine.InputSystem.EnhancedTouch;
 using UnityEngine.Tilemaps;
 
 public class MapManager : MonoBehaviour
@@ -10,6 +12,11 @@ public class MapManager : MonoBehaviour
 
     public int wallMaxAmount = 16;
     List<Wall_Base> wallList;
+
+    public Door_Base _northDoor;
+    public Door_Base _eastDoor;
+    public Door_Base _southDoor;
+    public Door_Base _westDoor;
     private void Awake()
     {
         Transform parent = transform.parent;
@@ -54,6 +61,31 @@ public class MapManager : MonoBehaviour
                 wallList.Add(tomb);
                 GridMap.PlainNodes_Remove(node);
             }
+
+            int settingIndex2 = Random.Range(0, GridMap.PossibleNorthDoorNodes.Count);
+            Node node2 = GridMap.PossibleNorthDoorNodes[settingIndex2];
+            node2.gridType = Node.GridType.Door;
+            _northDoor.transform.position = GridMap.GridToWorld(node2.x_coordinate, node2.y_coordinate) + new Vector2(_northDoor.X_Correction_Value, _northDoor.Y_Correction_Value);
+            GridMap.PlainNodes_Remove(node2);
+
+            settingIndex2 = Random.Range(0, GridMap.PossibleEastDoorNodes.Count);
+            node2 = GridMap.PossibleEastDoorNodes[settingIndex2];
+            node2.gridType = Node.GridType.Door;
+            _eastDoor.transform.position = GridMap.GridToWorld(node2.x_coordinate, node2.y_coordinate) + new Vector2(_eastDoor.X_Correction_Value, _eastDoor.Y_Correction_Value);
+            GridMap.PlainNodes_Remove(node2);
+
+            settingIndex2 = Random.Range(0, GridMap.PossibleSouthDoorNodes.Count);
+            node2 = GridMap.PossibleSouthDoorNodes[settingIndex2];
+            node2.gridType = Node.GridType.Door;
+            _southDoor.transform.position = GridMap.GridToWorld(node2.x_coordinate, node2.y_coordinate) + new Vector2(_southDoor.X_Correction_Value, _southDoor.Y_Correction_Value);
+            GridMap.PlainNodes_Remove(node2);
+
+            settingIndex2 = Random.Range(0, GridMap.PossibleWestDoorNodes.Count);
+            node2 = GridMap.PossibleWestDoorNodes[settingIndex2];
+            node2.gridType = Node.GridType.Door;
+            _westDoor.transform.position = GridMap.GridToWorld(node2.x_coordinate, node2.y_coordinate) + new Vector2(_westDoor.X_Correction_Value, _westDoor.Y_Correction_Value);
+            GridMap.PlainNodes_Remove(node2);
+
 
             if (reset)
             {

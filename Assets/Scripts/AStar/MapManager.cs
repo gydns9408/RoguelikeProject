@@ -89,7 +89,7 @@ public class MapManager : MonoBehaviour
             {
                 foreach (var node in _wallSettingNodeList)
                 {
-                    Wall_BlackTombstone tomb = SpawnManager_Etc.Instance.GetObject_Wall_BlackTombstone();
+                    Wall_Base tomb = SpawnManager_Etc.Instance.GetObject_Wall(WallCode.BlackTombstone);
                     tomb.transform.position = GridMap.GridToWorld(node.x_coordinate, node.y_coordinate) + new Vector2(tomb.X_Correction_Value, tomb.Y_Correction_Value);
                     tomb.Sprite_SortingOrderSetting();
                 }

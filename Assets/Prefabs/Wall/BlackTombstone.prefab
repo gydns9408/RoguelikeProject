@@ -177,8 +177,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2031372657595239053}
-  - component: {fileID: 1937075539632469850}
   - component: {fileID: 6288719176316614059}
+  - component: {fileID: -8307442329456536604}
   m_Layer: 9
   m_Name: BlackTombstone
   m_TagString: Wall
@@ -203,18 +203,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1937075539632469850
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2031372657595239054}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3d1a151017c4b5b49a8d68971a408629, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!61 &6288719176316614059
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -241,3 +229,17 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.94938695, y: 0.70355225}
   m_EdgeRadius: 0
+--- !u!114 &-8307442329456536604
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2031372657595239054}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be9cb726f6c2c094bb53a330eeb42a64, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  X_Correction_Value: 0
+  Y_Correction_Value: 0.2

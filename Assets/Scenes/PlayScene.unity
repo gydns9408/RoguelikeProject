@@ -1214,7 +1214,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f0bfec4f51c92c419e4c0051fb5af14, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  wallMaxAmount: 16
+  _wallMaxAmount: 16
   _doors:
   - {fileID: 647369755}
   - {fileID: 777266894}
@@ -22769,7 +22769,7 @@ GameObject:
   - component: {fileID: 1871670261}
   - component: {fileID: 1871670262}
   m_Layer: 0
-  m_Name: ObjectPool_BlackTombstone
+  m_Name: ObjectPool_Wall_Base_BlackTombstone
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

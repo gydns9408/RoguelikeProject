@@ -6,14 +6,14 @@ public class SpawnManager_Etc : Singleton<SpawnManager_Etc>
 {
     ObjectPool_DropItem _objectPool_dropItem;
     ObjectPool_ItemIcon _objectPool_itemIcon;
-    ObjectPool_Wall_BlackTombstone _objectPool_wall_blackTombstone;
+    ObjectPool_Wall_Base[] _objectPool_wall_base;
     protected override void RunOnlyOnce_Initialize()
     {
         if (_initialized == false)
         {
             _objectPool_dropItem = GetComponentInChildren<ObjectPool_DropItem>();
             _objectPool_itemIcon = GetComponentInChildren<ObjectPool_ItemIcon>();
-            _objectPool_wall_blackTombstone = GetComponentInChildren<ObjectPool_Wall_BlackTombstone>();
+            _objectPool_wall_base = GetComponentsInChildren<ObjectPool_Wall_Base>();
         }
     }
 
@@ -27,9 +27,12 @@ public class SpawnManager_Etc : Singleton<SpawnManager_Etc>
         {
             _objectPool_itemIcon.Initialize();
         }
-        if (_objectPool_wall_blackTombstone != null)
+        if (_objectPool_wall_base != null)
         {
-            _objectPool_wall_blackTombstone.Initialize();
+            foreach (var pool in _objectPool_wall_base)
+            {
+                pool.Initialize();
+            }    
         }
     }
 
@@ -45,9 +48,9 @@ public class SpawnManager_Etc : Singleton<SpawnManager_Etc>
         return _objectPool_itemIcon.GetObject();
     }
 
-    public Wall_BlackTombstone GetObject_Wall_BlackTombstone()
+    public Wall_Base GetObject_Wall(WallCode wallCode)
     {
-        return _objectPool_wall_blackTombstone.GetObject();
+        return _objectPool_wall_base[(int)wallCode].GetObject();
     }
 
 }

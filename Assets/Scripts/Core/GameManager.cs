@@ -36,6 +36,8 @@ public class GameManager : Singleton<GameManager>
     Room[] rooms;
     Room _nowRoom;
 
+    public Room NowRoom => _nowRoom;
+
     uint monster_totalAmount;
     uint monster_killAmount;
     public uint Monster_KillAmount

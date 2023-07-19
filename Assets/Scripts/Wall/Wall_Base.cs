@@ -4,7 +4,11 @@ using UnityEngine;
 
 public enum WallCode
 {
-    BlackTombstone = 0
+    BlackTombstone = 0,
+    WhiteTombstone,
+    TauStatue,
+    ReaperStatue,
+    DevilStatue
 }
 
 public class Wall_Base : PoolObjectShape
@@ -22,10 +26,13 @@ public class Wall_Base : PoolObjectShape
     protected void OnEnable()
     {
         int rand = Random.Range(0, 2);
-        bool randBool = ((rand & (0b_1)) != 0);
-        foreach (var sprite in _sprites)
+        if (rand == 0)
         {
-            sprite.flipX = randBool; 
+            transform.localScale = Vector3.one;
+        }
+        else
+        {
+            transform.localScale = new Vector3(-1, 1, 1);
         }
     }
 

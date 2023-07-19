@@ -22,6 +22,18 @@ public struct SpawnMonsterInfo
     }
 }
 
+public struct WallInfo
+{
+    public Monster_Type monsterType;
+    public uint spawnAmount;
+
+    public WallInfo(Monster_Type MonsterType, uint SpawnAmount)
+    {
+        monsterType = MonsterType;
+        spawnAmount = SpawnAmount;
+    }
+}
+
 public class Room
 {
     uint _depth;

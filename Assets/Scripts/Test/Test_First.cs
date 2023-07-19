@@ -27,14 +27,14 @@ public class Test_First : Test_Base
 
     protected override void Test_Action2(InputAction.CallbackContext _)
     {
-        Node node = mapManager.GridMap.GetNode(new Vector3(-9.57f, 15.14f, 0));
-        if (node != null)
+        Node[] nodes = new Node[2];
+        nodes[0] = mapManager.GridMap.GetNode(0, 8);
+        nodes[1] = mapManager.GridMap.GetNode(2, 8);
+        foreach (var node in nodes)
         {
-            Debug.Log($"({node.x_coordinate}, {node.y_coordinate})");
-        }
-        else
-        {
-            Debug.Log("Range over");
+            Wall_Base wall = SpawnManager_Etc.Instance.GetObject_Wall(WallCode.ReaperStatue);
+            wall.transform.position = mapManager.GridMap.GridToWorld(node.x_coordinate, node.y_coordinate) + new Vector2(wall.X_Correction_Value, wall.Y_Correction_Value);
+            wall.Sprite_SortingOrderSetting();
         }
     }
 

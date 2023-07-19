@@ -377,7 +377,8 @@ public class Monster_Base : Unit_Base
 
     protected void FixedUpdate_Hit()
     {
-        _moveDir = Vector3.zero;
+        Vector3 moveDir = (_position.position - GameManager.Instance.Player.Position.position).normalized;
+        _moveDir = moveDir;
     }
 
     protected void FixedUpdate_Die()

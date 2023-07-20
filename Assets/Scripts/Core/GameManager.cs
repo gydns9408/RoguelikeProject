@@ -38,24 +38,12 @@ public class GameManager : Singleton<GameManager>
 
     public Room NowRoom => _nowRoom;
 
-    uint monster_totalAmount;
-    uint monster_killAmount;
-    public uint Monster_KillAmount
+    bool _isMonsterSpawn;
+    public bool IsMonsterSpawn
     {
-        set
-        {
-            if (isMonsterSpawn)
-            {
-                monster_killAmount = value;
-                if (monster_killAmount >= monster_totalAmount && !_nowRoom.IsClear)
-                {
-                    _nowRoom.IsClear = true;
-                    StageClear();
-                }
-            }
-        }
-    }
-    bool isMonsterSpawn;
+        get => _isMonsterSpawn;
+        set => _isMonsterSpawn = value;
+    } 
 
     protected override void RunOnlyOnce_Initialize()
     {
@@ -181,33 +169,9 @@ public class GameManager : Singleton<GameManager>
         _inputActions.System.Disable();
     }
 
-    public void Monster_Spawn()
+    public void StageClear()
     {
-        monster_killAmount = 0;
-        monster_totalAmount = 0;
-        if (!_nowRoom.IsClear)
-        {
-            foreach (var spawnInfo in _nowRoom.SpawnMonsterList)
-            {
-                monster_totalAmount += spawnInfo.spawnAmount;
-                Monster_Spawn(spawnInfo.monsterType, spawnInfo.spawnAmount);
-            }
-        }
-        isMonsterSpawn = true;
-    }
-
-    private void Monster_Spawn(Monster_Type type, uint spawnAmount)
-    {
-        for(int i = 0; i < spawnAmount; i++)
-        {
-            Monster_Base mob = SpawnManager_Monster.Instance.GetObject(type);
-            mob.transform.position = new Vector3(UnityEngine.Random.Range(_randomSpawnArea_minX, _randomSpawnArea_maxX), UnityEngine.Random.Range(_randomSpawnArea_minY, _randomSpawnArea_maxY), 0f);
-        }
-    }
-
-    private void StageClear()
-    {
-
+        Debug.Log("스테이지 클리어!");
     }
 
     private T[] SuffleArray<T>(T[] array)

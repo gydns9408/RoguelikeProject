@@ -24,13 +24,15 @@ public struct SpawnMonsterInfo
 
 public struct WallInfo
 {
-    public Monster_Type monsterType;
-    public uint spawnAmount;
+    public WallCode wallCode;
+    public int x;
+    public int y;
 
-    public WallInfo(Monster_Type MonsterType, uint SpawnAmount)
+    public WallInfo(WallCode WallCode, int X, int Y)
     {
-        monsterType = MonsterType;
-        spawnAmount = SpawnAmount;
+        wallCode = WallCode;
+        x = X;
+        y = Y;
     }
 }
 
@@ -47,6 +49,13 @@ public class Room
     {
         get => _spawnMonsterList;
         private set => _spawnMonsterList = value;
+    }
+
+    List<WallInfo> _wallInfoList;
+    public List<WallInfo> WallInfoList
+    {
+        get => _wallInfoList;
+        private set => _wallInfoList = value;
     }
 
     bool _isClear;
@@ -79,10 +88,16 @@ public class Room
     {
         SpawnMonsterList = spawnMonsterList;
         _linkedRooms = new Room[4];
+        WallInfoList = new List<WallInfo>();
     }
 
     public void SettingDepth(uint depth)
     {
         _depth = depth;
+    }
+
+    public void AddToWallInfoList(WallInfo info)
+    {
+        WallInfoList.Add(info);
     }
 }

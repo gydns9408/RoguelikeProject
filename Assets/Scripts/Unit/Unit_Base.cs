@@ -29,9 +29,9 @@ public class Unit_Base : MonoBehaviour
 
     public float _moveSpeed = 1f;
     protected Vector2 _moveDir;
-    protected float _knock_back_maxSpeed = 1f;
+    protected float _knock_back_maxSpeed = 8f;
     protected float _knock_back_speed = 0f;
-    protected float _knock_back_speed_reduceSpeed = 1f;
+    protected float _knock_back_speed_reduceSpeed = 32f;
 
     protected const float trueValue = 0f;
     protected const float falseValue = 1f;

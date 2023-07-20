@@ -15,6 +15,23 @@ public struct DropItemInfo
 
 public class Monster_Base : Unit_Base
 {
+    static uint _totalCount;
+    public static uint TotalCount
+    {
+        get => _totalCount;
+        set
+        {
+            _totalCount = value;
+            if (GameManager.Instance.IsMonsterSpawn)
+            {
+                if (_totalCount <= 0 && !GameManager.Instance.NowRoom.IsClear)
+                {
+                    GameManager.Instance.NowRoom.IsClear = true;
+                    GameManager.Instance.StageClear();
+                }
+            }
+        }
+    }
     //public float _maxHp = 25f;
     //protected float _hp;
     public override float HP
@@ -47,8 +64,16 @@ public class Monster_Base : Unit_Base
                     else
                     {
                         _isAlive = false;
-                        _coroutine.Die();
-                        _NowState = EnemyState.Die;
+                        if (Mathf.Abs(_hp - refine_value) > _maxHp * 0.1f)
+                        {
+                            _coroutine.Hit();
+                            _NowState = EnemyState.Hit;
+                        }
+                        else
+                        {
+                            _coroutine.Die();
+                            _NowState = EnemyState.Die;
+                        }
                     }
                 }
                 _hp = refine_value;
@@ -166,6 +191,8 @@ public class Monster_Base : Unit_Base
                         break;
                     case EnemyState.Hit:
                         _stateFixedUpdate = FixedUpdate_Hit;
+                        _isKnock_back = trueValue;
+                        _knock_back_speed = _knock_back_maxSpeed;
                         _anim.SetBool(_isHitHash, true);
                         StopAllCoroutines();
                         StartCoroutine(Hit());
@@ -175,6 +202,7 @@ public class Monster_Base : Unit_Base
                         _anim.SetTrigger(_isDieHash);
                         StopAllCoroutines();
                         StartCoroutine(Die());
+                        TotalCount--;
                         break;
                 }
             }
@@ -440,8 +468,17 @@ public class Monster_Base : Unit_Base
         yield return _hit_wait;
         _anim.SetBool(_isHitHash, false);
         _afterHit_chasingTime_value = _afterHit_chasingTime;
-        Ready_Chase();
-        _NowState = EnemyState.Chase;
+        _isKnock_back = falseValue;
+        if (_isAlive)
+        {
+            Ready_Chase();
+            _NowState = EnemyState.Chase;
+        }
+        else
+        {
+            _coroutine.Die();
+            _NowState = EnemyState.Die;
+        }
     }
 
     protected IEnumerator Die()
@@ -493,6 +530,9 @@ public class Monster_Base : Unit_Base
         _afterHit_chasingTime_value %= _afterHit_chasingTime;
         _freeMove_notMoveDirChangeTime_value -= Time.deltaTime;
         _freeMove_notMoveDirChangeTime_value %= _freeMove_notMoveDirChangeTime;
+        float knock_back_speed = _knock_back_speed - Time.deltaTime * _knock_back_speed_reduceSpeed;
+        knock_back_speed = Mathf.Clamp(knock_back_speed, 0, _knock_back_maxSpeed);
+        _knock_back_speed = knock_back_speed;
     }
 
 

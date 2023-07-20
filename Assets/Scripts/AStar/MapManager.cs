@@ -97,18 +97,58 @@ public class MapManager : MonoBehaviour
                         Wall_Base wall = SpawnManager_Etc.Instance.GetObject_Wall((WallCode)rand);
                         wall.transform.position = GridMap.GridToWorld(node.x_coordinate, node.y_coordinate) + new Vector2(wall.X_Correction_Value, wall.Y_Correction_Value);
                         wall.Sprite_SortingOrderSetting();
+                        WallInfo wallInfo = new WallInfo((WallCode)rand, node.x_coordinate, node.y_coordinate);
+                        GameManager.Instance.NowRoom.AddToWallInfoList(wallInfo);
                     }
                     for (int i = 0; i < _doorSettingNodeList.Count; i++)
                     {
-                        _doors[i].transform.position = GridMap.GridToWorld(_doorSettingNodeList[i].x_coordinate, _doorSettingNodeList[i].y_coordinate) + new Vector2(_doors[i].X_Correction_Value, _doors[i].Y_Correction_Value);
+                        if (GameManager.Instance.NowRoom.LinkedRooms[i] != null)
+                        {
+                            _doors[i].transform.position = GridMap.GridToWorld(_doorSettingNodeList[i].x_coordinate, _doorSettingNodeList[i].y_coordinate) + new Vector2(_doors[i].X_Correction_Value, _doors[i].Y_Correction_Value);
+                        }
                     }
+                    Monster_Spawn();
                 }
 
             }
         }
         else
         {
-
+            foreach (var wallInfo in GameManager.Instance.NowRoom.WallInfoList)
+            {
+                Wall_Base wall = SpawnManager_Etc.Instance.GetObject_Wall(wallInfo.wallCode);
+                wall.transform.position = GridMap.GridToWorld(wallInfo.x, wallInfo.y) + new Vector2(wall.X_Correction_Value, wall.Y_Correction_Value);
+                wall.Sprite_SortingOrderSetting();
+            }
         }
     }
+
+    private void Monster_Spawn()
+    {
+        GameManager.Instance.IsMonsterSpawn = false;
+        Monster_Base.TotalCount = 0;
+        if (!GameManager.Instance.NowRoom.IsClear)
+        {
+            foreach (var spawnInfo in GameManager.Instance.NowRoom.SpawnMonsterList)
+            {
+                Monster_Spawn(spawnInfo.monsterType, spawnInfo.spawnAmount);
+            }
+        }
+        GameManager.Instance.IsMonsterSpawn = true;
+    }
+
+    private void Monster_Spawn(Monster_Type type, uint spawnAmount)
+    {
+        for (int i = 0; i < spawnAmount; i++)
+        {
+            int settingIndex = Random.Range(0, GridMap.PlainNodes.Count);
+            Node node = GridMap.PlainNodes[settingIndex];
+            node.gridType = Node.GridType.Monster;
+            Monster_Base mob = SpawnManager_Monster.Instance.GetObject(type);
+            mob.transform.position = GridMap.GridToWorld(node.x_coordinate, node.y_coordinate);
+            GridMap.PlainNodes_Remove(node);
+            Monster_Base.TotalCount++;
+        }
+    }
+
 }

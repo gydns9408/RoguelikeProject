@@ -58,7 +58,6 @@ public class GridMap
         {
             for (int x = min.x; x < max.x; x++)
             {
-                Debug.Log($"({x} , {y})");
                 int index = GridToIndex(x, y);
                 _nodes[index] = new Node(x, y);
                 _plainNodes.Add(_nodes[index]);

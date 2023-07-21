@@ -36,6 +36,17 @@ public struct WallInfo
     }
 }
 
+public struct DoorInfo
+{
+    public int x;
+    public int y;
+
+    public DoorInfo(int X, int Y)
+    {
+        x = X;
+        y = Y;
+    }
+}
 public class Room
 {
     uint _depth;
@@ -43,6 +54,8 @@ public class Room
 
     Room[] _linkedRooms;
     public Room[] LinkedRooms => _linkedRooms;
+    DoorInfo[] _doorInfos;
+    public DoorInfo[] DoorInfos => _doorInfos;
 
     List<SpawnMonsterInfo> _spawnMonsterList;
     public List<SpawnMonsterInfo> SpawnMonsterList
@@ -89,6 +102,7 @@ public class Room
         SpawnMonsterList = spawnMonsterList;
         _linkedRooms = new Room[4];
         WallInfoList = new List<WallInfo>();
+        _doorInfos = new DoorInfo[4];
     }
 
     public void SettingDepth(uint depth)
@@ -99,5 +113,10 @@ public class Room
     public void AddToWallInfoList(WallInfo info)
     {
         WallInfoList.Add(info);
+    }
+
+    public void AddToDoorInfoArray(DoorInfo info, int index)
+    {
+        DoorInfos[index] = info;
     }
 }

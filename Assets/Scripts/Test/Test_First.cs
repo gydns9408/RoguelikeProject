@@ -27,14 +27,7 @@ public class Test_First : Test_Base
 
     protected override void Test_Action2(InputAction.CallbackContext _)
     {
-        Node[] nodes = new Node[2];
-        nodes[0] = mapManager.GridMap.GetNode(30, 16);
-        nodes[1] = mapManager.GridMap.GetNode(30, 15);
-        foreach (var node in nodes)
-        {
-            Monster_Base mob = SpawnManager_Monster.Instance.GetObject(Monster_Type.WildBoar);
-            mob.transform.position = mapManager.GridMap.GridToWorld(node.x_coordinate, node.y_coordinate);
-        }
+        player.transform.position = mapManager.GridMap.GridToWorld(GameManager.Instance.NowRoom.DoorInfos[3].x, GameManager.Instance.NowRoom.DoorInfos[3].y);
     }
 
     protected override void Test_Action3(InputAction.CallbackContext _)

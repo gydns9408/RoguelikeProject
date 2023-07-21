@@ -106,6 +106,8 @@ public class MapManager : MonoBehaviour
                         {
                             _doors[i].transform.position = GridMap.GridToWorld(_doorSettingNodeList[i].x_coordinate, _doorSettingNodeList[i].y_coordinate) + new Vector2(_doors[i].X_Correction_Value, _doors[i].Y_Correction_Value);
                         }
+                        DoorInfo doorInfo = new DoorInfo(_doorSettingNodeList[i].x_coordinate, _doorSettingNodeList[i].y_coordinate);
+                        GameManager.Instance.NowRoom.AddToDoorInfoArray(doorInfo, i);
                     }
                     Monster_Spawn();
                 }
@@ -116,11 +118,25 @@ public class MapManager : MonoBehaviour
         {
             foreach (var wallInfo in GameManager.Instance.NowRoom.WallInfoList)
             {
+                Node node = GridMap.GetNode(wallInfo.x, wallInfo.y);
+                node.gridType = Node.GridType.Wall;
+                _wallSettingNodeList.Add(node);
                 Wall_Base wall = SpawnManager_Etc.Instance.GetObject_Wall(wallInfo.wallCode);
-                wall.transform.position = GridMap.GridToWorld(wallInfo.x, wallInfo.y) + new Vector2(wall.X_Correction_Value, wall.Y_Correction_Value);
+                wall.transform.position = GridMap.GridToWorld(node.x_coordinate, node.y_coordinate) + new Vector2(wall.X_Correction_Value, wall.Y_Correction_Value);
                 wall.Sprite_SortingOrderSetting();
             }
+            for (int i = 0; i < GameManager.Instance.NowRoom.DoorInfos.Length; i++)
+            {
+                Node node = GridMap.GetNode(GameManager.Instance.NowRoom.DoorInfos[i].x, GameManager.Instance.NowRoom.DoorInfos[i].y);
+                _doorSettingNodeList.Add(node);
+                if (GameManager.Instance.NowRoom.LinkedRooms[i] != null)
+                {
+                    _doors[i].transform.position = GridMap.GridToWorld(node.x_coordinate, node.y_coordinate) + new Vector2(_doors[i].X_Correction_Value, _doors[i].Y_Correction_Value);
+                    node.gridType = Node.GridType.Door;
+                }
+            }
         }
+        PlayerPositionSetting();
     }
 
     private void Monster_Spawn()
@@ -149,6 +165,12 @@ public class MapManager : MonoBehaviour
             GridMap.PlainNodes_Remove(node);
             Monster_Base.TotalCount++;
         }
+    }
+
+    private void PlayerPositionSetting()
+    {
+        Node node = _doorSettingNodeList[(int)GameManager.Instance.PlayerEntryArrow];
+        GameManager.Instance.Player.transform.position = GridMap.GridToWorld(node.x_coordinate , node.y_coordinate);
     }
 
 }

@@ -51,8 +51,8 @@ public class Player : Unit_Base
         get => _isStageStart;
         set => _isStageStart = value;
     }
-    bool _stageStart;
     bool _save_isMove;
+    public Vector2 MoveDir => _moveDir;
 
     PlayerInputActions _inputActions;
 
@@ -177,17 +177,6 @@ public class Player : Unit_Base
     {
         mob.SufferDamage(_attackPower + UnityEngine.Random.Range(0f, _attackPower * 0.1f));
     }
-
-    //public void SufferDamage(float damage)
-    //{
-    //    if (_hit_invincibleTime_value < 0)
-    //    {
-    //        _hit_invincibleTime_value = _hit_invincibleTime;
-    //        float fianl_Damage = damage * (1 - (_defencePower / (100f + _defencePower)));
-    //        HP -= fianl_Damage;
-
-    //    }
-    //}
 
     IEnumerator HitCoroutine()
     {

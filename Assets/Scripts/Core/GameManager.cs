@@ -45,8 +45,21 @@ public class GameManager : Singleton<GameManager>
         set => _isMonsterSpawn = value;
     }
 
+    Panel _panel;
+
+    bool _isStageStart;
+    public bool IsStageStart
+    {
+        get => _isStageStart;
+        private set => _isStageStart = value;
+    }
+
+    Arrow _playerEntryArrow;
+    public Arrow PlayerEntryArrow => _playerEntryArrow;
+
     const float trueValue = 1f;
     const float falseValue = 0f;
+    const int Arrow_Amount = 4;
 
     protected override void RunOnlyOnce_Initialize()
     {
@@ -129,16 +142,20 @@ public class GameManager : Singleton<GameManager>
                 }
             }
             _nowRoom = rooms[0];
+
+            _playerEntryArrow = (Arrow)UnityEngine.Random.Range(0, Arrow_Amount);
         }
     }
     protected override void Initialize()
     {
+        IsStageStart = false;
         _player = FindObjectOfType<Player>();
         _player.IsStageStart = falseValue;
         _playerInfoUI = FindObjectOfType<PlayerInfoUI>(true);
         ItemInventory itemInventory = new ItemInventory(_inventorySlotAmount, _player);
         _invenUI = FindObjectOfType<ItemInventoryUI>(true);
         _invenUI.Initialize(itemInventory);
+        _panel = FindObjectOfType<Panel>();
     }
 
 
@@ -171,6 +188,13 @@ public class GameManager : Singleton<GameManager>
         _inputActions.System.PlayerInfoUIVisible.performed -= OnUI_PlayerInfoUIVisible_Option_Input;
         _inputActions.System.MonsterHpBarVisible.performed -= OnMonster_HpBarVisible_Option_Input;
         _inputActions.System.Disable();
+    }
+
+    public void StageStart()
+    {
+        IsStageStart = true;
+        Player.GameStart();
+        _panel.CloseEnd();
     }
 
     public void StageClear()

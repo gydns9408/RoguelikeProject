@@ -35,10 +35,13 @@ public class Unit_Base : MonoBehaviour
 
     protected const float trueValue = 0f;
     protected const float falseValue = 1f;
+    protected const float trueValue_special = 1f;
+    protected const float falseValue_special = 0f;
 
     protected float _isAttack = falseValue;
     protected float _isKnock_back = falseValue;
     protected float _isKnock_back_reverse => (int)_isKnock_back ^ 0b_1;
+    protected float _isStageStart = trueValue_special;
 
     protected bool _isAlive = false;
     public float _attackPower = 3;
@@ -94,7 +97,7 @@ public class Unit_Base : MonoBehaviour
 
     protected virtual void FixedUpdate()
     {
-        _rigid.transform.position = _rigid.transform.position + Time.fixedDeltaTime * (_moveSpeed * _isAttack * _isKnock_back + _knock_back_speed * _isKnock_back_reverse) * (Vector3)_moveDir;
+        _rigid.transform.position = _rigid.transform.position + Time.fixedDeltaTime * (_moveSpeed * _isAttack * _isKnock_back * _isStageStart + _knock_back_speed * _isKnock_back_reverse) * (Vector3)_moveDir;
         _rigid.velocity = Vector2.zero;
     }
 

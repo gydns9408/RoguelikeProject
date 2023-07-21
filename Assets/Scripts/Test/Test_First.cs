@@ -28,13 +28,12 @@ public class Test_First : Test_Base
     protected override void Test_Action2(InputAction.CallbackContext _)
     {
         Node[] nodes = new Node[2];
-        nodes[0] = mapManager.GridMap.GetNode(0, 8);
-        nodes[1] = mapManager.GridMap.GetNode(2, 8);
+        nodes[0] = mapManager.GridMap.GetNode(30, 16);
+        nodes[1] = mapManager.GridMap.GetNode(30, 15);
         foreach (var node in nodes)
         {
-            Wall_Base wall = SpawnManager_Etc.Instance.GetObject_Wall(WallCode.ReaperStatue);
-            wall.transform.position = mapManager.GridMap.GridToWorld(node.x_coordinate, node.y_coordinate) + new Vector2(wall.X_Correction_Value, wall.Y_Correction_Value);
-            wall.Sprite_SortingOrderSetting();
+            Monster_Base mob = SpawnManager_Monster.Instance.GetObject(Monster_Type.WildBoar);
+            mob.transform.position = mapManager.GridMap.GridToWorld(node.x_coordinate, node.y_coordinate);
         }
     }
 

@@ -38,31 +38,21 @@ public class Player : Unit_Base
         }
     }
     public Action<float, float> _onChangeHP;
-    //bool _isAlive = true;
 
-    //public float _hit_invincibleTime = 1.5f; 
-    //float _hit_invincibleTime_value = 0f;
-    
     WaitForSeconds _wait_hitCorotine;
     public float _pickUpRange = 3.0f;
 
-    //public static float trueValue = 0f;
-    //public static float falseValue = 1f;
-
-    //float _isAttack = falseValue;
-    //float _attackPower = 10;
-    //float _defencePower = 3;
-
-    //public float _moveSpeed = 1f;
-    //Vector2 _moveDir;
-
-    //Rigidbody2D _rigid;
-    
-
-    //Animator _anim;
     readonly int _isMoveHash = Animator.StringToHash("IsMove");
     readonly int _isAttackHash = Animator.StringToHash("IsAttack");
     readonly int _activeHash = Animator.StringToHash("Active");
+
+    public float IsStageStart
+    {
+        get => _isStageStart;
+        set => _isStageStart = value;
+    }
+    bool _stageStart;
+    bool _save_isMove;
 
     PlayerInputActions _inputActions;
 
@@ -95,8 +85,7 @@ public class Player : Unit_Base
         _inputActions.Player.Enable();
         _inputActions.Player.Move.performed += OnMoveInput;
         _inputActions.Player.Move.canceled += OnMoveInput;
-        _inputActions.Player.Attack.performed += OnAttackInput;
-        _inputActions.Player.PickUp.performed += OnPickUpInput;
+
 
         _attackRange1.onMonsterAttack += CauseDamage;
     }
@@ -104,9 +93,11 @@ public class Player : Unit_Base
     private void OnDisable()
     {
         _attackRange1.onMonsterAttack -= CauseDamage;
-
-        _inputActions.Player.PickUp.performed -= OnPickUpInput;
-        _inputActions.Player.Attack.performed -= OnAttackInput;
+        if (IsStageStart == trueValue_special)
+        {
+            _inputActions.Player.PickUp.performed -= OnPickUpInput;
+            _inputActions.Player.Attack.performed -= OnAttackInput;
+        }
         _inputActions.Player.Move.canceled -= OnMoveInput;
         _inputActions.Player.Move.performed -= OnMoveInput;
         _inputActions.Player.Disable();
@@ -115,18 +106,19 @@ public class Player : Unit_Base
     private void OnMoveInput(InputAction.CallbackContext context)
     {
         _moveDir = context.ReadValue<Vector2>();
-        if (_isAttack == falseValue)
+        if (_isAttack == falseValue && IsStageStart == trueValue_special)
         {
-            if (_moveDir.x > 0)
-            {
-                transform.localScale = new Vector3(-1, 1, 1);
-            }
-            else if (_moveDir.x < 0)
-            {
-                transform.localScale = Vector3.one;
-            }
+            HeadTurn();
         }
-        _anim.SetBool(_isMoveHash, !context.canceled);
+
+        if (IsStageStart == trueValue_special)
+        {
+            _anim.SetBool(_isMoveHash, !context.canceled);
+        }
+        else
+        {
+            _save_isMove = !context.canceled;
+        }
     }
 
     private void OnAttackInput(InputAction.CallbackContext _)
@@ -141,23 +133,25 @@ public class Player : Unit_Base
 
     private void OnPickUpInput(InputAction.CallbackContext _)
     {
-        Collider2D[] items = Physics2D.OverlapCircleAll(Position.position, _pickUpRange, LayerMask.GetMask("Item"));
-        foreach (Collider2D collider in items)
-        {
-            DropItem dropItem = collider.GetComponent<DropItem>();
-            if (dropItem != null)
+
+            Collider2D[] items = Physics2D.OverlapCircleAll(Position.position, _pickUpRange, LayerMask.GetMask("Item"));
+            foreach (Collider2D collider in items)
             {
-                if (GameManager.Instance.InvenUI.Inven.AddItem(dropItem.ItemCode, dropItem.ItemAmount, out uint overCount))
+                DropItem dropItem = collider.GetComponent<DropItem>();
+                if (dropItem != null)
                 {
-                    dropItem.PickUp();
-                }
-                else
-                {
-                    Debug.Log($"아이템 {overCount}개 추가 실패");
-                    dropItem.DropItemSetting(dropItem.ItemCode, overCount);
+                    if (GameManager.Instance.InvenUI.Inven.AddItem(dropItem.ItemCode, dropItem.ItemAmount, out uint overCount))
+                    {
+                        dropItem.PickUp();
+                    }
+                    else
+                    {
+                        Debug.Log($"아이템 {overCount}개 추가 실패");
+                        dropItem.DropItemSetting(dropItem.ItemCode, overCount);
+                    }
                 }
             }
-        }
+      
     }
 
     private void CreateSlashEffect()
@@ -176,14 +170,7 @@ public class Player : Unit_Base
     {
         _attackRange1_trigger.enabled = false;
         _isAttack = falseValue;
-        if (_moveDir.x > 0)
-        {
-            transform.localScale = new Vector3(-1, 1, 1);
-        }
-        else if (_moveDir.x < 0)
-        {
-            transform.localScale = Vector3.one;
-        }
+        HeadTurn();
     }
 
     private void CauseDamage(Monster_Base mob)
@@ -234,5 +221,25 @@ public class Player : Unit_Base
     //    _rigid.velocity = Vector2.zero;
     //}
 
+    public void GameStart()
+    {
+        HeadTurn();
+        _anim.SetBool(_isMoveHash, _save_isMove);
+        _inputActions.Player.Attack.performed += OnAttackInput;
+        _inputActions.Player.PickUp.performed += OnPickUpInput;
+        IsStageStart = trueValue_special;
+    }
+
+    private void HeadTurn()
+    {
+        if (_moveDir.x > 0)
+        {
+            transform.localScale = new Vector3(-1, 1, 1);
+        }
+        else if (_moveDir.x < 0)
+        {
+            transform.localScale = Vector3.one;
+        }
+    }
 
 }

@@ -43,7 +43,10 @@ public class GameManager : Singleton<GameManager>
     {
         get => _isMonsterSpawn;
         set => _isMonsterSpawn = value;
-    } 
+    }
+
+    const float trueValue = 1f;
+    const float falseValue = 0f;
 
     protected override void RunOnlyOnce_Initialize()
     {
@@ -131,6 +134,7 @@ public class GameManager : Singleton<GameManager>
     protected override void Initialize()
     {
         _player = FindObjectOfType<Player>();
+        _player.IsStageStart = falseValue;
         _playerInfoUI = FindObjectOfType<PlayerInfoUI>(true);
         ItemInventory itemInventory = new ItemInventory(_inventorySlotAmount, _player);
         _invenUI = FindObjectOfType<ItemInventoryUI>(true);

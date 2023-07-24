@@ -45,6 +45,7 @@ public class GameManager : Singleton<GameManager>
         set => _isMonsterSpawn = value;
     }
 
+    MapManager _mapManager;
     Panel _panel;
 
     bool _isStageStart;
@@ -155,6 +156,7 @@ public class GameManager : Singleton<GameManager>
         ItemInventory itemInventory = new ItemInventory(_inventorySlotAmount, _player);
         _invenUI = FindObjectOfType<ItemInventoryUI>(true);
         _invenUI.Initialize(itemInventory);
+        _mapManager = FindObjectOfType<MapManager>();
         _panel = FindObjectOfType<Panel>();
     }
 
@@ -200,6 +202,14 @@ public class GameManager : Singleton<GameManager>
     public void StageClear()
     {
         Debug.Log("스테이지 클리어!");
+        _mapManager.DoorsOpen();
+    }
+
+    public void MoveStage(Arrow arrow)
+    {
+        _playerEntryArrow = arrow;
+        _nowRoom = _nowRoom.LinkedRooms[(int)arrow];
+        SceneManager.LoadScene(2);
     }
 
     private T[] SuffleArray<T>(T[] array)

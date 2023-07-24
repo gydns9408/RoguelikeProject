@@ -8,5 +8,16 @@ public class Door_Base : MonoBehaviour
     public float Y_Correction_Value = 0.2f;
     public Arrow Door_Arrow;
 
-    bool _isPlayerCollision;
+    BoxCollider2D _collider;
+
+    private void Awake()
+    {
+        _collider = GetComponent<BoxCollider2D>();
+        _collider.enabled = false;
+    }
+
+    public void Open()
+    {
+        _collider.enabled = true;
+    }
 }

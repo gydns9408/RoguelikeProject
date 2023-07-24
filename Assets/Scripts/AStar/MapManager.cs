@@ -134,6 +134,7 @@ public class MapManager : MonoBehaviour
                     _doors[i].transform.position = GridMap.GridToWorld(node.x_coordinate, node.y_coordinate) + new Vector2(_doors[i].X_Correction_Value, _doors[i].Y_Correction_Value);
                     node.gridType = Node.GridType.Door;
                 }
+                DoorsOpen();
             }
         }
         PlayerPositionSetting();
@@ -173,4 +174,14 @@ public class MapManager : MonoBehaviour
         GameManager.Instance.Player.transform.position = GridMap.GridToWorld(node.x_coordinate , node.y_coordinate);
     }
 
+    public void DoorsOpen()
+    {
+        for (int i = 0; i < GameManager.Instance.NowRoom.DoorInfos.Length; i++)
+        {
+            if (GameManager.Instance.NowRoom.LinkedRooms[i] != null)
+            {
+                _doors[i].Open();
+            }
+        }
+    }
 }

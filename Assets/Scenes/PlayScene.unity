@@ -1262,7 +1262,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _wallMaxAmount: 16
   _doors:
-  - {fileID: 647369755}
+  - {fileID: 0}
   - {fileID: 777266894}
   - {fileID: 1400565869}
   - {fileID: 496988695}
@@ -15755,8 +15755,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 647369754}
-  - component: {fileID: 647369755}
   - component: {fileID: 647369756}
+  - component: {fileID: 647369757}
   m_Layer: 11
   m_Name: NorthDoor
   m_TagString: Untagged
@@ -15785,21 +15785,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 16
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &647369755
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 647369753}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b3b3551f4cbb903418ca20c8cbcb5b76, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  X_Correction_Value: 1
-  Y_Correction_Value: 0
-  Door_Arrow: 0
 --- !u!61 &647369756
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -15826,6 +15811,21 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.8184204, y: 0.89912224}
   m_EdgeRadius: 0
+--- !u!114 &647369757
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 647369753}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b74a6638ce7fb0442b8c5d631a4ef815, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  X_Correction_Value: 1
+  Y_Correction_Value: 0
+  Door_Arrow: 0
 --- !u!1 &668317617
 GameObject:
   m_ObjectHideFlags: 0

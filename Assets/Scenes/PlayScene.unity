@@ -1262,7 +1262,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _wallMaxAmount: 16
   _doors:
-  - {fileID: 0}
+  - {fileID: 647369757}
   - {fileID: 777266894}
   - {fileID: 1400565869}
   - {fileID: 496988695}

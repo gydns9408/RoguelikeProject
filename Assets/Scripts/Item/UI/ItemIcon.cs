@@ -142,7 +142,7 @@ public class ItemIcon : PoolObjectShape, IBeginDragHandler, IDragHandler, IEndDr
         _itemIcon.raycastTarget = value;
     }
 
-    private void Before_OnDisable()
+    public void Before_OnDisable()
     {
         if (OrgParent != null)
         {

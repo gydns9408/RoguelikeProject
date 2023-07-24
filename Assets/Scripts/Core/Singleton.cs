@@ -9,7 +9,7 @@ public class Singleton<T> : MonoBehaviour where T : Component
     public static T Instance 
     {
         get
-        {
+        {            
             if (_programPowerOn == false)
             {
                 return null;
@@ -33,7 +33,7 @@ public class Singleton<T> : MonoBehaviour where T : Component
     private static bool _programPowerOn = true;
     protected bool _initialized = false;
 
-    private void Awake() {
+    protected void Awake() {        
         if (_instance == null)
         {
             _instance = this as T;
@@ -56,7 +56,10 @@ public class Singleton<T> : MonoBehaviour where T : Component
     private void OnDisable()
     {
         SceneManager.sceneLoaded -= OnSceneLoaded;
-        OnGameQuit();
+        if (_initialized)
+        {
+            OnGameQuit();
+        }
     }
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode) 

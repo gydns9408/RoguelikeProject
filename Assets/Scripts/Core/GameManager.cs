@@ -80,7 +80,7 @@ public class GameManager : Singleton<GameManager>
             for (int i = 0; i < roomAmount; i++)
             {
                 List<SpawnMonsterInfo> spawnList = new List<SpawnMonsterInfo>();
-                int monsterAmount = UnityEngine.Random.Range(10, 15);
+                int monsterAmount = UnityEngine.Random.Range(1, 2);
                 SpawnMonsterInfo spawnMonsterInfo = new SpawnMonsterInfo(Monster_Type.WildBoar, (uint)monsterAmount);
                 spawnList.Add(spawnMonsterInfo);
                 Room room = new Room(spawnList);
@@ -187,9 +187,12 @@ public class GameManager : Singleton<GameManager>
 
     private void OnDisable()
     {
-        _inputActions.System.PlayerInfoUIVisible.performed -= OnUI_PlayerInfoUIVisible_Option_Input;
-        _inputActions.System.MonsterHpBarVisible.performed -= OnMonster_HpBarVisible_Option_Input;
-        _inputActions.System.Disable();
+        if (_initialized)
+        {
+            _inputActions.System.PlayerInfoUIVisible.performed -= OnUI_PlayerInfoUIVisible_Option_Input;
+            _inputActions.System.MonsterHpBarVisible.performed -= OnMonster_HpBarVisible_Option_Input;
+            _inputActions.System.Disable();
+        }
     }
 
     public void StageStart()
@@ -207,8 +210,9 @@ public class GameManager : Singleton<GameManager>
 
     public void MoveStage(Arrow arrow)
     {
-        _playerEntryArrow = arrow;
         _nowRoom = _nowRoom.LinkedRooms[(int)arrow];
+        int oppositeArrow = ((int)arrow + 2) % 4;
+        _playerEntryArrow = (Arrow)oppositeArrow;
         SceneManager.LoadScene(2);
     }
 

@@ -96,6 +96,10 @@ public class DropItem : PoolObjectShape
                 Vector3 moveDir = (GameManager.Instance.Player.Position.position - _position.position).normalized;
                 _moveDir = moveDir;
             }
+            else
+            {
+                _moveDir = Vector3.zero;
+            }
             yield return null;
         }
         gameObject.SetActive(false);

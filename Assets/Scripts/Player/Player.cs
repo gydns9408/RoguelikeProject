@@ -8,11 +8,6 @@ using UnityEngine.InputSystem;
 
 public class Player : Unit_Base
 {
-
-    //[SerializeField]
-    //float _maxHp = 100;
-    
-    //float _hp = 100;
     public override float HP
     {
         get => _hp;
@@ -29,7 +24,7 @@ public class Player : Unit_Base
                     }
                     else
                     {
-                        
+
                     }
                 }
                 _hp = refine_value;
@@ -38,9 +33,19 @@ public class Player : Unit_Base
         }
     }
     public Action<float, float> _onChangeHP;
+    int _money;
+    public int Money
+    {
+        get => _money;
+        set   
+        {
+            _money = value;
+        }
+    }
 
     WaitForSeconds _wait_hitCorotine;
     public float _pickUpRange = 3.0f;
+    public float _coinPickUpRange = 3.0f;
 
     readonly int _isMoveHash = Animator.StringToHash("IsMove");
     readonly int _isAttackHash = Animator.StringToHash("IsAttack");
@@ -56,13 +61,10 @@ public class Player : Unit_Base
 
     PlayerInputActions _inputActions;
 
-    //SpriteRenderer _sprite;
     SlashEffect _slashEffect;
     PlayerAttackRange1 _attackRange1;
     Collider2D _attackRange1_trigger;
     Animator _attackRange1_anim;
-    //Transform _position;
-    //public Transform Position => _position;
 
     protected override void Awake()
     {
@@ -133,12 +135,14 @@ public class Player : Unit_Base
 
     private void OnPickUpInput(InputAction.CallbackContext _)
     {
-
-            Collider2D[] items = Physics2D.OverlapCircleAll(Position.position, _pickUpRange, LayerMask.GetMask("Item"));
-            foreach (Collider2D collider in items)
+        Collider2D[] items = Physics2D.OverlapCircleAll(Position.position, _pickUpRange, LayerMask.GetMask("Item"));
+        foreach (Collider2D collider in items)
+        {
+            DropItem dropItem = collider.GetComponent<DropItem>();
+            if (dropItem != null)
             {
-                DropItem dropItem = collider.GetComponent<DropItem>();
-                if (dropItem != null)
+                IConsumable iconsume = GameManager.Instance.ItemData[dropItem.ItemCode] as IConsumable;
+                if (iconsume == null)
                 {
                     if (GameManager.Instance.InvenUI.Inven.AddItem(dropItem.ItemCode, dropItem.ItemAmount, out uint overCount))
                     {
@@ -151,7 +155,25 @@ public class Player : Unit_Base
                     }
                 }
             }
-      
+        }
+    }
+
+    private void PickUpCoin()
+    {
+        Collider2D[] items = Physics2D.OverlapCircleAll(Position.position, _coinPickUpRange, LayerMask.GetMask("Item"));
+        foreach (Collider2D collider in items)
+        {
+            DropItem dropItem = collider.GetComponent<DropItem>();
+            if (dropItem != null)
+            {
+                IConsumable iconsume = GameManager.Instance.ItemData[dropItem.ItemCode] as IConsumable;
+                if (iconsume != null)
+                {
+                    iconsume.Consume(this);
+                    dropItem.PickUp();
+                }
+            }
+        }
     }
 
     private void CreateSlashEffect()
@@ -198,17 +220,17 @@ public class Player : Unit_Base
         _sprite.material.color = color;
     }
 
+    protected override void FixedUpdate()
+    {
+        base.FixedUpdate();
+        PickUpCoin();
+    }
+
     private void Update()
     {
         _hit_invincibleTime_value -= Time.deltaTime;
         _hit_invincibleTime_value %= _hit_invincibleTime;
     }
-
-    //private void FixedUpdate()
-    //{
-    //    _rigid.transform.position = _rigid.transform.position + Time.fixedDeltaTime * _moveSpeed * _isAttack * (Vector3)_moveDir;
-    //    _rigid.velocity = Vector2.zero;
-    //}
 
     public void GameStart()
     {

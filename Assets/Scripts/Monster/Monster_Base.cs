@@ -124,6 +124,8 @@ public class Monster_Base : Unit_Base
     protected Monster_HpBar _hpBar;
     public Monster_HpBar HPBar => _hpBar;
 
+    public int dropMoney_min = 30;
+    public int dropMoney_max = 70;
     public List<DropItemInfo> _dropItemList;
 
     Vector3 _hpBar_localScale = new Vector3(1.5f, 0.2f, 1f);
@@ -511,6 +513,26 @@ public class Monster_Base : Unit_Base
                 DropItem dropItem = SpawnManager_Etc.Instance.GetObject_DropItem(item.itemcode, (uint)randomValue2);
                 dropItem.transform.position = _position.position;
             }
+        }
+        int dropMoney = UnityEngine.Random.Range(dropMoney_min / 10, dropMoney_max / 10 + 1);
+        int drop_purseAmount = dropMoney / 50;
+        dropMoney %= 50;
+        int drop_goldCoinAmount = dropMoney / 5;
+        dropMoney %= 5;
+        for (int i = 0; i < drop_purseAmount; i++)
+        {
+            DropItem dropItem = SpawnManager_Etc.Instance.GetObject_DropItem(ItemCode.Purse, 1);
+            dropItem.transform.position = _position.position;
+        }
+        for (int i = 0; i < drop_goldCoinAmount; i++)
+        {
+            DropItem dropItem = SpawnManager_Etc.Instance.GetObject_DropItem(ItemCode.GoldCoin, 1);
+            dropItem.transform.position = _position.position;
+        }
+        for (int i = 0; i < dropMoney; i++)
+        {
+            DropItem dropItem = SpawnManager_Etc.Instance.GetObject_DropItem(ItemCode.BronzeCoin, 1);
+            dropItem.transform.position = _position.position;
         }
     }
 

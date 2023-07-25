@@ -64,8 +64,8 @@ public class DropItem : PoolObjectShape
 
     public void DropItemSetting(ItemCode itemCode, uint itemAmount)
     {
-        _itemCode = itemCode;
-        _itemAmount = itemAmount;
+        ItemCode = itemCode;
+        ItemAmount = itemAmount;
         
     }
     private void FixedUpdate()
@@ -75,6 +75,16 @@ public class DropItem : PoolObjectShape
     }
 
     public void PickUp()
+    {
+        if (_isAlive)
+        {
+            _isAlive = false;
+            StopAllCoroutines();
+            StartCoroutine(PickingUp());
+        }
+    }
+
+    public void PickUp_Coin()
     {
         if (_isAlive)
         {
@@ -99,6 +109,24 @@ public class DropItem : PoolObjectShape
             else
             {
                 _moveDir = Vector3.zero;
+            }
+            yield return null;
+        }
+        gameObject.SetActive(false);
+    }
+
+    private IEnumerator PickingUp_Coin()
+    {
+        while (true)
+        {
+            if ((GameManager.Instance.Player.Position.position - _position.position).sqrMagnitude > 0.2f)
+            {
+                Vector3 moveDir = (GameManager.Instance.Player.Position.position - _position.position).normalized;
+                _moveDir = moveDir;
+            }
+            else
+            {
+                break;
             }
             yield return null;
         }

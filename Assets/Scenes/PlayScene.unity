@@ -1086,6 +1086,7 @@ MonoBehaviour:
   _hit_invincibleTime: 1.5
   _hit_blinking_interval: 0.1
   _pickUpRange: 3
+  _coinPickUpRange: 3
 --- !u!50 &163857532
 Rigidbody2D:
   serializedVersion: 4
@@ -15176,6 +15177,9 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 87216b34277856d4b98661e84d0d99a0, type: 2}
   - {fileID: 11400000, guid: 004c045541f6a254ca7e51841385da9d, type: 2}
   - {fileID: 11400000, guid: 15d31cfced1faab4c90a711aff7aa76c, type: 2}
+  - {fileID: 11400000, guid: 33cc9282eaadead4fba2e5f66e979072, type: 2}
+  - {fileID: 11400000, guid: 6388c2c09bf135043ac89c7006ab9d98, type: 2}
+  - {fileID: 11400000, guid: 35fa938f7cb522e4b841aa3690911da9, type: 2}
 --- !u!1 &496988694
 GameObject:
   m_ObjectHideFlags: 0
@@ -23824,7 +23828,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _copyPrefab: {fileID: 7962301306547025345, guid: 38298c9f84284574bbd43fcc3b4aedc6, type: 3}
-  _poolSize: 16
+  _poolSize: 256
 --- !u!1 &2041872248
 GameObject:
   m_ObjectHideFlags: 0

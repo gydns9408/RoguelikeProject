@@ -6,7 +6,10 @@ public enum ItemCode
 {
     None,
     BeastMeat,
-    ApakiFruit
+    ApakiFruit,
+    BronzeCoin,
+    GoldCoin,
+    Purse
 }
 
 [CreateAssetMenu(fileName = "New Item Data", menuName = "Scriptable Object/Item Data", order = 1)]
@@ -17,5 +20,6 @@ public class ItemData : ScriptableObject
     public string itemName = "아이템이름";
     public Sprite itemIcon;
     public uint maxAmount = 1;
+    public uint price = 0;
     public string itemExplan = "아이템설명";
 }

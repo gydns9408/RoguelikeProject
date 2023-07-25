@@ -210,6 +210,7 @@ public class GameManager : Singleton<GameManager>
 
     public void MoveStage(Arrow arrow)
     {
+        SpawnManager_Etc.Instance.Before_OnDisable();
         _nowRoom = _nowRoom.LinkedRooms[(int)arrow];
         int oppositeArrow = ((int)arrow + 2) % 4;
         _playerEntryArrow = (Arrow)oppositeArrow;

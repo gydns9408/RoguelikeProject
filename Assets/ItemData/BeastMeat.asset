@@ -16,6 +16,7 @@ MonoBehaviour:
   itemName: "\uC9D0\uC2B9\uACE0\uAE30"
   itemIcon: {fileID: 21300000, guid: 14116d745afdc6f49bb99cb82ab5f0fe, type: 3}
   maxAmount: 10
+  price: 10
   itemExplan: "\uC9D0\uC2B9\uC758 \uC0B4\uC744 \uBC1C\uB77C\uB0B8 \uACE0\uAE30(\uC0AC\uC6A9\uC2DC
     HP + 10)"
   _healAmount: 10

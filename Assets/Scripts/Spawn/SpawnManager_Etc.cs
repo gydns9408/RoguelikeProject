@@ -55,6 +55,6 @@ public class SpawnManager_Etc : Singleton<SpawnManager_Etc>
 
     public void Before_OnDisable()
     {
-
+        _objectPool_itemIcon.Before_OnDisable();
     }
 }

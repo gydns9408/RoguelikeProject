@@ -95,4 +95,11 @@ public class ObjectPool<T> : MonoBehaviour where T : PoolObjectShape
         _poolSize = newSize;
     }
 
+    public void Before_OnDisable()
+    {
+        foreach (T obj in _pool)
+        {
+            obj.gameObject.transform.SetParent(this.gameObject.transform);
+        }
+    }
 }

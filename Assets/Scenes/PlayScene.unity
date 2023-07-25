@@ -1263,9 +1263,9 @@ MonoBehaviour:
   _wallMaxAmount: 16
   _doors:
   - {fileID: 647369757}
-  - {fileID: 777266894}
-  - {fileID: 1400565869}
-  - {fileID: 496988695}
+  - {fileID: 777266897}
+  - {fileID: 1400565872}
+  - {fileID: 496988698}
 --- !u!1001 &225009884
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -15185,8 +15185,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 496988696}
-  - component: {fileID: 496988695}
   - component: {fileID: 496988697}
+  - component: {fileID: 496988698}
   m_Layer: 11
   m_Name: WestDoor
   m_TagString: Untagged
@@ -15194,21 +15194,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &496988695
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 496988694}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b3b3551f4cbb903418ca20c8cbcb5b76, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  X_Correction_Value: 0
-  Y_Correction_Value: 1
-  Door_Arrow: 3
 --- !u!4 &496988696
 Transform:
   m_ObjectHideFlags: 0
@@ -15256,6 +15241,20 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.84577394, y: 0.91186976}
   m_EdgeRadius: 0
+--- !u!114 &496988698
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 496988694}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5954f9ef71de03348a9c2fd591d81a26, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  X_Correction_Value: 0
+  Y_Correction_Value: 1
 --- !u!1 &500055261
 GameObject:
   m_ObjectHideFlags: 0
@@ -15825,7 +15824,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   X_Correction_Value: 1
   Y_Correction_Value: 0
-  Door_Arrow: 0
 --- !u!1 &668317617
 GameObject:
   m_ObjectHideFlags: 0
@@ -16904,8 +16902,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 777266895}
-  - component: {fileID: 777266894}
   - component: {fileID: 777266896}
+  - component: {fileID: 777266897}
   m_Layer: 11
   m_Name: EastDoor
   m_TagString: Untagged
@@ -16913,21 +16911,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &777266894
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 777266893}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b3b3551f4cbb903418ca20c8cbcb5b76, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  X_Correction_Value: -0.1
-  Y_Correction_Value: -1
-  Door_Arrow: 1
 --- !u!4 &777266895
 Transform:
   m_ObjectHideFlags: 0
@@ -16975,6 +16958,20 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.910881, y: 1}
   m_EdgeRadius: 0
+--- !u!114 &777266897
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 777266893}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8384f80ffa82ad044908f937f955c745, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  X_Correction_Value: -0.1
+  Y_Correction_Value: -1
 --- !u!1 &781056204
 GameObject:
   m_ObjectHideFlags: 0
@@ -20714,8 +20711,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1400565870}
-  - component: {fileID: 1400565869}
   - component: {fileID: 1400565871}
+  - component: {fileID: 1400565872}
   m_Layer: 11
   m_Name: SouthDoor
   m_TagString: Untagged
@@ -20723,21 +20720,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1400565869
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1400565868}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b3b3551f4cbb903418ca20c8cbcb5b76, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  X_Correction_Value: -1
-  Y_Correction_Value: 0.1
-  Door_Arrow: 2
 --- !u!4 &1400565870
 Transform:
   m_ObjectHideFlags: 0
@@ -20785,6 +20767,20 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.8898392, y: 0.84577465}
   m_EdgeRadius: 0
+--- !u!114 &1400565872
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1400565868}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9826c1f0aa5914649adddba14fa5801c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  X_Correction_Value: -1
+  Y_Correction_Value: 0.1
 --- !u!1 &1447992975
 GameObject:
   m_ObjectHideFlags: 0

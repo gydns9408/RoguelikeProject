@@ -58,6 +58,8 @@ public class GameManager : Singleton<GameManager>
     Arrow _playerEntryArrow;
     public Arrow PlayerEntryArrow => _playerEntryArrow;
 
+    ItemInventory _itemInventory;
+
     const float trueValue = 1f;
     const float falseValue = 0f;
     const int Arrow_Amount = 4;
@@ -80,7 +82,7 @@ public class GameManager : Singleton<GameManager>
             for (int i = 0; i < roomAmount; i++)
             {
                 List<SpawnMonsterInfo> spawnList = new List<SpawnMonsterInfo>();
-                int monsterAmount = UnityEngine.Random.Range(1, 2);
+                int monsterAmount = UnityEngine.Random.Range(10, 15);
                 SpawnMonsterInfo spawnMonsterInfo = new SpawnMonsterInfo(Monster_Type.WildBoar, (uint)monsterAmount);
                 spawnList.Add(spawnMonsterInfo);
                 Room room = new Room(spawnList);
@@ -145,6 +147,7 @@ public class GameManager : Singleton<GameManager>
             _nowRoom = rooms[0];
 
             _playerEntryArrow = (Arrow)UnityEngine.Random.Range(0, Arrow_Amount);
+            _itemInventory = new ItemInventory(_inventorySlotAmount);
         }
     }
     protected override void Initialize()
@@ -153,9 +156,9 @@ public class GameManager : Singleton<GameManager>
         _player = FindObjectOfType<Player>();
         _player.IsStageStart = falseValue;
         _playerInfoUI = FindObjectOfType<PlayerInfoUI>(true);
-        ItemInventory itemInventory = new ItemInventory(_inventorySlotAmount, _player);
+        _itemInventory.OwnerSetting(_player);
         _invenUI = FindObjectOfType<ItemInventoryUI>(true);
-        _invenUI.Initialize(itemInventory);
+        _invenUI.Initialize(_itemInventory);
         _mapManager = FindObjectOfType<MapManager>();
         _panel = FindObjectOfType<Panel>();
     }

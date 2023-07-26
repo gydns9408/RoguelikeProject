@@ -69,14 +69,6 @@ public class Unit_Base : MonoBehaviour
 
         _position = transform.GetChild(0);
         _position_sprite = _position.GetComponent<SpriteRenderer>();
-
-        //Color color = _sprite.material.color;
-        //color.a = 0f;
-        //_sprite.material.color = color;
-        //color = _position_sprite.color;
-        //color.a = 0f;
-        //_position_sprite.color = color;
-        //_collider.enabled = false;
     }
     public void HPChange(float value)
     {

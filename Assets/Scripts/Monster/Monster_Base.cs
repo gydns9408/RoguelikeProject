@@ -307,7 +307,7 @@ public class Monster_Base : Unit_Base
     {
         if (!_detectRange.DetectPlayer)
         {
-            if ((new Vector3(_randomGoalArea_X, _randomGoalArea_Y, 0) - _position.position).sqrMagnitude > 0.1f)
+            if ((new Vector3(_randomGoalArea_X, _randomGoalArea_Y, 0) - _position.position).sqrMagnitude > 0.2f)
             {
                 //_rigid.MovePosition(transform.position + _randomGoalArea_moveDir * _moveSpeed * Time.fixedDeltaTime);
                 _moveDir = _randomGoalArea_moveDir;

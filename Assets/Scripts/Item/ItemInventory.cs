@@ -17,13 +17,17 @@ public class ItemInventory
     Player _owner;
     public Player Owner => _owner;
 
-    public ItemInventory(uint size, Player owner)
+    public ItemInventory(uint size)
     {
         _slots = new ItemSlot[size];
         for (int i = 0; i < size; i++)
         {
             _slots[i] = new ItemSlot((uint)i);
         }
+    }
+
+    public void OwnerSetting(Player owner)
+    {
         _owner = owner;
     }
 

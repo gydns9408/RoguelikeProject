@@ -39,9 +39,14 @@ public class Player : Unit_Base
         get => _money;
         set   
         {
+            if (_money != value)
+            {
+                _onChangeMoney?.Invoke(value);
+            }
             _money = value;
         }
     }
+    public Action<int> _onChangeMoney;
 
     WaitForSeconds _wait_hitCorotine;
     public float _pickUpRange = 3.0f;
@@ -169,8 +174,8 @@ public class Player : Unit_Base
                 IConsumable iconsume = GameManager.Instance.ItemData[dropItem.ItemCode] as IConsumable;
                 if (iconsume != null)
                 {
-                    iconsume.Consume(this);
-                    dropItem.PickUp();
+                    //iconsume.Consume(this);
+                    dropItem.Pulled(this);
                 }
             }
         }

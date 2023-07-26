@@ -16,9 +16,9 @@ public class ItemSlot
         _slotNum = slotNum;
     }
 
-    public void SlotSetting(ItemCode itemCode, uint itemAmount, bool isSlotChange = false)
+    public void SlotSetting(ItemCode itemCode, uint itemAmount, bool isSlotChange = false, bool isSceneInitialize = false)
     {
-        if (_itemAmount != itemAmount && _itemAmount == 0 && isSlotChange)
+        if (_itemAmount != itemAmount && _itemAmount == 0 && isSlotChange || isSceneInitialize && _itemAmount != 0)
         {
             ItemIcon icon = SpawnManager_Etc.Instance.GetObject_ItemIcon();
             GameManager.Instance.InvenUI.ItemSlotUI[SlotNum].SetChild(icon);

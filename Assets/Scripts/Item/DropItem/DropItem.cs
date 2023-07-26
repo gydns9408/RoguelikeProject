@@ -30,8 +30,10 @@ public class DropItem : PoolObjectShape
 
     Transform _position;
     Transform _child;
+    float _dropStart_position_y;
     Rigidbody2D _rigid;
     SpriteRenderer _sprite;
+    SpriteRenderer _position_sprite;
 
     bool _isAlive = false;
     public float _moveSpeed = 1.0f;
@@ -43,26 +45,35 @@ public class DropItem : PoolObjectShape
     float _currentAchievement_increaseSpeed = 3.0f;
     float _currentAchievement_reverse = 1;
 
+    float _currentAchievement2 = 0;
+    float _old_sinValue = 0;
+
     public float _remainTime = 10.0f;
+
+    const float _PI_Reciprocal = 1 / Mathf.PI;
+
     private void Awake()
     {
         _position = transform.GetChild(0);
         _child = transform.GetChild(1);
         _rigid = GetComponent<Rigidbody2D>();
         _sprite = _child.GetComponent<SpriteRenderer>();
+        Transform child = transform.GetChild(2);
+        _position_sprite = child.GetComponent<SpriteRenderer>();
     }
 
     private void OnEnable()
     {
         _sprite.color = Color.white;
+        _position_sprite.color = Color.white;
         _moveDir = Vector2.zero;
         _currentAchievement = 0;
         _currentAchievement_reverse = 1;
+        _currentAchievement2 = 0;
         StopAllCoroutines();
         StartCoroutine(LifeOver(_remainTime));
         _isAlive = true;
         _impulseDir = Random.insideUnitCircle * _impulseSpeed;
-
     }
 
     protected override IEnumerator LifeOver(float remainingTime = 0.0f)
@@ -80,7 +91,10 @@ public class DropItem : PoolObjectShape
     }
     private void FixedUpdate()
     {
-        _rigid.transform.position = _rigid.transform.position + Time.fixedDeltaTime * _moveSpeed * (Vector3)(_moveDir + _impulseDir * _currentAchievement_reverse);
+        float new_sinValue = Mathf.Sin(_currentAchievement2);
+        Vector3 add_position = new Vector3(0, new_sinValue - _old_sinValue, 0);
+        _old_sinValue = new_sinValue;
+        _rigid.transform.position = _rigid.transform.position + Time.fixedDeltaTime * _moveSpeed * (Vector3)(_moveDir + _impulseDir * _currentAchievement_reverse) + add_position;
         _rigid.velocity = Vector2.zero;
     }
 
@@ -138,10 +152,13 @@ public class DropItem : PoolObjectShape
     private IEnumerator Disappearing()
     {
         Color color = _sprite.color;
+        Color color2 = _position_sprite.color;
         while (color.a > 0f)
         {
             color.a -= Time.deltaTime;
             _sprite.color = color;
+            color2.a -= Time.deltaTime;
+            _position_sprite.color = color2;
             yield return null;
         }
         gameObject.SetActive(false);
@@ -150,7 +167,9 @@ public class DropItem : PoolObjectShape
     private void Update()
     {
         _currentAchievement += Time.deltaTime * _currentAchievement_increaseSpeed;
-        _currentAchievement_reverse = Mathf.Lerp(1f , 0f, _currentAchievement);
+        float currentAchievement2_temporary = _currentAchievement2 + Time.deltaTime * _currentAchievement_increaseSpeed;
+        _currentAchievement2 = Mathf.Clamp(currentAchievement2_temporary, 0, Mathf.PI);
+        _currentAchievement_reverse = Mathf.Lerp(1f, 0f , _PI_Reciprocal * _currentAchievement2);
     }
 
     private void LateUpdate()

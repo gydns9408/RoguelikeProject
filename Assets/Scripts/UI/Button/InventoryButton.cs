@@ -6,15 +6,17 @@ public class InventoryButton : Button_Base
 {
     protected override void ButtonClickEvent()
     {
-        if (GameManager.Instance.InvenUI.gameObject.activeSelf == false)
-        {
-            GameManager.Instance.InvenUI.Open();
-        }
-        else
-        {
-            if (GameManager.Instance.InvenUI.IsFullOpen)
+        if (GameManager.Instance.IsStageStart) {
+            if (GameManager.Instance.InvenUI.gameObject.activeSelf == false)
             {
-                GameManager.Instance.InvenUI.StartClose();
+                GameManager.Instance.InvenUI.Open();
+            }
+            else
+            {
+                if (GameManager.Instance.InvenUI.IsFullOpen)
+                {
+                    GameManager.Instance.InvenUI.StartClose();
+                }
             }
         }
     }

@@ -558,9 +558,11 @@ MonoBehaviour:
   _dieTime: 1
   _attack_coolTime: 6
   _attack_beforeDelayTime: 0.33
+  dropMoney_min: 30
+  dropMoney_max: 70
   _dropItemList:
   - itemcode: 1
-    dropProbability: 0.3
+    dropProbability: 1
     dropMaxAmount: 2
 --- !u!114 &4661172263705825465
 MonoBehaviour:

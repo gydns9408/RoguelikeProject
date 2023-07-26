@@ -52,7 +52,6 @@ public class HPBar : MonoBehaviour
         _slider.value = Mathf.Lerp(_startValue, _goalValue, _currentBarAchievement);
     }
 
-    // Update is called once per frame
     private void Refresh(float maxHp, float hp)
     {
         _currentBarAchievement = 0;

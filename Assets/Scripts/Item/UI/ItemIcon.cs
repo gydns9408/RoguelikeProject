@@ -33,6 +33,10 @@ public class ItemIcon : PoolObjectShape, IBeginDragHandler, IDragHandler, IEndDr
         _itemIcon = GetComponentInChildren<Image>();
         _itemAmountText = GetComponentInChildren<TextMeshProUGUI>();
         _firstParent = transform.parent;
+    }
+
+    private void OnEnable()
+    {
         _parentParent = GameManager.Instance.InvenUI.transform;
     }
 

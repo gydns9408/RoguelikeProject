@@ -21,7 +21,7 @@ public class ItemInventoryUI : UI_Window_HaveOpenCloseAnim
     public ItemSortOptionWindowUI SortWindow => _sortWindow;
 
     public GameObject slotPrefab;
-    
+
     protected override void Awake()
     {
         base.Awake();
@@ -36,13 +36,13 @@ public class ItemInventoryUI : UI_Window_HaveOpenCloseAnim
 
     }
 
-        public void Initialize(ItemInventory inven)
+    public void Initialize(ItemInventory inven)
     {
         _inven = inven;
         if (_slots.Length != inven.InventorySize)
         {
             Transform slots = transform.GetChild(0);
-            GridLayoutGroup gridLayout = slots.GetComponent<GridLayoutGroup>(); 
+            GridLayoutGroup gridLayout = slots.GetComponent<GridLayoutGroup>();
             foreach (ItemSlotUI slot in _slots)
             {
                 Destroy(slot.gameObject);
@@ -51,7 +51,7 @@ public class ItemInventoryUI : UI_Window_HaveOpenCloseAnim
             RectTransform slotsRect = (RectTransform)slots;
 
             float invenSizeSqrt = Mathf.Sqrt(inven.InventorySize);
-            if ((int)invenSizeSqrt * (int)invenSizeSqrt != inven.InventorySize) 
+            if ((int)invenSizeSqrt * (int)invenSizeSqrt != inven.InventorySize)
             {
                 invenSizeSqrt = Mathf.Ceil(invenSizeSqrt);
             }
@@ -72,6 +72,14 @@ public class ItemInventoryUI : UI_Window_HaveOpenCloseAnim
             _slots[i].Initialize(inven[i]);
         }
         Close();
+    }
+
+    public void Initialize_IconSetting()
+    {
+        for (uint i = 0; i < _slots.Length; i++)
+        {
+            _slots[i].Slot.SlotSetting(_slots[i].Slot.ItemCode, _slots[i].Slot.ItemAmount, false, true);
+        }
     }
 
     public override void FullOpen()

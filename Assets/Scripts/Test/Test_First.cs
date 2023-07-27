@@ -21,8 +21,8 @@ public class Test_First : Test_Base
     // Start is called before the first frame update
     protected override void Test_Action1(InputAction.CallbackContext _)
     {
-        DropItem drop = SpawnManager_Etc.Instance.GetObject_DropItem(ItemCode.BeastMeat, 8);
-        drop.transform.position = new Vector3(-6.27f, 0, 0);
+        DropItem drop = SpawnManager_Etc.Instance.GetObject_DropItem(ItemCode.BeastMeat, 1);
+        drop.transform.position = GameManager.Instance.Player.Position.position;
     }
 
     protected override void Test_Action2(InputAction.CallbackContext _)

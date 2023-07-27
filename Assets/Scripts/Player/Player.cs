@@ -205,7 +205,7 @@ public class Player : Unit_Base
         mob.SufferDamage(_attackPower + UnityEngine.Random.Range(0f, _attackPower * 0.1f));
     }
 
-    IEnumerator HitCoroutine()
+    private IEnumerator HitCoroutine()
     {
         Color color = _sprite.material.color;
         while (_hit_invincibleTime_value > 0 )

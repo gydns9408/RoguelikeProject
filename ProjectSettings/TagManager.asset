@@ -61,3 +61,6 @@ TagManager:
   - name: MonsterHpBar
     uniqueID: 3967425595
     locked: 0
+  - name: DamageText
+    uniqueID: 3150441285
+    locked: 0

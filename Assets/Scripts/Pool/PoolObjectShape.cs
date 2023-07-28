@@ -17,4 +17,8 @@ public class PoolObjectShape : MonoBehaviour
         _onDisable?.Invoke();
     }
 
+    public virtual void Before_OnDisable()
+    { 
+    }
+
 }

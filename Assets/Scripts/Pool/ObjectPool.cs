@@ -102,4 +102,12 @@ public class ObjectPool<T> : MonoBehaviour where T : PoolObjectShape
             obj.gameObject.transform.SetParent(this.gameObject.transform);
         }
     }
+
+    public void Before_OnDisable2()
+    {
+        foreach (T obj in _pool)
+        {
+            obj.Before_OnDisable();
+        }
+    }
 }

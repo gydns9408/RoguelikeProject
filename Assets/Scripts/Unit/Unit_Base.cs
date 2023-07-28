@@ -50,6 +50,8 @@ public class Unit_Base : MonoBehaviour
     protected float _hit_invincibleTime_value = 0f;
     public float _hit_blinking_interval = 0.1f;
 
+    protected float _damageTextHeight = 1f;
+
     protected Transform _position;
     public Transform Position => _position;
 
@@ -83,9 +85,13 @@ public class Unit_Base : MonoBehaviour
             float final_Damage = damage * (1 - (_defencePower / (100f + _defencePower)));
             final_Damage = Mathf.Ceil(final_Damage);
             HPChange(-final_Damage);
+            OnSufferDamage((int)final_Damage);
         }
     }
 
+    protected virtual void OnSufferDamage(int damage)
+    { 
+    }
 
 
     protected virtual void FixedUpdate()

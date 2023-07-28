@@ -82,7 +82,7 @@ public class GameManager : Singleton<GameManager>
             for (int i = 0; i < roomAmount; i++)
             {
                 List<SpawnMonsterInfo> spawnList = new List<SpawnMonsterInfo>();
-                int monsterAmount = UnityEngine.Random.Range(1, 2);
+                int monsterAmount = UnityEngine.Random.Range(10, 15);
                 SpawnMonsterInfo spawnMonsterInfo = new SpawnMonsterInfo(Monster_Type.WildBoar, (uint)monsterAmount);
                 spawnList.Add(spawnMonsterInfo);
                 Room room = new Room(spawnList);

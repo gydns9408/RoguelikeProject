@@ -6,19 +6,39 @@ public class SpawnManager_Etc : Singleton<SpawnManager_Etc>
 {
     ObjectPool_DropItem _objectPool_dropItem;
     ObjectPool_ItemIcon _objectPool_itemIcon;
+    ObjectPool_DamageText _objectPool_damageText;
     ObjectPool_Wall_Base[] _objectPool_wall_base;
+
+    public Sprite[] DamageSkin_Enemy_Default_Sprites;
+    public Sprite[] DamageSkin_Enemy_Critical_Sprites;
+    public Sprite[] DamageSkin_Player_Sprites;
+    public List<Sprite[]> DamageSkin_Sprites_List;
+
+    Transform _damageTextParent;
     protected override void RunOnlyOnce_Initialize()
     {
         if (_initialized == false)
         {
             _objectPool_dropItem = GetComponentInChildren<ObjectPool_DropItem>();
             _objectPool_itemIcon = GetComponentInChildren<ObjectPool_ItemIcon>();
+            _objectPool_damageText = GetComponentInChildren<ObjectPool_DamageText>();
             _objectPool_wall_base = GetComponentsInChildren<ObjectPool_Wall_Base>();
+            DamageSkin_Sprites_List = new List<Sprite[]>(3)
+            {
+                DamageSkin_Enemy_Default_Sprites,
+                DamageSkin_Enemy_Critical_Sprites,
+                DamageSkin_Player_Sprites
+            };
         }
     }
 
     protected override void Initialize()
     {
+        DamageTextParent dtp = FindObjectOfType<DamageTextParent>();
+        if (dtp != null) 
+        {
+            _damageTextParent = dtp.transform;
+        }
         if (_objectPool_dropItem != null) 
         {
             _objectPool_dropItem.Initialize();
@@ -26,6 +46,10 @@ public class SpawnManager_Etc : Singleton<SpawnManager_Etc>
         if (_objectPool_itemIcon != null)
         {
             _objectPool_itemIcon.Initialize();
+        }
+        if (_objectPool_damageText != null)
+        {
+            _objectPool_damageText.Initialize();
         }
         if (_objectPool_wall_base != null)
         {
@@ -48,6 +72,14 @@ public class SpawnManager_Etc : Singleton<SpawnManager_Etc>
         return _objectPool_itemIcon.GetObject();
     }
 
+    public DamageText GetObject_DamageText(Vector3 wolrdPos)
+    {
+        DamageText damageText = _objectPool_damageText.GetObject();
+        damageText.transform.SetParent(_damageTextParent);
+        damageText.transform.position = Camera.main.WorldToScreenPoint(wolrdPos);
+        return damageText;
+    }
+
     public Wall_Base GetObject_Wall(WallCode wallCode)
     {
         return _objectPool_wall_base[(int)wallCode].GetObject();
@@ -56,5 +88,6 @@ public class SpawnManager_Etc : Singleton<SpawnManager_Etc>
     public void Before_OnDisable()
     {
         _objectPool_itemIcon.Before_OnDisable();
+        _objectPool_damageText.Before_OnDisable2();
     }
 }

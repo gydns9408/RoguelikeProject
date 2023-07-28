@@ -146,7 +146,7 @@ public class ItemIcon : PoolObjectShape, IBeginDragHandler, IDragHandler, IEndDr
         _itemIcon.raycastTarget = value;
     }
 
-    public void Before_OnDisable()
+    public override void Before_OnDisable()
     {
         if (OrgParent != null)
         {

@@ -49,6 +49,7 @@ public class Player : Unit_Base
     public Action<int> _onChangeMoney;
 
     WaitForSeconds _wait_hitCorotine;
+    [Header("플레이어 기본 데이터")]
     public float _pickUpRange = 3.0f;
     public float _coinPickUpRange = 3.0f;
 
@@ -202,7 +203,7 @@ public class Player : Unit_Base
 
     private void CauseDamage(Monster_Base mob)
     {
-        mob.SufferDamage(_attackPower + UnityEngine.Random.Range(0f, _attackPower * 0.1f));
+        mob.SufferDamage(_attackPower + UnityEngine.Random.Range(0f, _attackPower * 0.3f));
     }
 
     private IEnumerator HitCoroutine()
@@ -223,6 +224,12 @@ public class Player : Unit_Base
         }
         color.a = 1f;
         _sprite.material.color = color;
+    }
+
+    protected override void OnSufferDamage(int damage)
+    {
+        DamageText damageText = SpawnManager_Etc.Instance.GetObject_DamageText(Position.position + Vector3.up * _damageTextHeight);
+        damageText.DamageTextSetting(damage.ToString(), DamageSkin.Player);
     }
 
     protected override void FixedUpdate()

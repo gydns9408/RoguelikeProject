@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UIElements;
 
 public class Test_First : Test_Base
 {
@@ -21,8 +22,8 @@ public class Test_First : Test_Base
     // Start is called before the first frame update
     protected override void Test_Action1(InputAction.CallbackContext _)
     {
-        DropItem drop = SpawnManager_Etc.Instance.GetObject_DropItem(ItemCode.BeastMeat, 1);
-        drop.transform.position = GameManager.Instance.Player.Position.position;
+        DamageText damageText = SpawnManager_Etc.Instance.GetObject_DamageText(GameManager.Instance.Player.Position.position + Vector3.up * 1f);
+        damageText.DamageTextSetting("191", DamageSkin.Critical);
     }
 
     protected override void Test_Action2(InputAction.CallbackContext _)

@@ -32,8 +32,7 @@ public class Monster_Base : Unit_Base
             }
         }
     }
-    //public float _maxHp = 25f;
-    //protected float _hp;
+
     public override float HP
     {
         get => _hp;
@@ -64,7 +63,7 @@ public class Monster_Base : Unit_Base
                     else
                     {
                         _isAlive = false;
-                        if (Mathf.Abs(_hp - refine_value) > _maxHp * 0.1f)
+                        if (Mathf.Abs(_hp - value) > _maxHp * 0.1f)
                         {
                             _coroutine.Hit();
                             _NowState = EnemyState.Hit;
@@ -85,13 +84,9 @@ public class Monster_Base : Unit_Base
     public Action<float> _onChangeHP;
     public Action _onDisable;
 
-    //protected bool _isAlive = false;
-    //protected float _attackPower = 3;
-    //protected float _defencePower = 0;
-
     protected float _spawnTime = 1.0f;
     protected float _spawnTime_reciprocal;
-    //public float _moveSpeed = 1.0f;
+
     protected float _freeMove_notMoveDirChangeTime = 1.0f;
     protected float _freeMove_notMoveDirChangeTime_value = 0f;
     [Header("몬스터 기본 데이터")]
@@ -113,14 +108,10 @@ public class Monster_Base : Unit_Base
     protected WaitForSeconds _attack_wait;
     protected bool _attack_active = false;
 
-    //public float _hit_invincibleTime = 0.6f;
-    //protected float _hit_invincibleTime_value = 0f;
     protected WaitForSeconds _hit_wait;
     protected float _afterHit_chasingTime = 0.5f;
     protected float _afterHit_chasingTime_value = 0f;
 
-    //protected Transform _position;
-    //public Transform Position => _position;
     protected Monster_HpBar _hpBar;
     public Monster_HpBar HPBar => _hpBar;
 
@@ -128,13 +119,10 @@ public class Monster_Base : Unit_Base
     public int dropMoney_max = 70;
     public List<DropItemInfo> _dropItemList;
 
+
+
     Vector3 _hpBar_localScale = new Vector3(1.5f, 0.2f, 1f);
     Vector3 _hpBar_localScale_reverse = new Vector3(-1.5f, 0.2f, 1f);
-    //protected SpriteRenderer _sprite;
-    //protected SpriteRenderer _position_sprite;
-    //protected Collider2D _collider;
-    //protected Rigidbody2D _rigid;
-    //protected Animator _anim;
     protected DetectRange _detectRange;
     protected MonsterAttackRange1 _attackRange1;
     protected Animator _attackRange1_anim;
@@ -216,18 +204,10 @@ public class Monster_Base : Unit_Base
     protected override void Awake()
     {
         base.Awake();
-        //_sprite = GetComponent<SpriteRenderer>();
-        //_collider = GetComponent<Collider2D>();
-        //_rigid = GetComponent<Rigidbody2D>();
-        //_anim = GetComponent<Animator>();
         _detectRange = GetComponentInChildren<DetectRange>();
         _attackRange1 = GetComponentInChildren<MonsterAttackRange1>();
         _attackRange1_anim = _attackRange1.gameObject.GetComponent<Animator>();
         _coroutine = GetComponent<MonsterCoroutine>();
-
-
-        //_position = transform.GetChild(0);
-        //_position_sprite = _position.GetComponent<SpriteRenderer>();
         _hpBar = GetComponentInChildren<Monster_HpBar>();
 
         Color color = _sprite.material.color;
@@ -309,7 +289,6 @@ public class Monster_Base : Unit_Base
         {
             if ((new Vector3(_randomGoalArea_X, _randomGoalArea_Y, 0) - _position.position).sqrMagnitude > 0.2f)
             {
-                //_rigid.MovePosition(transform.position + _randomGoalArea_moveDir * _moveSpeed * Time.fixedDeltaTime);
                 _moveDir = _randomGoalArea_moveDir;
             }
             else
@@ -344,6 +323,7 @@ public class Monster_Base : Unit_Base
             {
                 if (_attackRange1.DetectPlayer)
                 {
+                    Ready_Chase();
                     _attack_coolTime_value = _attack_coolTime;
                     _NowState = EnemyState.Attack;
                 }
@@ -369,7 +349,6 @@ public class Monster_Base : Unit_Base
         {
             Vector3 moveDir = (GameManager.Instance.Player.Position.position - _position.position).normalized;
             HeadTurn(moveDir);
-            //_rigid.MovePosition(transform.position + moveDir * _moveSpeed * Time.fixedDeltaTime);
             _moveDir = moveDir;
         }
     }
@@ -450,20 +429,9 @@ public class Monster_Base : Unit_Base
     {
         if (_attack_active)
         {
-            GameManager.Instance.Player.SufferDamage(_attackPower + UnityEngine.Random.Range(0f, _attackPower * 0.1f));
+            GameManager.Instance.Player.SufferDamage(_attackPower + UnityEngine.Random.Range(0f, _attackPower * 0.3f));
         }
     }
-
-    //public void SufferDamage(float damage)
-    //{
-    //    if (_hit_invincibleTime_value < 0)
-    //    {
-    //        _hit_invincibleTime_value = _hit_invincibleTime;
-    //        float fianl_Damage = damage * (1 - (_defencePower / (100f + _defencePower)));
-    //        HP -= fianl_Damage;
-
-    //    }
-    //}
 
     protected IEnumerator Hit()
     {
@@ -534,6 +502,12 @@ public class Monster_Base : Unit_Base
             DropItem dropItem = SpawnManager_Etc.Instance.GetObject_DropItem(ItemCode.BronzeCoin, 1);
             dropItem.transform.position = _position.position;
         }
+    }
+
+    protected override void OnSufferDamage(int damage)
+    {
+        DamageText damageText = SpawnManager_Etc.Instance.GetObject_DamageText(Position.position + Vector3.up * _damageTextHeight);
+        damageText.DamageTextSetting(damage.ToString(), DamageSkin.Default);
     }
 
     protected override void FixedUpdate()

@@ -14,6 +14,7 @@ public class PlayerDataManager : Singleton<PlayerDataManager>
     {
         if (_initialized == false)
         {
+            _initialized = true;
             _hp = _first_hp;
         }
     }
@@ -21,5 +22,14 @@ public class PlayerDataManager : Singleton<PlayerDataManager>
     protected override void Initialize()
     {
         Player player = FindObjectOfType<Player>();
+        player.HPChange(_hp);
+        player.Money = _money;
     }
+
+    public void TempSaveData()
+    {
+        _hp = GameManager.Instance.Player.HP;
+        _money = GameManager.Instance.Player.Money;
+    }
+
 }

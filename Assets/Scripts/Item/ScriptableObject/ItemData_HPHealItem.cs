@@ -12,7 +12,7 @@ public class ItemData_HPHealItem : ItemData, IUsable
         bool result = false;
 
         if (unit.HP < unit.MaxHP) {
-            unit.HPChange(_healAmount);
+            unit.HPChange(unit.HP + _healAmount);
             result = true;
         }
         return result;

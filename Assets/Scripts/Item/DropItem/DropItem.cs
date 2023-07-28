@@ -38,7 +38,8 @@ public class DropItem : PoolObjectShape
     Color _position_sprite_originalColor;
 
     bool _isAlive = false;
-    bool _isGettable => _currentAchievement >= Mathf.PI;
+    public bool IsAlive => _isAlive;
+    public bool IsGettable => _currentAchievement >= Mathf.PI;
     public float _moveSpeed = 1.0f;
     public float _pulledSpeed = 6.0f;
     Vector2 _moveDir;
@@ -117,7 +118,7 @@ public class DropItem : PoolObjectShape
 
     public void PickUp()
     {
-        if (_isAlive && _isGettable)
+        if (_isAlive)
         {
             _isAlive = false;
             StopAllCoroutines();
@@ -127,7 +128,7 @@ public class DropItem : PoolObjectShape
 
     public void Pulled(Player player)
     {
-        if (_isAlive && _isGettable) 
+        if (_isAlive && IsGettable) 
         {
             if ((player.Position.position - _position.position).sqrMagnitude > 0.2f)
             {

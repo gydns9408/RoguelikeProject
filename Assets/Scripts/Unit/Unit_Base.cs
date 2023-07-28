@@ -74,7 +74,7 @@ public class Unit_Base : MonoBehaviour
     }
     public void HPChange(float value)
     {
-        HP += value;
+        HP = value;
     }
 
     public void SufferDamage(float damage)
@@ -84,7 +84,7 @@ public class Unit_Base : MonoBehaviour
             _hit_invincibleTime_value = _hit_invincibleTime;
             float final_Damage = damage * (1 - (_defencePower / (100f + _defencePower)));
             final_Damage = Mathf.Ceil(final_Damage);
-            HPChange(-final_Damage);
+            HPChange(HP - final_Damage);
             OnSufferDamage((int)final_Damage);
         }
     }

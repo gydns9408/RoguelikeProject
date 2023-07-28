@@ -14,6 +14,7 @@ public class SpawnManager_Monster : Singleton<SpawnManager_Monster>
     {
         if (_initialized == false)
         {
+            _initialized = true;
             _objectPool = GetComponentsInChildren<ObjectPool_Monster_Monster>();
         }
     }

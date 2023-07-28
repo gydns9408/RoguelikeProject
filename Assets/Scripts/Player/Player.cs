@@ -48,6 +48,13 @@ public class Player : Unit_Base
     }
     public Action<int> _onChangeMoney;
 
+    public float Skill1_CoolTime = 2.0f;
+    float _skill1_coolTime_value = 0;
+    float _skill1_dashMaxSpeed = 1.0f;
+    float _skill1_dashSpeed = 1.0f;
+    float _skill1_dash_currentAchievement = 0f;
+    float _skill1_dash_currentAchievement_increaseSpeed = 1f;
+
     WaitForSeconds _wait_hitCorotine;
     [Header("플레이어 기본 데이터")]
     public float _pickUpRange = 3.0f;
@@ -82,7 +89,6 @@ public class Player : Unit_Base
         _attackRange1_anim = _attackRange1.gameObject.GetComponent<Animator>();
 
         _isAlive = true;
-        HP = MaxHP;
 
 
         _wait_hitCorotine = new WaitForSeconds(_hit_blinking_interval);
@@ -103,6 +109,7 @@ public class Player : Unit_Base
         _attackRange1.onMonsterAttack -= CauseDamage;
         if (IsStageStart == trueValue_special)
         {
+            _inputActions.Player.Skill1.performed -= OnSkill1Input;
             _inputActions.Player.PickUp.performed -= OnPickUpInput;
             _inputActions.Player.Attack.performed -= OnAttackInput;
         }
@@ -148,7 +155,7 @@ public class Player : Unit_Base
             if (dropItem != null)
             {
                 IConsumable iconsume = GameManager.Instance.ItemData[dropItem.ItemCode] as IConsumable;
-                if (iconsume == null)
+                if (iconsume == null && dropItem.IsGettable && dropItem.IsAlive)
                 {
                     if (GameManager.Instance.InvenUI.Inven.AddItem(dropItem.ItemCode, dropItem.ItemAmount, out uint overCount))
                     {
@@ -175,14 +182,30 @@ public class Player : Unit_Base
                 IConsumable iconsume = GameManager.Instance.ItemData[dropItem.ItemCode] as IConsumable;
                 if (iconsume != null)
                 {
-                    //iconsume.Consume(this);
                     dropItem.Pulled(this);
                 }
             }
         }
     }
 
-    private void CreateSlashEffect()
+    private void OnSkill1Input(InputAction.CallbackContext _)
+    {
+        if (_isAttack == falseValue  && _skill1_coolTime_value < 0)
+        {
+            _isAttack = trueValue;
+            _skill1_coolTime_value = Skill1_CoolTime;
+            if (transform.localScale.x > 0)
+            {
+                //왼쪽
+            }
+            else
+            {
+                //오른쪽
+            }
+        }
+    }
+
+        private void CreateSlashEffect()
     {
         _slashEffect.gameObject.transform.position = transform.position;
         _slashEffect.gameObject.SetActive(true);
@@ -242,6 +265,8 @@ public class Player : Unit_Base
     {
         _hit_invincibleTime_value -= Time.deltaTime;
         _hit_invincibleTime_value %= _hit_invincibleTime;
+        _skill1_coolTime_value -= Time.deltaTime;
+        _skill1_coolTime_value %= Skill1_CoolTime;
     }
 
     public void GameStart()
@@ -250,6 +275,7 @@ public class Player : Unit_Base
         _anim.SetBool(_isMoveHash, _save_isMove);
         _inputActions.Player.Attack.performed += OnAttackInput;
         _inputActions.Player.PickUp.performed += OnPickUpInput;
+        _inputActions.Player.Skill1.performed += OnSkill1Input;
         IsStageStart = trueValue_special;
     }
 

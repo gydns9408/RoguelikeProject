@@ -21,13 +21,13 @@ public class HPBar : MonoBehaviour
         _slider = GetComponentInChildren<Slider>();
         _HpText = GetComponentInChildren<TextMeshProUGUI>();
     }
-    // Start is called before the first frame update
+
     private void Start()
     {
         Player player = FindObjectOfType<Player>();
         player._onChangeHP += Refresh;
         _slider.value = _goalValue;
-        Refresh(player.MaxHP, player.HP);
+        Refresh(player.MaxHP, PlayerDataManager.Instance.HP);
     }
 
     private void Update()

@@ -82,7 +82,7 @@ public class GameManager : Singleton<GameManager>
             for (int i = 0; i < roomAmount; i++)
             {
                 List<SpawnMonsterInfo> spawnList = new List<SpawnMonsterInfo>();
-                int monsterAmount = UnityEngine.Random.Range(10, 15);
+                int monsterAmount = UnityEngine.Random.Range(1, 2);
                 SpawnMonsterInfo spawnMonsterInfo = new SpawnMonsterInfo(Monster_Type.WildBoar, (uint)monsterAmount);
                 spawnList.Add(spawnMonsterInfo);
                 Room room = new Room(spawnList);
@@ -202,6 +202,7 @@ public class GameManager : Singleton<GameManager>
     {
         IsStageStart = true;
         Player.GameStart();
+        Player.Money = PlayerDataManager.Instance.Money;
         _panel.CloseEnd();
         _invenUI.Initialize_IconSetting();
     }
@@ -215,6 +216,7 @@ public class GameManager : Singleton<GameManager>
     public void MoveStage(Arrow arrow)
     {
         SpawnManager_Etc.Instance.Before_OnDisable();
+        PlayerDataManager.Instance.TempSaveData();
         _nowRoom = _nowRoom.LinkedRooms[(int)arrow];
         int oppositeArrow = ((int)arrow + 2) % 4;
         _playerEntryArrow = (Arrow)oppositeArrow;

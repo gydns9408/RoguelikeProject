@@ -19,6 +19,7 @@ public class SpawnManager_Etc : Singleton<SpawnManager_Etc>
     {
         if (_initialized == false)
         {
+            _initialized = true;
             _objectPool_dropItem = GetComponentInChildren<ObjectPool_DropItem>();
             _objectPool_itemIcon = GetComponentInChildren<ObjectPool_ItemIcon>();
             _objectPool_damageText = GetComponentInChildren<ObjectPool_DamageText>();

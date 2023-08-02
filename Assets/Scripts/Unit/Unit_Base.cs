@@ -101,7 +101,7 @@ public class Unit_Base : MonoBehaviour
         HP = value;
     }
 
-    public void SufferDamage(float damage)
+    public void SufferDamage(float damage, DamageSkin damageSkin)
     {
         if (_hit_invincibleTime_value < 0)
         {
@@ -109,10 +109,10 @@ public class Unit_Base : MonoBehaviour
             float final_Damage = damage * (1 - (_defencePower / (100f + _defencePower)));
             final_Damage = Mathf.Ceil(final_Damage);
             HPChange(HP - final_Damage);
-            OnSufferDamage((int)final_Damage);
+            OnSufferDamage((int)final_Damage, damageSkin);
         }
     }
-    protected virtual void OnSufferDamage(int damage)
+    protected virtual void OnSufferDamage(int damage, DamageSkin damageSkin)
     {
     }
 

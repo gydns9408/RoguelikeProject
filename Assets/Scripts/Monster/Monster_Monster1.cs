@@ -46,7 +46,7 @@ public class Monster_Monster1 : Monster_Base
 
     protected override void CauseDamage_Attack()
     {
-        GameManager.Instance.Player.SufferDamage(_attackPower + UnityEngine.Random.Range(0f, _attackPower * 0.3f));
+        GameManager.Instance.Player.SufferDamage(_attackPower + UnityEngine.Random.Range(0f, _attackPower * 0.3f), DamageSkin.Player);
     }
 
     protected override void OnSufferStun()

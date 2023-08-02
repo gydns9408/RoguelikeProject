@@ -22,8 +22,8 @@ public class Player : Unit_Base
                     {
                         _coroutine.Hit();
                     }
-                    else 
-                    { 
+                    else
+                    {
                     }
                 }
                 _hp = refine_value;
@@ -56,11 +56,18 @@ public class Player : Unit_Base
     float _mpRecoverCoroutine_recoverAmount = 10f;
     public float MpRecoverCoroutine_RecoverAmount => _mpRecoverCoroutine_recoverAmount;
 
+    [SerializeField]
+    float _criticalChance = 0f;
+    public float CriticalChance => _criticalChance;
+    [SerializeField]
+    float _criticalDamage = 2f;
+    public float CriticalDamage => _criticalDamage;
+
     int _money;
     public int Money
     {
         get => _money;
-        set   
+        set
         {
             if (_money != value)
             {
@@ -71,7 +78,7 @@ public class Player : Unit_Base
     }
     public Action<int> _onChangeMoney;
 
-    
+
     public float Hit_InvincibleTime_Value => _hit_invincibleTime_value;
     public float Skill1_CoolTime = 2.0f;
     public float Skill1_MPCost = 10.0f;
@@ -87,10 +94,12 @@ public class Player : Unit_Base
     public float Skill2_CoolTime = 10.0f;
     public float Skill2_MPCost = 40.0f;
     float _skill2_coolTime_value = 0;
+    public float Skill2_CoolTime_Value => _skill2_coolTime_value;
     public float Skill3_CoolTime = 15.0f;
     public float Skill3_MPCost = 45.0f;
     float _skill3_coolTime_value = 0;
-    public float Skill2_CoolTime_Value => _skill2_coolTime_value;
+    public float Skill3_CoolTime_Value => _skill3_coolTime_value;
+    Skill3_Ball _skill3_ball;
 
     WaitForSeconds _wait_skill1;
     public float _pickUpRange = 3.0f;
@@ -100,6 +109,7 @@ public class Player : Unit_Base
     readonly int _attackHash = Animator.StringToHash("Attack");
     readonly int _attack2Hash = Animator.StringToHash("Attack2");
     readonly int _attack3Hash = Animator.StringToHash("Attack3");
+    readonly int _attack4Hash = Animator.StringToHash("Attack4");
     readonly int _stunHash = Animator.StringToHash("Stun");
     readonly int _activeHash = Animator.StringToHash("Active");
     readonly int _inactiveHash = Animator.StringToHash("Inactive");
@@ -183,15 +193,19 @@ public class Player : Unit_Base
         _attackRange1.onMonsterAttack += CauseDamage_Attack1;
         _attackRange2.onMonsterAttack += CauseDamage_Skill1;
         _attackRange3.onMonsterAttack += CauseDamage_Skill2;
+        _skill3_ball = FindObjectOfType<Skill3_Ball>(true);
+        _skill3_ball.onMonsterAttack += CauseDamage_Skill3;
     }
 
     private void OnDisable()
     {
+
         _attackRange3.onMonsterAttack -= CauseDamage_Skill2;
         _attackRange2.onMonsterAttack -= CauseDamage_Skill1;
         _attackRange1.onMonsterAttack -= CauseDamage_Attack1;
         if (IsStageStart)
         {
+            _inputActions.Player.Skill3.performed -= OnSkill3Input;
             _inputActions.Player.Skill2.performed -= OnSkill2Input;
             _inputActions.Player.Skill1.performed -= OnSkill1Input;
             _inputActions.Player.PickUp.performed -= OnPickUpInput;
@@ -205,7 +219,7 @@ public class Player : Unit_Base
     private void OnMoveInput(InputAction.CallbackContext context)
     {
         _keyDir = context.ReadValue<Vector2>();
-        
+
         if (!_isAttack && IsStageStart && StunTime <= 0)
         {
             _moveDir = _keyDir;
@@ -383,6 +397,22 @@ public class Player : Unit_Base
         }
     }
 
+    private void OnSkill3Input(InputAction.CallbackContext _)
+    {
+        if (!_isAttack && _skill3_coolTime_value <= 0 && StunTime <= 0)
+        {
+            if (MP >= Skill3_MPCost)
+            {
+                _isAttack = true;
+                _moveDir = Vector2.zero;
+                _skill3_coolTime_value = Skill3_CoolTime;
+                MP -= Skill3_MPCost;
+                _anim.SetTrigger(_attack4Hash);
+                _skill3ChargeEffect.gameObject.SetActive(true);
+            }
+        }
+    }
+
     private void Skill2ColliderOn()
     {
         if (StunTime <= 0)
@@ -409,34 +439,56 @@ public class Player : Unit_Base
         }
     }
 
+    private void CreateSwordKi()
+    {
+        if (StunTime <= 0)
+        {
+            _skill3_ball.gameObject.SetActive(true);
+            if (transform.localScale.x > 0)
+            {
+                _skill3_ball.Summon(Vector2.left);
+            }
+            else
+            {
+                _skill3_ball.Summon(Vector2.right);
+            }
+        }
+    }
+
     private void CauseDamage_Attack1(Monster_Base mob)
     {
-        SettingAttackPlayer_Position(mob);
-        mob.SufferDamage(_attackPower + UnityEngine.Random.Range(0f, _attackPower * 0.3f));
+        SettingAttackTarget_Position(mob, Position.position);
+        mob.SufferDamage(_attackPower + UnityEngine.Random.Range(0f, _attackPower * 0.3f), DamageSkin.Default);
     }
 
     private void CauseDamage_Skill1(Monster_Base mob)
     {
-        SettingAttackPlayer_Position(mob);
+        SettingAttackTarget_Position(mob, Position.position);
         mob.SufferStun(_skill1_CauseStunTime);
-        mob.SufferDamage(_attackPower * 1.5f + UnityEngine.Random.Range(0f, _attackPower * 0.45f));
+        mob.SufferDamage(_attackPower * 1.5f + UnityEngine.Random.Range(0f, _attackPower * 0.45f), DamageSkin.Default);
     }
 
     private void CauseDamage_Skill2(Monster_Base mob)
     {
-        SettingAttackPlayer_Position(mob);
-        mob.SufferDamage(_attackPower * 2.5f + UnityEngine.Random.Range(0f, _attackPower * 0.75f));
+        SettingAttackTarget_Position(mob, Position.position);
+        mob.SufferDamage(_attackPower * 2.5f + UnityEngine.Random.Range(0f, _attackPower * 0.75f), DamageSkin.Default);
     }
 
-    private void SettingAttackPlayer_Position(Monster_Base mob)
+    private void CauseDamage_Skill3(Monster_Base mob)
     {
-        mob.AttackPlayer_Position = Position.position;
+        SettingAttackTarget_Position(mob, _skill3_ball.Position.position);
+        mob.SufferDamage(_attackPower * 4f + UnityEngine.Random.Range(0f, _attackPower * 1.2f), DamageSkin.Default);
     }
 
-    protected override void OnSufferDamage(int damage)
+    private void SettingAttackTarget_Position(Monster_Base mob, Vector3 targetPos)
+    {
+        mob.AttackTarget_Position = targetPos;
+    }
+
+    protected override void OnSufferDamage(int damage, DamageSkin damageSkin)
     {
         DamageText damageText = SpawnManager_Etc.Instance.GetObject_DamageText(Position.position + Vector3.up * _damageTextHeight);
-        damageText.DamageTextSetting(damage.ToString(), DamageSkin.Player);
+        damageText.DamageTextSetting(damage.ToString(), damageSkin);
     }
 
     protected override void OnSufferStun()
@@ -462,6 +514,7 @@ public class Player : Unit_Base
         _skill1Effect.gameObject.SetActive(false);
         _skill1ChargeEffect.gameObject.SetActive(false);
         _skill2Effect.gameObject.SetActive(false);
+        _skill3ChargeEffect.gameObject.SetActive(false);
         _isAttack = false;
     }
 
@@ -502,13 +555,14 @@ public class Player : Unit_Base
         _inputActions.Player.PickUp.performed += OnPickUpInput;
         _inputActions.Player.Skill1.performed += OnSkill1Input;
         _inputActions.Player.Skill2.performed += OnSkill2Input;
+        _inputActions.Player.Skill3.performed += OnSkill3Input;
         IsStageStart = true;
     }
 
     protected override void OnFixedUpdate()
     {
         PickUpCoin();
-        _moveSpeedChangeElement = _skill1_dashSpeed + _isSkill1On; 
+        _moveSpeedChangeElement = _skill1_dashSpeed + _isSkill1On;
     }
 
     protected override void Update()
@@ -531,7 +585,5 @@ public class Player : Unit_Base
         base.LateUpdate();
         _skill2Effect_sprite.sortingOrder = (int)(_position.position.y * -100 - 1);
     }
-
-
 
 }

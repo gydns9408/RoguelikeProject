@@ -121,11 +121,11 @@ public class Monster_Base : Unit_Base
     protected WaitForSeconds _hit_wait;
     protected float _afterHit_chasingTime = 0.5f;
     protected float _afterHit_chasingTime_value = 0f;
-    protected Vector3 _attackPlayer_position;
-    public Vector3 AttackPlayer_Position
+    protected Vector3 _attackTarget_position;
+    public Vector3 AttackTarget_Position
     {
-        get => _attackPlayer_position;
-        set => _attackPlayer_position = value;
+        get => _attackTarget_position;
+        set => _attackTarget_position = value;
     }
 
     protected Monster_HpBar _hpBar;
@@ -382,10 +382,10 @@ public class Monster_Base : Unit_Base
         }
         else
         {
-            if ((AttackPlayer_Position - _position.position).sqrMagnitude > 0.2f)
+            if ((AttackTarget_Position - _position.position).sqrMagnitude > 0.2f)
             {
                 _anim.SetBool(_isMoveHash, true);
-                Vector3 moveDir = (AttackPlayer_Position - _position.position).normalized;
+                Vector3 moveDir = (AttackTarget_Position - _position.position).normalized;
                 HeadTurn(moveDir);
                 _moveDir = moveDir;
             }
@@ -398,7 +398,7 @@ public class Monster_Base : Unit_Base
 
     protected void Ready_Chase()
     {
-        Vector3 goalDir = AttackPlayer_Position - _position.position;
+        Vector3 goalDir = AttackTarget_Position - _position.position;
         HeadTurn(goalDir);
     }
 
@@ -436,7 +436,7 @@ public class Monster_Base : Unit_Base
 
     protected void FixedUpdate_Hit()
     {
-        Vector3 moveDir = (_position.position - AttackPlayer_Position).normalized;
+        Vector3 moveDir = (_position.position - AttackTarget_Position).normalized;
         _moveDir = moveDir;
     }
 
@@ -576,10 +576,10 @@ public class Monster_Base : Unit_Base
         }
     }
 
-    protected override void OnSufferDamage(int damage)
+    protected override void OnSufferDamage(int damage, DamageSkin damageSkin)
     {
         DamageText damageText = SpawnManager_Etc.Instance.GetObject_DamageText(Position.position + Vector3.up * _damageTextHeight);
-        damageText.DamageTextSetting(damage.ToString(), DamageSkin.Default);
+        damageText.DamageTextSetting(damage.ToString(), damageSkin);
     }
 
     protected override void OnFixedUpdate()

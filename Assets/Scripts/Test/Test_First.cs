@@ -32,10 +32,10 @@ public class Test_First : Test_Base
 
     protected override void Test_Action2(InputAction.CallbackContext _)
     {
-        //player.transform.position = mapManager.GridMap.GridToWorld(GameManager.Instance.NowRoom.DoorInfos[3].x, GameManager.Instance.NowRoom.DoorInfos[3].y);
-        Wall_Base wall = SpawnManager_Etc.Instance.GetObject_Wall(WallCode.ReaperStatue);
-        wall.transform.position = mapManager.GridMap.GridToWorld(x, y) + new Vector2(wall.X_Correction_Value, wall.Y_Correction_Value);
-        wall.Sprite_SortingOrderSetting();
+        GameManager.Instance.Player.MPChange(100f);
+        //Wall_Base wall = SpawnManager_Etc.Instance.GetObject_Wall(WallCode.ReaperStatue);
+        //wall.transform.position = mapManager.GridMap.GridToWorld(x, y) + new Vector2(wall.X_Correction_Value, wall.Y_Correction_Value);
+        //wall.Sprite_SortingOrderSetting();
     }
 
     protected override void Test_Action3(InputAction.CallbackContext _)

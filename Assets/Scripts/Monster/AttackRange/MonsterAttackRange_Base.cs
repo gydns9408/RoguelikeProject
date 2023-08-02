@@ -5,10 +5,10 @@ using UnityEngine;
 
 public class MonsterAttackRange_Base : MonoBehaviour
 {
-    bool _detectPlayer = false;
+    protected bool _detectPlayer = false;
     public Action onPlayerAttack;
     public bool DetectPlayer => _detectPlayer;
-    private void OnTriggerEnter2D(Collider2D collision)
+    protected void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.CompareTag("Player"))
         {
@@ -17,7 +17,7 @@ public class MonsterAttackRange_Base : MonoBehaviour
         }
     }
 
-    private void OnTriggerExit2D(Collider2D collision)
+    protected void OnTriggerExit2D(Collider2D collision)
     {
         if (collision.gameObject.CompareTag("Player"))
         {

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Video;
 
 [System.Serializable]
 public struct DropItemInfo
@@ -53,10 +54,19 @@ public class Monster_Base : Unit_Base
                         else
                         {
                             _afterHit_chasingTime_value = _afterHit_chasingTime;
-                            if (_NowState != EnemyState.Attack)
+                            if (StunTime <= 0)
                             {
-                                Ready_Chase();
-                                _NowState = EnemyState.Chase;
+                                if (_NowState != EnemyState.Attack)
+                                {
+
+                                    Ready_Chase();
+                                    _NowState = EnemyState.Chase;
+
+                                }
+                            }
+                            else 
+                            {
+                                _nowState = EnemyState.Idle;
                             }
                         }
                     }
@@ -111,6 +121,12 @@ public class Monster_Base : Unit_Base
     protected WaitForSeconds _hit_wait;
     protected float _afterHit_chasingTime = 0.5f;
     protected float _afterHit_chasingTime_value = 0f;
+    protected Vector3 _attackPlayer_position;
+    public Vector3 AttackPlayer_Position
+    {
+        get => _attackPlayer_position;
+        set => _attackPlayer_position = value;
+    }
 
     protected Monster_HpBar _hpBar;
     public Monster_HpBar HPBar => _hpBar;
@@ -126,12 +142,13 @@ public class Monster_Base : Unit_Base
     protected DetectRange _detectRange;
     protected MonsterAttackRange1 _attackRange1;
     protected Animator _attackRange1_anim;
-    protected MonsterCoroutine _coroutine;
+    protected UnitCoroutine_Monster _coroutine;
 
     protected readonly int _isMoveHash = Animator.StringToHash("IsMove");
     protected readonly int _isHitHash = Animator.StringToHash("IsHit");
-    protected readonly int _isDieHash = Animator.StringToHash("IsDie");
+    protected readonly int _dieHash = Animator.StringToHash("Die");
     protected readonly int _activeHash = Animator.StringToHash("Active");
+    protected readonly int _inactiveHash = Animator.StringToHash("Inactive");
 
     protected enum EnemyState
     {
@@ -161,23 +178,25 @@ public class Monster_Base : Unit_Base
                     case EnemyState.FreeMove :
                         _stateFixedUpdate = FixedUpdate_FreeMove;
                         _freeMove_notMoveDirChangeTime_value = _freeMove_notMoveDirChangeTime;
-                        _anim.SetBool(_isMoveHash, true);
                         break;
                     case EnemyState.Idle:
                         _stateFixedUpdate = FixedUpdate_Idle;
                         _anim.SetBool(_isMoveHash, false);
                         StopAllCoroutines();
-                        StartCoroutine(Idle(_idleTime + UnityEngine.Random.Range(0f, 1f)));
+                        if (StunTime <= 0) 
+                        {
+                            StartCoroutine(Idle(_idleTime + UnityEngine.Random.Range(0f, 1f)));
+                        }
                         break;
                     case EnemyState.Chase:
                         StopAllCoroutines();
                         _stateFixedUpdate = FixedUpdate_Chase;
-                        _anim.SetBool(_isMoveHash, true);
                         break;
                     case EnemyState.Attack:
                         _stateFixedUpdate = FixedUpdate_Attack;
                         StopAllCoroutines();
                         StartCoroutine(Attack());
+                        OnStateChange_Hit();
                         break;
                     case EnemyState.Hit:
                         _stateFixedUpdate = FixedUpdate_Hit;
@@ -185,11 +204,12 @@ public class Monster_Base : Unit_Base
                         _knock_back_speed = _knock_back_maxSpeed;
                         _anim.SetBool(_isHitHash, true);
                         StopAllCoroutines();
+                        OnStateChange_Hit();
                         StartCoroutine(Hit());
                         break;
                     case EnemyState.Die:
                         _stateFixedUpdate = FixedUpdate_Die;
-                        _anim.SetTrigger(_isDieHash);
+                        _anim.SetTrigger(_dieHash);
                         StopAllCoroutines();
                         StartCoroutine(Die());
                         TotalCount--;
@@ -207,7 +227,7 @@ public class Monster_Base : Unit_Base
         _detectRange = GetComponentInChildren<DetectRange>();
         _attackRange1 = GetComponentInChildren<MonsterAttackRange1>();
         _attackRange1_anim = _attackRange1.gameObject.GetComponent<Animator>();
-        _coroutine = GetComponent<MonsterCoroutine>();
+        _coroutine = GetComponent<UnitCoroutine_Monster>();
         _hpBar = GetComponentInChildren<Monster_HpBar>();
 
         Color color = _sprite.material.color;
@@ -289,6 +309,7 @@ public class Monster_Base : Unit_Base
         {
             if ((new Vector3(_randomGoalArea_X, _randomGoalArea_Y, 0) - _position.position).sqrMagnitude > 0.2f)
             {
+                _anim.SetBool(_isMoveHash, true);
                 _moveDir = _randomGoalArea_moveDir;
             }
             else
@@ -305,7 +326,7 @@ public class Monster_Base : Unit_Base
 
     protected void FixedUpdate_Idle()
     {
-        if (_detectRange.DetectPlayer)
+        if (_detectRange.DetectPlayer && StunTime <= 0)
         {
             _NowState = EnemyState.Chase;
         }
@@ -317,13 +338,13 @@ public class Monster_Base : Unit_Base
 
     protected void FixedUpdate_Chase()
     {
-        if (_detectRange.DetectPlayer|| _afterHit_chasingTime_value > 0)
+        if (_detectRange.DetectPlayer || _afterHit_chasingTime_value > 0)
         {
             if (_attack_coolTime_value < 0)
             {
                 if (_attackRange1.DetectPlayer)
                 {
-                    Ready_Chase();
+                    Ready_Attack();
                     _attack_coolTime_value = _attack_coolTime;
                     _NowState = EnemyState.Attack;
                 }
@@ -345,19 +366,48 @@ public class Monster_Base : Unit_Base
 
     protected void Chasing()
     {
-        if ((GameManager.Instance.Player.Position.position - _position.position).sqrMagnitude > 0.2f)
+        if (_detectRange.DetectPlayer)
         {
-            Vector3 moveDir = (GameManager.Instance.Player.Position.position - _position.position).normalized;
-            HeadTurn(moveDir);
-            _moveDir = moveDir;
+            if ((GameManager.Instance.Player.Position.position - _position.position).sqrMagnitude > 0.2f)
+            {
+                _anim.SetBool(_isMoveHash, true);
+                Vector3 moveDir = (GameManager.Instance.Player.Position.position - _position.position).normalized;
+                HeadTurn(moveDir);
+                _moveDir = moveDir;
+            }
+            else
+            {
+                _anim.SetBool(_isMoveHash, false);
+            }
+        }
+        else
+        {
+            if ((AttackPlayer_Position - _position.position).sqrMagnitude > 0.2f)
+            {
+                _anim.SetBool(_isMoveHash, true);
+                Vector3 moveDir = (AttackPlayer_Position - _position.position).normalized;
+                HeadTurn(moveDir);
+                _moveDir = moveDir;
+            }
+            else
+            {
+                _anim.SetBool(_isMoveHash, false);
+            }
         }
     }
 
     protected void Ready_Chase()
     {
+        Vector3 goalDir = AttackPlayer_Position - _position.position;
+        HeadTurn(goalDir);
+    }
+
+    protected void Ready_Attack()
+    {
         Vector3 goalDir = GameManager.Instance.Player.Position.position - _position.position;
         HeadTurn(goalDir);
     }
+
 
     protected void HeadTurn(Vector3 moveDir)
     {
@@ -386,7 +436,7 @@ public class Monster_Base : Unit_Base
 
     protected void FixedUpdate_Hit()
     {
-        Vector3 moveDir = (_position.position - GameManager.Instance.Player.Position.position).normalized;
+        Vector3 moveDir = (_position.position - AttackPlayer_Position).normalized;
         _moveDir = moveDir;
     }
 
@@ -429,8 +479,12 @@ public class Monster_Base : Unit_Base
     {
         if (_attack_active)
         {
-            GameManager.Instance.Player.SufferDamage(_attackPower + UnityEngine.Random.Range(0f, _attackPower * 0.3f));
+            CauseDamage_Attack();
         }
+    }
+
+    protected virtual void CauseDamage_Attack()
+    {
     }
 
     protected IEnumerator Hit()
@@ -439,10 +493,18 @@ public class Monster_Base : Unit_Base
         _anim.SetBool(_isHitHash, false);
         _afterHit_chasingTime_value = _afterHit_chasingTime;
         _isKnock_back = falseValue;
+        OnHit();
         if (_isAlive)
         {
-            Ready_Chase();
-            _NowState = EnemyState.Chase;
+            if (StunTime <= 0)
+            {
+                Ready_Chase();
+                _NowState = EnemyState.Chase;
+            }
+            else 
+            {
+                _NowState = EnemyState.Idle;
+            }
         }
         else
         {
@@ -451,9 +513,14 @@ public class Monster_Base : Unit_Base
         }
     }
 
+    protected virtual void OnHit()
+    {
+    }
+
     protected IEnumerator Die()
     {
         _collider.enabled = false;
+        _attack_active = false;
         Color color = _sprite.material.color;
         Color color2 = _position_sprite.color;
         while (color.a > 0)
@@ -469,6 +536,11 @@ public class Monster_Base : Unit_Base
         DropPlunder();
         gameObject.SetActive(false);
     }
+
+    protected virtual void OnStateChange_Hit()
+    { 
+    }
+
 
     private void DropPlunder()
     {
@@ -510,18 +582,16 @@ public class Monster_Base : Unit_Base
         damageText.DamageTextSetting(damage.ToString(), DamageSkin.Default);
     }
 
-    protected override void FixedUpdate()
+    protected override void OnFixedUpdate()
     {
-        base.FixedUpdate();
         _stateFixedUpdate();
     }
 
-    protected void Update()
+    protected override void Update()
     {
+        base.Update();
         _attack_coolTime_value -= Time.deltaTime;
         _attack_coolTime_value %= _attack_coolTime;
-        _hit_invincibleTime_value -= Time.deltaTime;
-        _hit_invincibleTime_value %= _hit_invincibleTime;
         _afterHit_chasingTime_value -= Time.deltaTime;
         _afterHit_chasingTime_value %= _afterHit_chasingTime;
         _freeMove_notMoveDirChangeTime_value -= Time.deltaTime;

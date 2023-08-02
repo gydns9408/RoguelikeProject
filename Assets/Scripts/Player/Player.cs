@@ -20,11 +20,10 @@ public class Player : Unit_Base
                 {
                     if (refine_value > 0)
                     {
-                        StartCoroutine(HitCoroutine());
+                        _coroutine.Hit();
                     }
-                    else
-                    {
-
+                    else 
+                    { 
                     }
                 }
                 _hp = refine_value;
@@ -33,6 +32,30 @@ public class Player : Unit_Base
         }
     }
     public Action<float, float> _onChangeHP;
+
+    [Header("플레이어 기본 데이터")]
+    [SerializeField]
+    float _maxMp = 25f;
+    public float MaxMP => _maxMp;
+    float _mp;
+    public float MP
+    {
+        get => _mp;
+        protected set
+        {
+            if (_isAlive)
+            {
+                float refine_value = Mathf.Clamp(value, 0, _maxMp);
+                _mp = refine_value;
+                _onChangeMP?.Invoke(MaxMP, _mp);
+            }
+        }
+    }
+    public Action<float, float> _onChangeMP;
+    [SerializeField]
+    float _mpRecoverCoroutine_recoverAmount = 10f;
+    public float MpRecoverCoroutine_RecoverAmount => _mpRecoverCoroutine_recoverAmount;
+
     int _money;
     public int Money
     {
@@ -48,50 +71,106 @@ public class Player : Unit_Base
     }
     public Action<int> _onChangeMoney;
 
+    
+    public float Hit_InvincibleTime_Value => _hit_invincibleTime_value;
     public float Skill1_CoolTime = 2.0f;
+    public float Skill1_MPCost = 10.0f;
     float _skill1_coolTime_value = 0;
-    float _skill1_dashMaxSpeed = 1.0f;
+    public float Skill1_CoolTime_Value => _skill1_coolTime_value;
+    float _isSkill1On = falseValue;
+    float _skill1_dashMaxSpeed = 8.0f;
+    [SerializeField]
+    float _skill1_CauseStunTime = 2.0f;
     float _skill1_dashSpeed = 1.0f;
-    float _skill1_dash_currentAchievement = 0f;
-    float _skill1_dash_currentAchievement_increaseSpeed = 1f;
+    float _skill1_dash_currentAchievement = 1f;
+    float _skill1_dash_currentAchievement_increaseSpeed = 3f;
+    public float Skill2_CoolTime = 10.0f;
+    public float Skill2_MPCost = 40.0f;
+    float _skill2_coolTime_value = 0;
+    public float Skill3_CoolTime = 15.0f;
+    public float Skill3_MPCost = 45.0f;
+    float _skill3_coolTime_value = 0;
+    public float Skill2_CoolTime_Value => _skill2_coolTime_value;
 
-    WaitForSeconds _wait_hitCorotine;
-    [Header("플레이어 기본 데이터")]
+    WaitForSeconds _wait_skill1;
     public float _pickUpRange = 3.0f;
     public float _coinPickUpRange = 3.0f;
 
     readonly int _isMoveHash = Animator.StringToHash("IsMove");
-    readonly int _isAttackHash = Animator.StringToHash("IsAttack");
+    readonly int _attackHash = Animator.StringToHash("Attack");
+    readonly int _attack2Hash = Animator.StringToHash("Attack2");
+    readonly int _attack3Hash = Animator.StringToHash("Attack3");
+    readonly int _stunHash = Animator.StringToHash("Stun");
     readonly int _activeHash = Animator.StringToHash("Active");
+    readonly int _inactiveHash = Animator.StringToHash("Inactive");
 
-    public float IsStageStart
+    public bool IsStageStart
     {
         get => _isStageStart;
         set => _isStageStart = value;
     }
     bool _save_isMove;
-    public Vector2 MoveDir => _moveDir;
+    public Vector2 MoveDir => _keyDir;
+    Vector2 _keyDir;
 
     PlayerInputActions _inputActions;
 
-    SlashEffect _slashEffect;
-    PlayerAttackRange1 _attackRange1;
+    TemporaryEffect _slashEffect;
+    TemporaryEffect _dashEffect;
+    TemporaryEffect _skill1Effect;
+    TemporaryEffect _skill1ChargeEffect;
+    TemporaryEffect _skill2Effect;
+    SpriteRenderer _skill2Effect_sprite;
+    TemporaryEffect _skill3ChargeEffect;
+    PlayerAttackRange_Base _attackRange1;
+    PlayerAttackRange_Base _attackRange2;
+    PlayerAttackRange_Base _attackRange3;
     Collider2D _attackRange1_trigger;
+    Collider2D _attackRange2_trigger;
+    Collider2D _attackRange3_trigger;
     Animator _attackRange1_anim;
+    Animator _attackRange2_anim;
+    Animator _attackRange3_anim;
+    UnitCoroutine_Player _coroutine;
 
     protected override void Awake()
     {
         base.Awake();
         _inputActions = new PlayerInputActions();
-        _slashEffect = GetComponentInChildren<SlashEffect>(true);
-        _attackRange1 = GetComponentInChildren<PlayerAttackRange1>(true);
+        Transform child = transform.GetChild(2);
+        _slashEffect = child.GetComponentInChildren<TemporaryEffect>(true);
+        child = transform.GetChild(3);
+        _dashEffect = child.GetComponentInChildren<TemporaryEffect>(true);
+        child = transform.GetChild(4);
+        _skill1Effect = child.GetComponentInChildren<TemporaryEffect>(true);
+        child = transform.GetChild(5);
+        _skill1ChargeEffect = child.GetComponentInChildren<TemporaryEffect>(true);
+        child = transform.GetChild(1);
+        _attackRange1 = child.GetComponent<PlayerAttackRange_Base>();
         _attackRange1_trigger = _attackRange1.gameObject.GetComponentInChildren<Collider2D>(true);
         _attackRange1_anim = _attackRange1.gameObject.GetComponent<Animator>();
+        child = transform.GetChild(6);
+        _attackRange2 = child.GetComponent<PlayerAttackRange_Base>();
+        _attackRange2_trigger = _attackRange2.gameObject.GetComponentInChildren<Collider2D>(true);
+        _attackRange2_anim = _attackRange2.gameObject.GetComponent<Animator>();
+        child = transform.GetChild(8);
+        _skill2Effect = child.GetComponentInChildren<TemporaryEffect>(true);
+        _skill2Effect_sprite = child.GetComponentInChildren<SpriteRenderer>(true);
+        child = transform.GetChild(9);
+        _attackRange3 = child.GetComponent<PlayerAttackRange_Base>();
+        _attackRange3_trigger = _attackRange3.gameObject.GetComponentInChildren<Collider2D>(true);
+        _attackRange3_anim = _attackRange3.gameObject.GetComponent<Animator>();
+        child = transform.GetChild(10);
+        _skill3ChargeEffect = child.GetComponentInChildren<TemporaryEffect>(true);
+        _coroutine = GetComponent<UnitCoroutine_Player>();
+        _coroutine.Owner = this;
+        _coroutine.Sprite = _sprite;
+        _coroutine.Wait = new WaitForSeconds(_hit_blinking_interval);
+        _coroutine.MPRecoverCoroutineStart();
 
         _isAlive = true;
 
-
-        _wait_hitCorotine = new WaitForSeconds(_hit_blinking_interval);
+        _wait_skill1 = new WaitForSeconds(1 / _skill1_dash_currentAchievement_increaseSpeed);
     }
 
     private void OnEnable()
@@ -101,14 +180,19 @@ public class Player : Unit_Base
         _inputActions.Player.Move.canceled += OnMoveInput;
 
 
-        _attackRange1.onMonsterAttack += CauseDamage;
+        _attackRange1.onMonsterAttack += CauseDamage_Attack1;
+        _attackRange2.onMonsterAttack += CauseDamage_Skill1;
+        _attackRange3.onMonsterAttack += CauseDamage_Skill2;
     }
 
     private void OnDisable()
     {
-        _attackRange1.onMonsterAttack -= CauseDamage;
-        if (IsStageStart == trueValue_special)
+        _attackRange3.onMonsterAttack -= CauseDamage_Skill2;
+        _attackRange2.onMonsterAttack -= CauseDamage_Skill1;
+        _attackRange1.onMonsterAttack -= CauseDamage_Attack1;
+        if (IsStageStart)
         {
+            _inputActions.Player.Skill2.performed -= OnSkill2Input;
             _inputActions.Player.Skill1.performed -= OnSkill1Input;
             _inputActions.Player.PickUp.performed -= OnPickUpInput;
             _inputActions.Player.Attack.performed -= OnAttackInput;
@@ -120,51 +204,55 @@ public class Player : Unit_Base
 
     private void OnMoveInput(InputAction.CallbackContext context)
     {
-        _moveDir = context.ReadValue<Vector2>();
-        if (_isAttack == falseValue && IsStageStart == trueValue_special)
+        _keyDir = context.ReadValue<Vector2>();
+        
+        if (!_isAttack && IsStageStart && StunTime <= 0)
         {
+            _moveDir = _keyDir;
             HeadTurn();
         }
 
-        if (IsStageStart == trueValue_special)
+        _save_isMove = !context.canceled;
+
+        if (IsStageStart && StunTime <= 0)
         {
-            _anim.SetBool(_isMoveHash, !context.canceled);
-        }
-        else
-        {
-            _save_isMove = !context.canceled;
+            _anim.SetBool(_isMoveHash, _save_isMove);
         }
     }
 
     private void OnAttackInput(InputAction.CallbackContext _)
     {
-        if (_isAttack == falseValue)
+        if (!_isAttack && StunTime <= 0)
         {
-            _isAttack = trueValue;
-            _anim.SetTrigger(_isAttackHash);
+            _moveDir = Vector2.zero;
+            _isAttack = true;
+            _anim.SetTrigger(_attackHash);
             _attackRange1_anim.SetTrigger(_activeHash);
         }
     }
 
     private void OnPickUpInput(InputAction.CallbackContext _)
     {
-        Collider2D[] items = Physics2D.OverlapCircleAll(Position.position, _pickUpRange, LayerMask.GetMask("Item"));
-        foreach (Collider2D collider in items)
+        if (StunTime <= 0)
         {
-            DropItem dropItem = collider.GetComponent<DropItem>();
-            if (dropItem != null)
+            Collider2D[] items = Physics2D.OverlapCircleAll(Position.position, _pickUpRange, LayerMask.GetMask("Item"));
+            foreach (Collider2D collider in items)
             {
-                IConsumable iconsume = GameManager.Instance.ItemData[dropItem.ItemCode] as IConsumable;
-                if (iconsume == null && dropItem.IsGettable && dropItem.IsAlive)
+                DropItem dropItem = collider.GetComponent<DropItem>();
+                if (dropItem != null)
                 {
-                    if (GameManager.Instance.InvenUI.Inven.AddItem(dropItem.ItemCode, dropItem.ItemAmount, out uint overCount))
+                    IConsumable iconsume = GameManager.Instance.ItemData[dropItem.ItemCode] as IConsumable;
+                    if (iconsume == null && dropItem.IsGettable && dropItem.IsAlive)
                     {
-                        dropItem.PickUp();
-                    }
-                    else
-                    {
-                        Debug.Log($"아이템 {overCount}개 추가 실패");
-                        dropItem.DropItemSetting(dropItem.ItemCode, overCount);
+                        if (GameManager.Instance.InvenUI.Inven.AddItem(dropItem.ItemCode, dropItem.ItemAmount, out uint overCount))
+                        {
+                            dropItem.PickUp();
+                        }
+                        else
+                        {
+                            Debug.Log($"아이템 {overCount}개 추가 실패");
+                            dropItem.DropItemSetting(dropItem.ItemCode, overCount);
+                        }
                     }
                 }
             }
@@ -173,80 +261,176 @@ public class Player : Unit_Base
 
     private void PickUpCoin()
     {
-        Collider2D[] items = Physics2D.OverlapCircleAll(Position.position, _coinPickUpRange, LayerMask.GetMask("Item"));
-        foreach (Collider2D collider in items)
+        if (StunTime <= 0)
         {
-            DropItem dropItem = collider.GetComponent<DropItem>();
-            if (dropItem != null)
+            Collider2D[] items = Physics2D.OverlapCircleAll(Position.position, _coinPickUpRange, LayerMask.GetMask("Item"));
+            foreach (Collider2D collider in items)
             {
-                IConsumable iconsume = GameManager.Instance.ItemData[dropItem.ItemCode] as IConsumable;
-                if (iconsume != null)
+                DropItem dropItem = collider.GetComponent<DropItem>();
+                if (dropItem != null)
                 {
-                    dropItem.Pulled(this);
+                    IConsumable iconsume = GameManager.Instance.ItemData[dropItem.ItemCode] as IConsumable;
+                    if (iconsume != null)
+                    {
+                        dropItem.Pulled(this);
+                    }
                 }
             }
         }
     }
 
-    private void OnSkill1Input(InputAction.CallbackContext _)
+    private void CreateSlashEffect()
     {
-        if (_isAttack == falseValue  && _skill1_coolTime_value < 0)
+        if (StunTime <= 0)
         {
-            _isAttack = trueValue;
-            _skill1_coolTime_value = Skill1_CoolTime;
-            if (transform.localScale.x > 0)
-            {
-                //왼쪽
-            }
-            else
-            {
-                //오른쪽
-            }
+            _slashEffect.gameObject.transform.position = transform.position;
+            _slashEffect.gameObject.SetActive(true);
+            _attackRange1_trigger.enabled = true;
         }
     }
 
-        private void CreateSlashEffect()
+    private void CreateSkill1Effect()
     {
-        _slashEffect.gameObject.transform.position = transform.position;
-        _slashEffect.gameObject.SetActive(true);
-        _attackRange1_trigger.enabled = true;
-    }
-
-    public void AttackStart()
-    {
-        _attackRange1.gameObject.SetActive(true);
+        if (StunTime <= 0)
+        {
+            _skill1Effect.gameObject.SetActive(true);
+            _attackRange2_trigger.enabled = true;
+        }
     }
 
     public void AttackEnd()
     {
-        _attackRange1_trigger.enabled = false;
-        _isAttack = falseValue;
-        HeadTurn();
+        if (StunTime <= 0)
+        {
+            _attackRange1_trigger.enabled = false;
+            _isAttack = false;
+            _moveDir = _keyDir;
+            HeadTurn();
+        }
     }
 
-    private void CauseDamage(Monster_Base mob)
+    private void Skill1ColliderOff()
     {
+        if (StunTime <= 0)
+        {
+            _attackRange2_trigger.enabled = false;
+        }
+    }
+
+    public void Skill1End()
+    {
+        if (StunTime <= 0)
+        {
+            _isAttack = false;
+            _isSkill1On = falseValue;
+            _moveDir = _keyDir;
+            HeadTurn();
+        }
+    }
+
+    private void OnSkill1Input(InputAction.CallbackContext _)
+    {
+        if (!_isAttack && _skill1_coolTime_value <= 0 && StunTime <= 0)
+        {
+            if (MP >= Skill1_MPCost)
+            {
+                _isAttack = true;
+                _isSkill1On = trueValue;
+                _skill1_coolTime_value = Skill1_CoolTime;
+                MP -= Skill1_MPCost;
+                _skill1_dash_currentAchievement = 0f;
+                if (transform.localScale.x > 0)
+                {
+                    _moveDir = Vector2.left;
+                }
+                else
+                {
+                    _moveDir = Vector2.right;
+                }
+                _anim.speed = 2.0f;
+                _anim.SetBool(_isMoveHash, true);
+                _dashEffect.gameObject.SetActive(true);
+                StartCoroutine(Skill1ing());
+            }
+        }
+    }
+
+
+
+    private IEnumerator Skill1ing()
+    {
+        yield return _wait_skill1;
+        _anim.speed = 1.0f;
+        _skill1ChargeEffect.gameObject.SetActive(true);
+        _anim.SetTrigger(_attack2Hash);
+        _attackRange2_anim.SetTrigger(_activeHash);
+    }
+
+    private void OnSkill2Input(InputAction.CallbackContext _)
+    {
+        if (!_isAttack && _skill2_coolTime_value <= 0 && StunTime <= 0)
+        {
+            if (MP >= Skill2_MPCost)
+            {
+                _isAttack = true;
+                _moveDir = Vector2.zero;
+                _skill2_coolTime_value = Skill2_CoolTime;
+                MP -= Skill2_MPCost;
+                _anim.SetTrigger(_attack3Hash);
+                _skill2Effect.gameObject.SetActive(true);
+                _attackRange3_anim.SetTrigger(_activeHash);
+            }
+        }
+    }
+
+    private void Skill2ColliderOn()
+    {
+        if (StunTime <= 0)
+        {
+            _attackRange3_trigger.enabled = true;
+        }
+    }
+
+    private void Skill2ColliderOff()
+    {
+        if (StunTime <= 0)
+        {
+            _attackRange3_trigger.enabled = false;
+        }
+    }
+
+    public void Skill2End()
+    {
+        if (StunTime <= 0)
+        {
+            _isAttack = false;
+            _moveDir = _keyDir;
+            HeadTurn();
+        }
+    }
+
+    private void CauseDamage_Attack1(Monster_Base mob)
+    {
+        SettingAttackPlayer_Position(mob);
         mob.SufferDamage(_attackPower + UnityEngine.Random.Range(0f, _attackPower * 0.3f));
     }
 
-    private IEnumerator HitCoroutine()
+    private void CauseDamage_Skill1(Monster_Base mob)
     {
-        Color color = _sprite.material.color;
-        while (_hit_invincibleTime_value > 0 )
-        {
-            color.a = 0.5f;
-            _sprite.material.color = color;
-            yield return _wait_hitCorotine;
-            if (_hit_invincibleTime_value <= 0)
-            {
-                break;
-            }
-            color.a = 1f;
-            _sprite.material.color = color;
-            yield return _wait_hitCorotine;
-        }
-        color.a = 1f;
-        _sprite.material.color = color;
+        SettingAttackPlayer_Position(mob);
+        mob.SufferStun(_skill1_CauseStunTime);
+        mob.SufferDamage(_attackPower * 1.5f + UnityEngine.Random.Range(0f, _attackPower * 0.45f));
+    }
+
+    private void CauseDamage_Skill2(Monster_Base mob)
+    {
+        SettingAttackPlayer_Position(mob);
+        mob.SufferDamage(_attackPower * 2.5f + UnityEngine.Random.Range(0f, _attackPower * 0.75f));
+    }
+
+    private void SettingAttackPlayer_Position(Monster_Base mob)
+    {
+        mob.AttackPlayer_Position = Position.position;
     }
 
     protected override void OnSufferDamage(int damage)
@@ -255,28 +439,47 @@ public class Player : Unit_Base
         damageText.DamageTextSetting(damage.ToString(), DamageSkin.Player);
     }
 
-    protected override void FixedUpdate()
+    protected override void OnSufferStun()
     {
-        base.FixedUpdate();
-        PickUpCoin();
+        StopAllCoroutines();
+        _moveDir = Vector2.zero;
+        _anim.SetBool(_isMoveHash, false);
+        _anim.SetTrigger(_stunHash);
+
+        _attackRange1_anim.SetTrigger(_inactiveHash);
+        _attackRange1_trigger.enabled = false;
+        _attackRange2_anim.SetTrigger(_inactiveHash);
+        _attackRange2_trigger.enabled = false;
+        _attackRange3_anim.SetTrigger(_inactiveHash);
+        _attackRange3_trigger.enabled = false;
+
+        _isSkill1On = falseValue;
+        _anim.speed = 1.0f;
+        _skill1_dash_currentAchievement = 1f;
+
+        _slashEffect.gameObject.SetActive(false);
+        _dashEffect.gameObject.SetActive(false);
+        _skill1Effect.gameObject.SetActive(false);
+        _skill1ChargeEffect.gameObject.SetActive(false);
+        _skill2Effect.gameObject.SetActive(false);
+        _isAttack = false;
     }
 
-    private void Update()
+    protected override void CureStun()
     {
-        _hit_invincibleTime_value -= Time.deltaTime;
-        _hit_invincibleTime_value %= _hit_invincibleTime;
-        _skill1_coolTime_value -= Time.deltaTime;
-        _skill1_coolTime_value %= Skill1_CoolTime;
-    }
+        _anim.ResetTrigger(_stunHash);
+        _attackRange1_anim.ResetTrigger(_inactiveHash);
+        _attackRange2_anim.ResetTrigger(_inactiveHash);
+        _attackRange3_anim.ResetTrigger(_inactiveHash);
 
-    public void GameStart()
-    {
+        _moveDir = _keyDir;
         HeadTurn();
         _anim.SetBool(_isMoveHash, _save_isMove);
-        _inputActions.Player.Attack.performed += OnAttackInput;
-        _inputActions.Player.PickUp.performed += OnPickUpInput;
-        _inputActions.Player.Skill1.performed += OnSkill1Input;
-        IsStageStart = trueValue_special;
+    }
+
+    public void MPChange(float value)
+    {
+        MP = value;
     }
 
     private void HeadTurn()
@@ -290,5 +493,45 @@ public class Player : Unit_Base
             transform.localScale = Vector3.one;
         }
     }
+    public void GameStart()
+    {
+        _moveDir = _keyDir;
+        HeadTurn();
+        _anim.SetBool(_isMoveHash, _save_isMove);
+        _inputActions.Player.Attack.performed += OnAttackInput;
+        _inputActions.Player.PickUp.performed += OnPickUpInput;
+        _inputActions.Player.Skill1.performed += OnSkill1Input;
+        _inputActions.Player.Skill2.performed += OnSkill2Input;
+        IsStageStart = true;
+    }
+
+    protected override void OnFixedUpdate()
+    {
+        PickUpCoin();
+        _moveSpeedChangeElement = _skill1_dashSpeed + _isSkill1On; 
+    }
+
+    protected override void Update()
+    {
+        base.Update();
+        float skill1_coolTime_value = _skill1_coolTime_value - Time.deltaTime;
+        _skill1_coolTime_value = Mathf.Clamp(skill1_coolTime_value, 0f, Skill1_CoolTime);
+        float skill2_coolTime_value = _skill2_coolTime_value - Time.deltaTime;
+        _skill2_coolTime_value = Mathf.Clamp(skill2_coolTime_value, 0f, Skill2_CoolTime);
+        float skill3_coolTime_value = _skill3_coolTime_value - Time.deltaTime;
+        _skill3_coolTime_value = Mathf.Clamp(skill3_coolTime_value, 0f, Skill3_CoolTime);
+        float skill1_dash_currentAchievement = _skill1_dash_currentAchievement + Time.deltaTime * _skill1_dash_currentAchievement_increaseSpeed;
+        skill1_dash_currentAchievement = Mathf.Clamp(skill1_dash_currentAchievement, 0f, 1f);
+        _skill1_dash_currentAchievement = skill1_dash_currentAchievement;
+        _skill1_dashSpeed = Mathf.Lerp(_skill1_dashMaxSpeed, 0, _skill1_dash_currentAchievement);
+    }
+
+    protected override void LateUpdate()
+    {
+        base.LateUpdate();
+        _skill2Effect_sprite.sortingOrder = (int)(_position.position.y * -100 - 1);
+    }
+
+
 
 }

@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Dynamic;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
@@ -9,6 +11,9 @@ public class Test_First : Test_Base
     public Player player;
     public Monster_Monster1 monster_Monster1;
     public ItemInventoryUI invenUI;
+
+    public int x;
+    public int y;
 
     public ItemSlotUI slotUI;
     ItemIcon icon;
@@ -22,13 +27,15 @@ public class Test_First : Test_Base
     // Start is called before the first frame update
     protected override void Test_Action1(InputAction.CallbackContext _)
     {
-        DamageText damageText = SpawnManager_Etc.Instance.GetObject_DamageText(GameManager.Instance.Player.Position.position + Vector3.up * 1f);
-        damageText.DamageTextSetting("191", DamageSkin.Critical);
+        GameManager.Instance.Player.SufferStun(2f);
     }
 
     protected override void Test_Action2(InputAction.CallbackContext _)
     {
-        player.transform.position = mapManager.GridMap.GridToWorld(GameManager.Instance.NowRoom.DoorInfos[3].x, GameManager.Instance.NowRoom.DoorInfos[3].y);
+        //player.transform.position = mapManager.GridMap.GridToWorld(GameManager.Instance.NowRoom.DoorInfos[3].x, GameManager.Instance.NowRoom.DoorInfos[3].y);
+        Wall_Base wall = SpawnManager_Etc.Instance.GetObject_Wall(WallCode.ReaperStatue);
+        wall.transform.position = mapManager.GridMap.GridToWorld(x, y) + new Vector2(wall.X_Correction_Value, wall.Y_Correction_Value);
+        wall.Sprite_SortingOrderSetting();
     }
 
     protected override void Test_Action3(InputAction.CallbackContext _)

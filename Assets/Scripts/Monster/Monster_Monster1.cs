@@ -24,11 +24,46 @@ public class Monster_Monster1 : Monster_Base
         _attack_active = true;
         if (_attackRange1.DetectPlayer)
         {
-            GameManager.Instance.Player.SufferDamage(_attackPower + UnityEngine.Random.Range(0f, _attackPower * 0.1f));
+            CauseDamage_Attack();
         }
         yield return _attack_wait2;
         _attack_active = false;
         _attackEffect1.gameObject.SetActive(false);
         _NowState = EnemyState.Chase;
+    }
+
+    protected override void OnStateChange_Hit()
+    {
+        _attack_active = false;
+        _attackRange1_anim.SetTrigger(_inactiveHash);
+        _attackEffect1.gameObject.SetActive(false);
+    }
+
+    protected override void OnHit()
+    {
+        _attackRange1_anim.ResetTrigger(_inactiveHash);
+    }
+
+    protected override void CauseDamage_Attack()
+    {
+        GameManager.Instance.Player.SufferDamage(_attackPower + UnityEngine.Random.Range(0f, _attackPower * 0.3f));
+    }
+
+    protected override void OnSufferStun()
+    {
+        _attack_active = false;
+        _attackRange1_anim.SetTrigger(_inactiveHash);
+        _attackEffect1.gameObject.SetActive(false);
+    }
+
+    protected override void CureStun()
+    {
+        if (_NowState == EnemyState.Idle)
+        {
+            _afterHit_chasingTime_value = _afterHit_chasingTime;
+            OnHit();
+            Ready_Chase();
+            _NowState = EnemyState.Chase;
+        }
     }
 }

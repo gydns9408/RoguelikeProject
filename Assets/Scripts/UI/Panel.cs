@@ -9,7 +9,7 @@ public class Panel : UI_Window_Base
     Image _image;
     Animator _anim;
 
-    readonly int _isOpenHash = Animator.StringToHash("IsOpen");
+    readonly int _openHash = Animator.StringToHash("Open");
 
     private void Awake()
     {
@@ -24,7 +24,7 @@ public class Panel : UI_Window_Base
 
     public void StartOpen()
     {
-        _anim.SetTrigger(_isOpenHash);
+        _anim.SetTrigger(_openHash);
     }
 
 }

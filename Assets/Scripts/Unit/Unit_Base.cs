@@ -35,13 +35,12 @@ public class Unit_Base : MonoBehaviour
 
     protected const float trueValue = 0f;
     protected const float falseValue = 1f;
-    protected const float trueValue_special = 1f;
-    protected const float falseValue_special = 0f;
 
-    protected float _isAttack = falseValue;
+    protected bool _isAttack;
     protected float _isKnock_back = falseValue;
     protected float _isKnock_back_reverse => (int)_isKnock_back ^ 0b_1;
-    protected float _isStageStart = trueValue_special;
+    protected float _moveSpeedChangeElement = 1f;
+    protected bool _isStageStart;
 
     protected bool _isAlive = false;
     public float _attackPower = 3;
@@ -49,6 +48,31 @@ public class Unit_Base : MonoBehaviour
     public float _hit_invincibleTime = 0.6f;
     protected float _hit_invincibleTime_value = 0f;
     public float _hit_blinking_interval = 0.1f;
+
+    protected float _stunTime;
+    public float StunTime
+    {
+        get => _stunTime;
+        protected set 
+        {
+            if (value > 0)
+            {
+                _stunTime = value;
+                _stunEffect.gameObject.SetActive(true);
+            }
+            else if(_stunTime > 0)
+            {
+                _stunTime = 0;
+                _stunEffect.gameObject.SetActive(false);
+                CureStun();
+            }
+            
+        }
+    }
+    [SerializeField]
+    protected float _stunTime_resistanceValue = 1f;
+    StunEffect _stunEffect;
+    protected const float _stunTime_max = 100000f;
 
     protected float _damageTextHeight = 1f;
 
@@ -67,7 +91,7 @@ public class Unit_Base : MonoBehaviour
         _collider = GetComponent<Collider2D>();
         _rigid = GetComponent<Rigidbody2D>();
         _anim = GetComponent<Animator>();
-
+        _stunEffect = GetComponentInChildren<StunEffect>(true);
 
         _position = transform.GetChild(0);
         _position_sprite = _position.GetComponent<SpriteRenderer>();
@@ -88,19 +112,47 @@ public class Unit_Base : MonoBehaviour
             OnSufferDamage((int)final_Damage);
         }
     }
-
     protected virtual void OnSufferDamage(int damage)
+    {
+    }
+
+    public void SufferStun(float timeDuration)
+    {
+        if (StunTime < timeDuration * _stunTime_resistanceValue)
+        {
+            StunTime = timeDuration * _stunTime_resistanceValue;
+            OnSufferStun();
+        }
+    }
+
+    protected virtual void OnSufferStun()
+    {
+    }
+
+    protected virtual void CureStun()
     { 
     }
 
 
     protected virtual void FixedUpdate()
     {
-        _rigid.transform.position = _rigid.transform.position + Time.fixedDeltaTime * (_moveSpeed * _isAttack * _isKnock_back * _isStageStart + _knock_back_speed * _isKnock_back_reverse) * (Vector3)_moveDir;
+        OnFixedUpdate();
+        _rigid.transform.position = _rigid.transform.position + Time.fixedDeltaTime * (_moveSpeed * _isKnock_back + _knock_back_speed * _isKnock_back_reverse) * _moveSpeedChangeElement *(Vector3)_moveDir ;
         _rigid.velocity = Vector2.zero;
     }
 
-    protected void LateUpdate()
+    protected virtual void OnFixedUpdate()
+    {
+    }
+
+    protected virtual void Update()
+    {
+        _hit_invincibleTime_value -= Time.deltaTime;
+        _hit_invincibleTime_value %= _hit_invincibleTime;
+        StunTime -= Time.deltaTime;
+    }
+
+    protected virtual void LateUpdate()
     {
         _sprite.sortingOrder = (int)(_position.position.y * -100);
     }

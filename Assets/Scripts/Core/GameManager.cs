@@ -60,8 +60,6 @@ public class GameManager : Singleton<GameManager>
 
     ItemInventory _itemInventory;
 
-    const float trueValue = 1f;
-    const float falseValue = 0f;
     const int Arrow_Amount = 4;
 
     protected override void RunOnlyOnce_Initialize()
@@ -154,7 +152,6 @@ public class GameManager : Singleton<GameManager>
     {
         IsStageStart = false;
         _player = FindObjectOfType<Player>();
-        _player.IsStageStart = falseValue;
         _playerInfoUI = FindObjectOfType<PlayerInfoUI>(true);
         _itemInventory.OwnerSetting(_player);
         _invenUI = FindObjectOfType<ItemInventoryUI>(true);

@@ -11,11 +11,6 @@ public class AttackAnimationStateClass : StateMachineBehaviour
         _player = FindObjectOfType<Player>();
     }
 
-    override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
-    {
-        _player.AttackStart();
-    }
-
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         _player.AttackEnd();

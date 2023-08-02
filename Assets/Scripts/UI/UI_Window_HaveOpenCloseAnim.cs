@@ -9,7 +9,7 @@ public class UI_Window_HaveOpenCloseAnim : UI_Window_Base
     public bool IsFullOpen => _isFullOpen;
     protected Animator _anim;
 
-    readonly int _isCloseHash = Animator.StringToHash("IsClose");
+    readonly int _closeHash = Animator.StringToHash("Close");
 
     protected virtual void Awake()
     {
@@ -29,7 +29,7 @@ public class UI_Window_HaveOpenCloseAnim : UI_Window_Base
     public virtual void StartClose()
     {
         _isFullOpen = false;
-        _anim.SetTrigger(_isCloseHash);
+        _anim.SetTrigger(_closeHash);
     }
 
 }

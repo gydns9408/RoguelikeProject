@@ -28,7 +28,7 @@ public class Monster_Base : Unit_Base
                 if (_totalCount <= 0 && !GameManager.Instance.NowRoom.IsClear)
                 {
                     GameManager.Instance.NowRoom.IsClear = true;
-                    GameManager.Instance.StageClear();
+                    GameManager.Instance.VictoryAlarm.gameObject.SetActive(true);
                 }
             }
         }

@@ -84,15 +84,28 @@ public class Room
         }
     }
 
-    bool _isBossroom;
-    public bool IsBossroom
+    bool _isBossRoom;
+    public bool IsBossRoom
     {
-        get => _isBossroom;
+        get => _isBossRoom;
         set
         {
-            if (!_isBossroom)
+            if (!_isBossRoom)
             {
-                _isBossroom = value;
+                _isBossRoom = value;
+            }
+        }
+    }
+
+    bool _isShopRoom;
+    public bool IsShopRoom
+    {
+        get => _isShopRoom;
+        set
+        {
+            if (!_isShopRoom)
+            {
+                _isShopRoom = value;
             }
         }
     }

@@ -109,7 +109,15 @@ public class MapManager : MonoBehaviour
                         DoorInfo doorInfo = new DoorInfo(_doorSettingNodeList[i].x_coordinate, _doorSettingNodeList[i].y_coordinate);
                         GameManager.Instance.NowRoom.AddToDoorInfoArray(doorInfo, i);
                     }
-                    Monster_Spawn();
+                    if (!GameManager.Instance.NowRoom.IsShopRoom)
+                    {
+                        Monster_Spawn();
+                    }
+                    else
+                    {
+                        GameManager.Instance.NowRoom.IsClear = true;
+                        DoorsOpen();
+                    }
                 }
 
             }

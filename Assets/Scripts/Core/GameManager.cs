@@ -59,6 +59,8 @@ public class GameManager : Singleton<GameManager>
     public Arrow PlayerEntryArrow => _playerEntryArrow;
 
     ItemInventory _itemInventory;
+    TemporaryEffect_VictoryAlarm _victoryAlarm;
+    public TemporaryEffect_VictoryAlarm VictoryAlarm => _victoryAlarm;
 
     const int Arrow_Amount = 4;
 
@@ -88,7 +90,7 @@ public class GameManager : Singleton<GameManager>
                 rooms[i] = room;
             }
 
-            rooms[roomAmount - 1].IsBossroom = true;
+            rooms[roomAmount - 1].IsBossRoom = true;
             Stack<int> roomStack = new Stack<int>();
             roomStack.Push(0);
             int currentRoomNumber = 1;
@@ -142,6 +144,14 @@ public class GameManager : Singleton<GameManager>
                     currentRoomNumber++;
                 }
             }
+
+            for (int i = 0; i < roomAmount; i++) 
+            {
+                if (rooms[i].Depth == 2 && !rooms[i].IsBossRoom)
+                {
+                    rooms[i].IsShopRoom = true;
+                }
+            }
             _nowRoom = rooms[0];
 
             _playerEntryArrow = (Arrow)UnityEngine.Random.Range(0, Arrow_Amount);
@@ -158,6 +168,7 @@ public class GameManager : Singleton<GameManager>
         _invenUI.Initialize(_itemInventory);
         _mapManager = FindObjectOfType<MapManager>();
         _panel = FindObjectOfType<Panel>();
+        _victoryAlarm = FindObjectOfType<TemporaryEffect_VictoryAlarm>(true);
     }
 
 

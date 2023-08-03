@@ -217,7 +217,6 @@ public class GameManager : Singleton<GameManager>
 
     public void StageClear()
     {
-        Debug.Log("스테이지 클리어!");
         _mapManager.DoorsOpen();
     }
 

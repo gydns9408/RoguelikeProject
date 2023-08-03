@@ -42,6 +42,7 @@ public class Monster_Monster1 : Monster_Base
     protected override void OnHit()
     {
         _attackRange1_anim.ResetTrigger(_inactiveHash);
+        Debug.Log("test¡ﬂ");
     }
 
     protected override void CauseDamage_Attack()

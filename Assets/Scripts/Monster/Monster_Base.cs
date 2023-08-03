@@ -196,7 +196,6 @@ public class Monster_Base : Unit_Base
                         _stateFixedUpdate = FixedUpdate_Attack;
                         StopAllCoroutines();
                         StartCoroutine(Attack());
-                        OnStateChange_Hit();
                         break;
                     case EnemyState.Hit:
                         _stateFixedUpdate = FixedUpdate_Hit;
@@ -377,6 +376,7 @@ public class Monster_Base : Unit_Base
             }
             else
             {
+                _moveDir = Vector2.zero;
                 _anim.SetBool(_isMoveHash, false);
             }
         }
@@ -391,6 +391,7 @@ public class Monster_Base : Unit_Base
             }
             else
             {
+                _moveDir = Vector2.zero;
                 _anim.SetBool(_isMoveHash, false);
             }
         }
